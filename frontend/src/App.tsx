@@ -15,6 +15,7 @@ import Signup from './components/signup'
 import Home from './pages/home'
 import AboutUs from './pages/about'
 import ContactUs from './pages/contact_us'
+import JourneyPage from './pages/journey_page'
 const auth = getAuth(app);
 
 
@@ -35,6 +36,7 @@ function App() {
         <Route path="/home" element={<Home></Home>}></Route>
         <Route path='/about' element = {<AboutUs></AboutUs>}></Route>
         <Route path='/contact_us' element={<ContactUs></ContactUs>}></Route>
+        <Route path='/journey' element={<JourneyPage></JourneyPage>}></Route>
       </Routes>
       <Footer></Footer>
 
