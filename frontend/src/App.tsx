@@ -16,6 +16,7 @@ import Home from './pages/home'
 import AboutUs from './pages/about'
 import ContactUs from './pages/contact_us'
 import JourneyPage from './pages/journey_page'
+import OnboardingName from './components/onboarding'
 const auth = getAuth(app);
 
 
@@ -37,6 +38,7 @@ function App() {
         <Route path='/about' element = {<AboutUs></AboutUs>}></Route>
         <Route path='/contact_us' element={<ContactUs></ContactUs>}></Route>
         <Route path='/journey' element={<JourneyPage></JourneyPage>}></Route>
+        <Route path='/onboarding' element={<OnboardingName></OnboardingName>}></Route>
       </Routes>
       <Footer></Footer>
 

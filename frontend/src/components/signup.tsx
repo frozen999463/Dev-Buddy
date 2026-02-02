@@ -15,12 +15,17 @@ export default function Signup() {
     } catch (err: any) {
       alert(err.message);
     }
+
+
   }
 
   async function handleGoogleSignup() {
     try {
       await loginWithGoogle();
-      navigate("/");
+
+      // For Google signup, always redirect to onboarding
+      // (new users will have onboarded: false by default)
+      navigate("/onboarding");
     } catch (err: any) {
       alert(err.message);
     }

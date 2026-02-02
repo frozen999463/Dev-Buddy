@@ -1,4 +1,4 @@
-import { auth } from "../firebase/auth"; 
+import { auth } from "../firebase/auth";
 
 import { useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -14,16 +14,31 @@ export default function Login() {
     try {
       await loginWithEmail(email, password);
 
-       // 2️⃣ Get logged-in user
+      // Get current logged-in user
       const user = auth.currentUser;
 
-      // 3️⃣ Get ID token
+      // Get Firebase ID token
       const token = await user?.getIdToken();
 
-      console.log("ID TOKEN:", token); // 👀 CHECK CONSOLE
+      // Send token to backend to get profile
+      const res = await fetch("http://localhost:5000/api/profile", {
+        method: "GET",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+        },
+      });
+
+      const data = await res.json();
+      console.log(data);
 
       alert("Login successful ✅");
-      navigate("/"); // or /dashboard
+
+      // Redirect based on onboarding status
+      if (data.onboarded) {
+        navigate("/journey");
+      } else {
+        navigate("/onboarding");
+      }
     } catch (err: any) {
       alert(err.message);
     }
@@ -32,8 +47,29 @@ export default function Login() {
   async function handleGoogleLogin() {
     try {
       await loginWithGoogle();
+
+      // Get current logged-in user
+      const user = auth.currentUser;
+      const token = await user?.getIdToken();
+
+      // Check onboarding status
+      const res = await fetch("http://localhost:5000/api/profile", {
+        method: "GET",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+        },
+      });
+
+      const data = await res.json();
+
       alert("Google login successful ✅");
-      navigate("/");
+
+      // Redirect based on onboarding status
+      if (data.onboarded) {
+        navigate("/journey");
+      } else {
+        navigate("/onboarding");
+      }
     } catch (err: any) {
       alert(err.message);
     }
