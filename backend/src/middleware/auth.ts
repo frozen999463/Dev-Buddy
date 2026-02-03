@@ -1,9 +1,13 @@
 import { Request, Response, NextFunction } from "express";
 import admin from "../firebase/admin";
 
+import { User } from "../models/User"; // adjust if needed
+
 export interface AuthRequest extends Request {
-  user?: admin.auth.DecodedIdToken;
+  firebaseUser?: admin.auth.DecodedIdToken;
+  user?: any;
 }
+
 
 export async function verifyFirebaseToken(
   req: AuthRequest,

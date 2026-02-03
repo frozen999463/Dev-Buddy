@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema(
   {
+    role: {type: String,enum: ["user", "admin"],default: "user", },
     uid: { type: String, required: true, unique: true },
     email: { type: String, required: true },
     name: { type: String },
@@ -11,7 +12,7 @@ const userSchema = new mongoose.Schema(
     experienceLevel: { type: String },
     learningGoal: { type: String },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 export const User = mongoose.model("User", userSchema);
