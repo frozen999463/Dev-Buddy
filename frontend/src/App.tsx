@@ -17,7 +17,7 @@ import AboutUs from './pages/about'
 import ContactUs from './pages/contact_us'
 import JourneyPage from './pages/journey_page'
 import OnboardingName from './components/onboarding'
-import AdminDashboard from './pages/adminDashboard'
+import AdminDashboard from './pages/admin/Dashboard'
 const auth = getAuth(app);
 
 
@@ -40,7 +40,8 @@ function App() {
         <Route path='/contact_us' element={<ContactUs></ContactUs>}></Route>
         <Route path='/journey' element={<JourneyPage></JourneyPage>}></Route>
         <Route path='/onboarding' element={<OnboardingName></OnboardingName>}></Route>
-        <Route path='/admin_dashboard' element={<AdminDashboard></AdminDashboard>}></Route>
+        <Route path='/adminDashboard' element={<AdminDashboard></AdminDashboard>}></Route>
+
       </Routes>
       <Footer></Footer>
 
