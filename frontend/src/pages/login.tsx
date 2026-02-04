@@ -33,8 +33,16 @@ export default function Login() {
 
       alert("Login successful ✅");
 
+      console.log(data.isAdmin);
+
+      // Redirect to admin dashboard if user is admin
+
+      if(data.role === "admin"){
+        navigate("/adminDashboard");
+        return;
+      }
       // Redirect based on onboarding status
-      if (data.onboarded) {
+      else if (data.onboarded) {
         navigate("/journey");
       } else {
         navigate("/onboarding");
@@ -64,8 +72,15 @@ export default function Login() {
 
       alert("Google login successful ✅");
 
+        // Redirect to admin dashboard if user is admin
+
+      if(data.role === "admin"){
+        navigate("/adminDashboard");
+        return;
+      }
+
       // Redirect based on onboarding status
-      if (data.onboarded) {
+      else if (data.onboarded) {
         navigate("/journey");
       } else {
         navigate("/onboarding");

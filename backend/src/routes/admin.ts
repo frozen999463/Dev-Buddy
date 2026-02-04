@@ -6,7 +6,7 @@ import {User } from "../models/User";
 const router = express.Router();
 
 router.get(
-  "/admin_dashboard",
+  "/adminDashboard",
   verifyFirebaseToken,
   isAdmin,
   async (req, res) => {

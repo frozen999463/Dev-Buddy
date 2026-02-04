@@ -8,7 +8,7 @@ import {
   SidebarProvider,
 } from "@/components/ui/sidebar"
 
-import data from "/media/abhijith/aa4143af-70ea-4622-88b9-5537fba0a89e/Learn/Major Project/frontend/src/app/dashboard/data.json"
+import data from "/media/abhijith/aa4143af-70ea-4622-88b9-5537fba0a89e/Learn/Major Project/Dev-Buddy/frontend/src/app/dashboard/data.json"
 
 export default function AdminDashboard() {
   return (
