@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/sidebar"
 
 import data from "/media/abhijith/aa4143af-70ea-4622-88b9-5537fba0a89e/Learn/Major Project/Dev-Buddy/frontend/src/app/dashboard/data.json"
+import UsersTable from "./components/table"
 
 export default function AdminDashboard() {
   return (
@@ -30,7 +31,7 @@ export default function AdminDashboard() {
               <div className="px-4 lg:px-6">
                 <ChartAreaInteractive />
               </div>
-              <DataTable data={data} />
+              <UsersTable/>
             </div>
           </div>
         </div>

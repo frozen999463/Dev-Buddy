@@ -1,21 +1,15 @@
 import express from "express";
 import { verifyFirebaseToken } from "../middleware/auth";
 import { isAdmin } from "../middleware/admin";
-import {User } from "../models/User";
+import * as AdminController from "../controllers/admin.controller";
 
 const router = express.Router();
 
-router.get(
-  "/adminDashboard",
-  verifyFirebaseToken,
-  isAdmin,
-  async (req, res) => {
-    const usersCount = await User.countDocuments();
+// Define paths and middleware, but let the controller do the work
 
-    res.json({
-      usersCount,
-    });
-  }
-);
 
+router.get("/adminDashboard", verifyFirebaseToken, isAdmin, AdminController.getAdminStats);
+router.get("/users", verifyFirebaseToken, isAdmin, AdminController.getUsersList);
+router.patch("/users/:id/role", verifyFirebaseToken, isAdmin, AdminController.updateUserRole);
+router.delete("/users/:id", verifyFirebaseToken, isAdmin, AdminController.deleteUser);
 export default router;

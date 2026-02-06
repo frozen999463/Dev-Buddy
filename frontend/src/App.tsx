@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 import Header from './pages/header'
@@ -18,37 +17,41 @@ import ContactUs from './pages/contact_us'
 import JourneyPage from './pages/journey_page'
 import OnboardingName from './pages/onboarding'
 import AdminDashboard from './pages/admin/Dashboard'
+import ProtectedRoute from './components/ProtectedRoute'
+import { Toaster } from './components/ui/sonner'
 const auth = getAuth(app);
 
 
 
 function App() {
-
   return (
-
-
-
     <div className="w-full h-screen ">
-      <Header></Header>
+      <Header />
       <Routes>
         <Route path="/" element={<Navigate to="home" />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/codeEditor" element={<CodeEditor />}></Route>
-        <Route path="/home" element={<Home></Home>}></Route>
-        <Route path='/about' element = {<AboutUs></AboutUs>}></Route>
-        <Route path='/contact_us' element={<ContactUs></ContactUs>}></Route>
-        <Route path='/journey' element={<JourneyPage></JourneyPage>}></Route>
-        <Route path='/onboarding' element={<OnboardingName></OnboardingName>}></Route>
-        <Route path='/adminDashboard' element={<AdminDashboard></AdminDashboard>}></Route>
-
+        <Route path="/codeEditor" element={<CodeEditor />} />
+        <Route path="/home" element={<Home />} />
+        <Route path='/about' element={<AboutUs />} />
+        <Route path='/contact_us' element={<ContactUs />} />
+        <Route path='/journey' element={<JourneyPage />} />
+        <Route path='/onboarding' element={<OnboardingName />} />
+        
+        {/* 2️⃣ Add the protection here */}
+        <Route 
+          path='/adminDashboard' 
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <AdminDashboard />
+            </ProtectedRoute>
+          } 
+        />
       </Routes>
-      <Footer></Footer>
-
+      <Footer />
+      <Toaster/>
     </div>
-
   )
 }
 
 export default App
-

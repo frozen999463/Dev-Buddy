@@ -1,0 +1,109 @@
+Project structure for Dev-Buddy
+Generated: 2026-02-05
+
+README.md
+package-lock.json
+
+backend/
+  DockerFile
+  .env
+  package.json
+  package-lock.json
+  server.js
+  test-ws.js
+  tsconfig.json
+  src/
+    app.ts
+    index.ts
+    db/
+      mongo.ts
+    firebase/
+      admin.ts
+      serviceAccountKey.json
+    middleware/
+      admin.ts
+      auth.ts
+    models/
+      User.ts
+    routes/
+      admin.ts
+      profile.ts
+      protected.ts
+  temp/
+    1dc508ad-3004-464b-9340-ca3a68752938_out
+    1dc508ad-3004-464b-9340-ca3a68752938.c
+    29edc059-8ec5-4915-842d-fe47bfc7f48b.py
+    4988af38-8e29-40bd-ba49-eaca38d23468_out
+    4988af38-8e29-40bd-ba49-eaca38d23468.c
+    4aad5889-fd96-4386-9f55-6ece6c98f3cb.py
+    6126dbf0-8512-4b38-b130-1cf83589d6a6_out
+    6126dbf0-8512-4b38-b130-1cf83589d6a6.c
+    657a2a8e-244a-4b5b-9b65-1e4a3cd09416.py
+    709abc07-6935-4c8b-af89-80ad36d650da.py
+    7fd8f78b-6b2f-4fae-963d-5d0f51ec182c_out
+    7fd8f78b-6b2f-4fae-963d-5d0f51ec182c.c
+    89e318a4-801b-4d46-aaac-6b87ce56daef.py
+    a3d2de82-cdf3-4d2e-897b-8d6ea2b4849d.py
+    afaf0491-76c7-4dc3-bf66-0e17ed8e9123.py
+    b1438ade-01bc-49cb-9c3b-1c94cf51c2bc.py
+    b5e577b1-acdc-4664-a538-195fc1e5260c_out
+    b5e577b1-acdc-4664-a538-195fc1e5260c.c
+    b85593b5-6fdd-46a6-afdf-b968d5e1eb06.py
+    cc3b350f-f227-44d3-bc92-97f98212585b.py
+    d63e0994-bd96-4aaf-84e7-6558c527f7b4.py
+    eb1311e9-8af4-4da4-89f8-9c3cfdf78d66.py
+    fb479617-9207-4490-8991-8dc655ebe8d6.py
+
+frontend/
+  index.html
+  package.json
+  pnpm-lock.yaml
+  README.md
+  tsconfig.app.json
+  tsconfig.json
+  tsconfig.node.json
+  vite.config.ts
+  components.json
+  public/
+    images/
+  src/
+    App.css
+    App.tsx
+    index.css
+    main.tsx
+    app/
+      dashboard/
+    assets/
+    codeEditor/
+      codeEditor.tsx
+      piston_api_logic.ts
+    components/
+      app-sidebar.tsx
+      chart-area-interactive.tsx
+      data-table.tsx
+      main_content.tsx
+      nav-documents.tsx
+      nav-main.tsx
+      nav-secondary.tsx
+      nav-user.tsx
+      section-cards.tsx
+      side_bar.tsx
+      site-header.tsx
+      ui/
+    data/
+      dummySection.ts
+    dataFetching_logic/
+      courseSection.ts
+    firebase/
+      auth.ts
+      firebase.ts
+    hooks/
+      use-mobile.ts
+    lib/
+      utils.ts
+    pages/
+      about.tsx
+    types/
+
+Notes:
+- This is a generated high-level tree (files and key folders). For a complete, file-by-file dump, run `find . -print` in the repository root.
