@@ -1,33 +1,65 @@
-import React from "react";
+import React, { useState } from "react";
 import { Progress } from "@/components/ui/progress";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Flame, Gem, Zap, ArrowUp, Inbox } from "lucide-react";
+import { Flame, ArrowUp, Inbox } from "lucide-react";
+import StreakCard from "./StreakCard";
 const JourneyRightPanel = () => {
+  const [showStreak, setShowStreak] = useState(false);
   return (
-    <div className="space-y-8">
-      {/* 📊 Top Stats Bar */}
-      <div className="flex items-center justify-between bg-neutral-900/50 p-3 rounded-2xl border border-neutral-800">
-        <div className="flex items-center gap-1.5"><div className="w-6 h-6 bg-blue-600 rounded-sm flex items-center justify-center text-[10px] font-bold">Py</div></div>
-        <div className="flex items-center gap-1 text-orange-400 font-bold"><span className="text-sm">1</span><Flame size={18} fill="currentColor" /></div>
-        <div className="flex items-center gap-1 text-yellow-500 font-bold"><span className="text-sm">11</span><Gem size={16} fill="currentColor" /></div>
-        <div className="flex items-center gap-1 text-purple-400 font-bold"><span className="text-sm">5</span><Zap size={18} fill="currentColor" /></div>
+    <div className="space-y-8 bg-white relative">
+      
+      {/* 📊 Perfectly Aligned Header Icons */}
+      <div className="flex items-center justify-end gap-3 h-12 mb-4">
+        
+        {/* Python Logo Wrapper */}
+        <div className="flex items-center justify-center w-10 h-10 cursor-pointer hover:bg-neutral-50 rounded-xl transition-all" title="Current Course">
+           <img 
+            src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" 
+            alt="Python" 
+            className="w-7 h-7 object-contain"
+           />
+        </div>
+        {/* Streak Trigger */}
+        <div 
+          className={`relative flex items-center gap-2 px-3 py-2 rounded-2xl cursor-pointer transition-all active:scale-95 ${
+            showStreak ? "bg-orange-50" : "hover:bg-neutral-50"
+          }`}
+          onClick={() => setShowStreak(!showStreak)}
+        >
+          <span className="text-lg font-bold text-neutral-800 tabular-nums"></span>
+          <Flame size={24} className="text-orange-500 fill-orange-500" />
+          
+          {/* 🔥 The interactive Streak Card Popup */}
+          {showStreak && <StreakCard />}
+        </div>
       </div>
       {/* 🏆 Starter League Card */}
-      <Card className="bg-neutral-900/50 border-neutral-800 overflow-hidden">
-        <CardContent className="p-5 space-y-4">
-          <div className="flex justify-between items-center"><h3 className="font-bold text-neutral-300">Starter League</h3><button className="text-sky-500 text-xs font-bold">View</button></div>
+      <Card className="bg-white border-neutral-100 shadow-sm overflow-hidden rounded-3xl">
+        <CardContent className="p-6 space-y-4">
+          <div className="flex justify-between items-center">
+            <h3 className="font-bold text-neutral-800 text-lg">Starter League</h3>
+            <button className="text-sky-500 text-sm font-bold hover:underline">View</button>
+          </div>
           <div className="flex items-center gap-4">
-            <div className="w-16 h-16 bg-green-500 rounded-2xl flex items-center justify-center text-white"><ArrowUp size={32} strokeWidth={3} /></div>
-            <div><p className="font-bold text-lg">Ranked <span className="text-red-500">#33</span></p><p className="text-xs text-neutral-400">35 XP earned this week</p></div>
+            <div className="w-16 h-16 bg-green-500 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-green-100">
+              <ArrowUp size={32} strokeWidth={3} />
+            </div>
+            <div>
+              <p className="font-bold text-xl text-neutral-900 leading-tight">Ranked <span className="text-red-500">#33</span></p>
+              <p className="text-sm text-neutral-500 font-medium tracking-tight">35 XP earned this week</p>
+            </div>
           </div>
         </CardContent>
       </Card>
-      {/* ✅ Daily Goals */}
-      <Card className="bg-neutral-900/50 border-neutral-800">
-        <CardContent className="p-5 space-y-4">
-          <h3 className="font-bold text-neutral-300">Daily Goals</h3>
-          <div className="space-y-6">
+      {/* ✅ Daily Goals Card */}
+      <Card className="bg-white border-neutral-100 shadow-sm rounded-3xl">
+        <CardContent className="p-6 space-y-4">
+          <div className="flex justify-between items-center mb-2">
+            <h3 className="font-bold text-neutral-800 text-lg">Daily Goals</h3>
+            <button className="text-sky-500 text-sm font-bold hover:underline">View</button>
+          </div>
+          
+          <div className="space-y-8">
             <GoalItem label="Earn 60 XP" progress={0} total={60} />
             <GoalItem label="Complete 3 exercises" progress={0} total={3} />
           </div>
@@ -38,11 +70,16 @@ const JourneyRightPanel = () => {
 };
 /* Helper component for each goal row */
 const GoalItem = ({ label, progress, total }: { label: string, progress: number, total: number }) => (
-  <div className="space-y-2">
-    <div className="flex justify-between items-end"><p className="text-xs font-medium text-neutral-300">{label}</p><span className="text-[10px] text-neutral-500 font-bold">{progress}/{total}</span></div>
-    <div className="flex items-center gap-3">
-        <Progress value={(progress/total) * 100} className="h-1.5 flex-1 bg-neutral-800" />
-        <div className="w-8 h-8 rounded-lg bg-neutral-800 border border-neutral-700 flex items-center justify-center text-orange-400"><Inbox size={14} /></div>
+  <div className="space-y-3 group cursor-pointer">
+    <div className="flex justify-between items-end">
+        <p className="text-sm font-semibold text-neutral-600 group-hover:text-neutral-900 transition-colors tracking-tight">{label}</p>
+        <span className="text-xs text-neutral-400 font-bold tabular-nums">{progress}/{total}</span>
+    </div>
+    <div className="flex items-center gap-4">
+        <Progress value={(progress/total) * 100} className="h-2 flex-1 bg-neutral-100" />
+        <div className="w-9 h-9 rounded-xl bg-neutral-50 border border-neutral-100 flex items-center justify-center text-orange-500 shadow-sm group-hover:bg-white group-hover:border-orange-200 transition-all">
+            <Inbox size={16} />
+        </div>
     </div>
   </div>
 );
