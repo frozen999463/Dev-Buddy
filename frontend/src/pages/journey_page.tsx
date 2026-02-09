@@ -3,7 +3,10 @@ import JourneyRightPanel from "@/components/JourneyRightPanel";
 import CourseContents from "@/components/CourseContents"; // 1️⃣ Import the roadmap
 import { ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useParams } from "react-router-dom";
+
 const JourneyPage = () => {
+  const { id } = useParams();
   return (
     <div className="min-h-screen bg-[#f8fafc] text-neutral-900 flex">
       <aside className="w-64 bg-white border-r border-neutral-200 hidden lg:block sticky top-0 h-screen">
@@ -21,7 +24,7 @@ const JourneyPage = () => {
             </Button>
           </div>
           {/* 2️⃣ Use the Roadmap component here instead of CourseSections */}
-          <CourseContents />
+          <CourseContents courseId={id} />
         </div>
       </main>
       <aside className="w-[350px] bg-white px-6 py-8 hidden xl:block sticky top-0 h-screen overflow-y-auto border-l border-neutral-200">

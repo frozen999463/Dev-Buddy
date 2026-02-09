@@ -1,14 +1,11 @@
-import { useState } from 'react'
-import viteLogo from '/vite.svg'
 import './App.css'
 import Header from './pages/header'
 import Login from './pages/login'
 import CodeEditor from './codeEditor/codeEditor'
+import BrowseCourses from './pages/BrowseCourses'
+import CourseLanding from './pages/CourseLanding'
 
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth"
-import { app } from "./firebase/firebase";
 import Footer from './pages/footer'
-import SignupPage from './pages/signup'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import Signup from './pages/signup'
 import Home from './pages/home'
@@ -19,7 +16,9 @@ import OnboardingName from './pages/onboarding'
 import AdminDashboard from './pages/admin/Dashboard'
 import ProtectedRoute from './components/ProtectedRoute'
 import { Toaster } from './components/ui/sonner'
+/*
 const auth = getAuth(app);
+*/
 
 
 
@@ -35,21 +34,23 @@ function App() {
         <Route path="/home" element={<Home />} />
         <Route path='/about' element={<AboutUs />} />
         <Route path='/contact_us' element={<ContactUs />} />
-        <Route path='/journey' element={<JourneyPage />} />
+        <Route path='/journey/:id' element={<JourneyPage />} />
         <Route path='/onboarding' element={<OnboardingName />} />
-        
+        <Route path="/courses" element={<BrowseCourses />} />
+        <Route path="/course/:id" element={<CourseLanding />} />
+
         {/* 2️⃣ Add the protection here */}
-        <Route 
-          path='/adminDashboard' 
+        <Route
+          path='/adminDashboard'
           element={
             <ProtectedRoute requiredRole="admin">
               <AdminDashboard />
             </ProtectedRoute>
-          } 
+          }
         />
       </Routes>
       <Footer />
-      <Toaster/>
+      <Toaster />
     </div>
   )
 }

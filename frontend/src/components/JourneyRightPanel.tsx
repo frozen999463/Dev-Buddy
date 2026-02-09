@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Progress } from "@/components/ui/progress";
 import { Card, CardContent } from "@/components/ui/card";
 import { Flame, ArrowUp, Inbox } from "lucide-react";
@@ -7,28 +7,27 @@ const JourneyRightPanel = () => {
   const [showStreak, setShowStreak] = useState(false);
   return (
     <div className="space-y-8 bg-white relative">
-      
+
       {/* 📊 Perfectly Aligned Header Icons */}
       <div className="flex items-center justify-end gap-3 h-12 mb-4">
-        
+
         {/* Python Logo Wrapper */}
         <div className="flex items-center justify-center w-10 h-10 cursor-pointer hover:bg-neutral-50 rounded-xl transition-all" title="Current Course">
-           <img 
-            src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" 
-            alt="Python" 
+          <img
+            src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg"
+            alt="Python"
             className="w-7 h-7 object-contain"
-           />
+          />
         </div>
         {/* Streak Trigger */}
-        <div 
-          className={`relative flex items-center gap-2 px-3 py-2 rounded-2xl cursor-pointer transition-all active:scale-95 ${
-            showStreak ? "bg-orange-50" : "hover:bg-neutral-50"
-          }`}
+        <div
+          className={`relative flex items-center gap-2 px-3 py-2 rounded-2xl cursor-pointer transition-all active:scale-95 ${showStreak ? "bg-orange-50" : "hover:bg-neutral-50"
+            }`}
           onClick={() => setShowStreak(!showStreak)}
         >
           <span className="text-lg font-bold text-neutral-800 tabular-nums"></span>
           <Flame size={24} className="text-orange-500 fill-orange-500" />
-          
+
           {/* 🔥 The interactive Streak Card Popup */}
           {showStreak && <StreakCard />}
         </div>
@@ -58,7 +57,7 @@ const JourneyRightPanel = () => {
             <h3 className="font-bold text-neutral-800 text-lg">Daily Goals</h3>
             <button className="text-sky-500 text-sm font-bold hover:underline">View</button>
           </div>
-          
+
           <div className="space-y-8">
             <GoalItem label="Earn 60 XP" progress={0} total={60} />
             <GoalItem label="Complete 3 exercises" progress={0} total={3} />
@@ -72,14 +71,14 @@ const JourneyRightPanel = () => {
 const GoalItem = ({ label, progress, total }: { label: string, progress: number, total: number }) => (
   <div className="space-y-3 group cursor-pointer">
     <div className="flex justify-between items-end">
-        <p className="text-sm font-semibold text-neutral-600 group-hover:text-neutral-900 transition-colors tracking-tight">{label}</p>
-        <span className="text-xs text-neutral-400 font-bold tabular-nums">{progress}/{total}</span>
+      <p className="text-sm font-semibold text-neutral-600 group-hover:text-neutral-900 transition-colors tracking-tight">{label}</p>
+      <span className="text-xs text-neutral-400 font-bold tabular-nums">{progress}/{total}</span>
     </div>
     <div className="flex items-center gap-4">
-        <Progress value={(progress/total) * 100} className="h-2 flex-1 bg-neutral-100" />
-        <div className="w-9 h-9 rounded-xl bg-neutral-50 border border-neutral-100 flex items-center justify-center text-orange-500 shadow-sm group-hover:bg-white group-hover:border-orange-200 transition-all">
-            <Inbox size={16} />
-        </div>
+      <Progress value={(progress / total) * 100} className="h-2 flex-1 bg-neutral-100" />
+      <div className="w-9 h-9 rounded-xl bg-neutral-50 border border-neutral-100 flex items-center justify-center text-orange-500 shadow-sm group-hover:bg-white group-hover:border-orange-200 transition-all">
+        <Inbox size={16} />
+      </div>
     </div>
   </div>
 );

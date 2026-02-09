@@ -22,13 +22,12 @@ const StreakCard = () => {
           {days.map((day, i) => (
             <div key={i} className="flex flex-col items-center gap-3">
               <span className="text-[10px] font-bold text-orange-200/60 uppercase">{day}</span>
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${
-                day === currentDay 
-                ? "border-2 border-orange-400 bg-orange-800/40 shadow-inner" 
-                : "bg-orange-800/20"
-              }`}>
-                 {/* This would be a check or flame if completed */}
-                 {day === "S" && i === 6 ? <Flame size={14} className="text-orange-900/40" /> : null}
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${day === currentDay
+                  ? "border-2 border-orange-400 bg-orange-800/40 shadow-inner"
+                  : "bg-orange-800/20"
+                }`}>
+                {/* This would be a check or flame if completed */}
+                {day === "S" && i === 6 ? <Flame size={14} className="text-orange-900/40" /> : null}
               </div>
             </div>
           ))}

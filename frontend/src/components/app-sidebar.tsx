@@ -10,12 +10,8 @@ import {
   IconFileAi,
   IconFileDescription,
   IconFileWord,
-  IconFolder,
   IconHelp,
   IconInnerShadowTop,
-  IconListDetails,
-  IconMoneybag,
-  IconMoneybagHeart,
   IconReport,
   IconSearch,
   IconSettings,
@@ -45,27 +41,27 @@ const data = {
   navMain: [
     {
       title: "Dashboard",
-      url: "#",
+      url: "/adminDashboard?view=users",
       icon: IconDashboard,
     },
     {
       title: "Users",
-      url: "#",
+      url: "/adminDashboard?view=users",
       icon: IconUsers,
     },
     {
       title: "Analytics",
-      url: "#",
+      url: "/adminDashboard?view=analytics",
       icon: IconChartBar,
     },
     {
       title: "Courses",
-      url: "#",
+      url: "/adminDashboard?view=courses",
       icon: IconBook2,
     },
     {
       title: "Payments",
-      url: "#",
+      url: "/adminDashboard?view=payments",
       icon: IconCashBanknote,
     },
   ],
@@ -173,7 +169,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-         </SidebarContent>
+      </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />
       </SidebarFooter>
