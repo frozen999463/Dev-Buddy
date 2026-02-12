@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { Check, Star, Trophy, Loader2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
@@ -90,7 +91,7 @@ const CourseContents = ({ courseId }: { courseId?: string }) => {
                       }`} />
                   </div>
                 )}
-                <RoadmapNodeItem node={node} index={index} />
+                <RoadmapNodeItem node={node} index={index} courseId={courseId} />
               </div>
             </React.Fragment>
           );
@@ -101,7 +102,7 @@ const CourseContents = ({ courseId }: { courseId?: string }) => {
 };
 
 /* ⬢ Helper component for individual nodes */
-const RoadmapNodeItem = ({ node, index }: { node: Node; index: number }) => {
+const RoadmapNodeItem = ({ node, index, courseId }: { node: Node; index: number; courseId?: string }) => {
   const offsets = ["0px", "40px", "70px", "40px", "0px", "-40px", "-70px", "-40px"];
   const currentOffset = offsets[index % offsets.length];
 
@@ -113,24 +114,26 @@ const RoadmapNodeItem = ({ node, index }: { node: Node; index: number }) => {
   };
 
   return (
-    <div
-      className="relative z-10 py-4 group cursor-pointer transition-all hover:scale-110 active:scale-95"
-      style={{ transform: `translateX(${currentOffset})` }}
-    >
-      <div className={`${getColors()} w-16 h-16 rounded-2xl flex items-center justify-center border-b-4 transition-all active:translate-y-1 active:shadow-none`}>
-        {node.status === "completed" && <Check size={32} strokeWidth={3} />}
-        {node.status === "active" && node.type === "lesson" && <div className="w-4 h-4 rounded-full bg-white animate-pulse" />}
-        {node.type === "challenge" && <Star size={28} fill="currentColor" />}
-        {node.type === "quiz" && <Trophy size={28} fill="currentColor" />}
-      </div>
+    <Link to={`/course/${courseId}/learn/${node._id}`}>
+      <div
+        className="relative z-10 py-4 group cursor-pointer transition-all hover:scale-110 active:scale-95"
+        style={{ transform: `translateX(${currentOffset})` }}
+      >
+        <div className={`${getColors()} w-16 h-16 rounded-2xl flex items-center justify-center border-b-4 transition-all active:translate-y-1 active:shadow-none`}>
+          {node.status === "completed" && <Check size={32} strokeWidth={3} />}
+          {node.status === "active" && node.type === "lesson" && <div className="w-4 h-4 rounded-full bg-white animate-pulse" />}
+          {node.type === "challenge" && <Star size={28} fill="currentColor" />}
+          {node.type === "quiz" && <Trophy size={28} fill="currentColor" />}
+        </div>
 
-      <div className="absolute top-1/2 -translate-y-1/2 left-20 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50 pointer-events-none translate-x-4 group-hover:translate-x-0 duration-300">
-        <span className="bg-neutral-900 text-white px-3 py-1.5 rounded-xl text-xs font-bold shadow-xl flex items-center gap-2">
-          {node.title}
-          <Badge className="bg-white/20 text-[10px] py-0 border-none">{node.type}</Badge>
-        </span>
+        <div className="absolute top-1/2 -translate-y-1/2 left-20 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50 pointer-events-none translate-x-4 group-hover:translate-x-0 duration-300">
+          <span className="bg-neutral-900 text-white px-3 py-1.5 rounded-xl text-xs font-bold shadow-xl flex items-center gap-2">
+            {node.title}
+            <Badge className="bg-white/20 text-[10px] py-0 border-none">{node.type}</Badge>
+          </span>
+        </div>
       </div>
-    </div>
+    </Link>
   );
 };
 

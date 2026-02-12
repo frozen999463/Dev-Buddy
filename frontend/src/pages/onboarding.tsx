@@ -1,15 +1,18 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { getAuth } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 
-const courseOptions = [
-  { id: "python", label: "Python", icon: "🐍" },
-  { id: "html", label: "HTML", icon: "🌐" },
-  { id: "c", label: "C Program", icon: "©️" },
-  { id: "css", label: "CSS", icon: "🎨" },
-  { id: "react", label: "React", icon: "⚛️" },
-  { id: "javascript", label: "Java Script", icon: "📜" },
-];
+// Course icons mapping
+const courseIcons: Record<string, string> = {
+  python: "🐍",
+  html: "🌐",
+  css: "🎨",
+  javascript: "📜",
+  react: "⚛️",
+  c: "©️",
+  java: "☕",
+  default: "�"
+};
 
 const experienceOptions = [
   { id: "beginner", label: "Complete beginner", icon: "📊" },
@@ -32,20 +35,54 @@ const goalOptions = [
 export default function OnboardingName() {
   const [step, setStep] = useState(1);
   const [name, setName] = useState("");
-  const [selectedCourse, setSelectedCourse] = useState("");
+  const [selectedCourse, setSelectedCourse] = useState(""); // Will store course ID
+  const [selectedCourseName, setSelectedCourseName] = useState(""); // For display
   const [experienceLevel, setExperienceLevel] = useState("");
   const [learningGoal, setLearningGoal] = useState("");
   const [loading, setLoading] = useState(false);
+  const [courses, setCourses] = useState<any[]>([]);
+  const [loadingCourses, setLoadingCourses] = useState(true);
   const navigate = useNavigate();
+
+  // Fetch courses from the database
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/api/course");
+        const data = await response.json();
+        setCourses(data);
+      } catch (error) {
+        console.error("Failed to fetch courses:", error);
+      } finally {
+        setLoadingCourses(false);
+      }
+    };
+    fetchCourses();
+  }, []);
 
   const handleFinalSubmit = async () => {
     try {
       setLoading(true);
       const auth = getAuth();
       const user = auth.currentUser;
-      if (!user) return;
+
+      console.log("🔐 Current user:", user?.uid);
+
+      if (!user) {
+        alert("You must be logged in to complete onboarding");
+        return;
+      }
 
       const token = await user.getIdToken();
+
+      const payload = {
+        name,
+        selectedCourse,
+        experienceLevel,
+        learningGoal
+      };
+
+      console.log("📤 Sending onboarding data:", payload);
 
       const response = await fetch("http://localhost:5000/api/onboarding", {
         method: "PATCH",
@@ -53,19 +90,24 @@ export default function OnboardingName() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({
-          name,
-          selectedCourse,
-          experienceLevel,
-          learningGoal
-        }),
+        body: JSON.stringify(payload),
       });
 
-      if (!response.ok) throw new Error("Failed to save onboarding data");
+      console.log("📥 Response status:", response.status);
 
-      navigate("/journey");
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("❌ Error response:", errorData);
+        throw new Error("Failed to save onboarding data");
+      }
+
+      const data = await response.json();
+      console.log("✅ Onboarding successful:", data);
+
+      // Navigate to the selected course's journey page
+      navigate(`/journey/${selectedCourse}`);
     } catch (err) {
-      console.error(err);
+      console.error("❌ Onboarding error:", err);
       alert("Something went wrong");
     } finally {
       setLoading(false);
@@ -90,7 +132,7 @@ export default function OnboardingName() {
               {step === 1 && "Welcome to DevBuddy! What should we call you?"}
               {step === 2 && `Hello, ${name} Which course would you like to start with?`}
               {step === 3 && "What is your level of coding experience?"}
-              {step === 4 && `Why are you learning ${selectedCourse}?`}
+              {step === 4 && `Why are you learning ${selectedCourseName}?`}
             </p>
             {/* Speech bubble tail */}
             <div className="absolute top-0 -left-2 w-0 h-0 border-t-[10px] border-t-[#2D315E] border-l-[10px] border-l-transparent"></div>
@@ -121,22 +163,32 @@ export default function OnboardingName() {
 
           {step === 2 && (
             <div className="space-y-3">
-              <div className="grid grid-cols-2 gap-3">
-                {courseOptions.map((course) => (
-                  <button
-                    key={course.id}
-                    onClick={() => {
-                      setSelectedCourse(course.label);
-                      nextStep();
-                    }}
-                    className={`flex items-center gap-3 border-2 p-4 rounded-xl text-left transition-all hover:bg-gray-50 ${selectedCourse === course.label ? "border-indigo-500 bg-indigo-50" : "border-gray-100"
-                      }`}
-                  >
-                    <span className="text-2xl">{course.icon}</span>
-                    <span className="text-gray-700 font-medium">{course.label}</span>
-                  </button>
-                ))}
-              </div>
+              {loadingCourses ? (
+                <div className="text-center py-8 text-gray-500">Loading courses...</div>
+              ) : courses.length === 0 ? (
+                <div className="text-center py-8 text-gray-500">No courses available yet.</div>
+              ) : (
+                <div className="grid grid-cols-2 gap-3">
+                  {courses.map((course) => {
+                    const icon = courseIcons[course.title.toLowerCase()] || courseIcons.default;
+                    return (
+                      <button
+                        key={course._id}
+                        onClick={() => {
+                          setSelectedCourse(course._id);
+                          setSelectedCourseName(course.title);
+                          nextStep();
+                        }}
+                        className={`flex items-center gap-3 border-2 p-4 rounded-xl text-left transition-all hover:bg-gray-50 ${selectedCourse === course._id ? "border-indigo-500 bg-indigo-50" : "border-gray-100"
+                          }`}
+                      >
+                        <span className="text-2xl">{icon}</span>
+                        <span className="text-gray-700 font-medium">{course.title}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
               <button
                 onClick={prevStep}
                 className="w-full text-gray-500 font-medium pt-4 hover:text-gray-700"

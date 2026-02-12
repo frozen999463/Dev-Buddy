@@ -11,7 +11,8 @@ export default function Signup() {
     e.preventDefault();
     try {
       await signupWithEmail(email, password);
-      navigate("/login");
+      // Redirect to onboarding while user is still authenticated
+      navigate("/onboarding");
     } catch (err: any) {
       alert(err.message);
     }

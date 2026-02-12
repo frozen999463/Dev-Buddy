@@ -38,21 +38,19 @@ export async function verifyFirebaseToken(
     // 1️⃣ Verify Firebase token
     const decoded = await admin.auth().verifyIdToken(token);
 
-    // 2️⃣ Find user in MongoDB
+    // 2️⃣ Find user in MongoDB (optional for some routes like onboarding)
     const dbUser = await User.findOne({ uid: decoded.uid });
 
-    if (!dbUser) {
-      return res.status(401).json({ message: "User not found" });
-    }
-
-  req.user = {
-  uid: dbUser.uid,
-  email: dbUser.email,
-  role: dbUser.role,
-  onboarded: dbUser.onboarded,
-  selectedCourse: dbUser.selectedCourse,
-};
-
+    // Attach both Firebase and MongoDB user data
+    req.user = {
+      uid: decoded.uid,
+      email: decoded.email || "",
+      name: decoded.name,
+      firebase: decoded,
+      role: dbUser?.role || "user",
+      onboarded: dbUser?.onboarded || false,
+      selectedCourse: dbUser?.selectedCourse,
+    };
 
     next();
   } catch (error) {

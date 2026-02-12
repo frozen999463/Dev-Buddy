@@ -37,13 +37,16 @@ export default function Login() {
 
       // Redirect to admin dashboard if user is admin
 
-      if(data.role === "admin"){
+      if (data.role === "admin") {
         navigate("/adminDashboard");
         return;
       }
       // Redirect based on onboarding status
-      else if (data.onboarded) {
-        navigate("/journey");
+      else if (data.onboarded && data.selectedCourse) {
+        navigate(`/journey/${data.selectedCourse}`);
+      } else if (data.onboarded) {
+        // Fallback to courses page if no selected course
+        navigate("/courses");
       } else {
         navigate("/onboarding");
       }
@@ -72,16 +75,19 @@ export default function Login() {
 
       alert("Google login successful ✅");
 
-        // Redirect to admin dashboard if user is admin
+      // Redirect to admin dashboard if user is admin
 
-      if(data.role === "admin"){
+      if (data.role === "admin") {
         navigate("/adminDashboard");
         return;
       }
 
       // Redirect based on onboarding status
-      else if (data.onboarded) {
-        navigate("/journey");
+      else if (data.onboarded && data.selectedCourse) {
+        navigate(`/journey/${data.selectedCourse}`);
+      } else if (data.onboarded) {
+        // Fallback to courses page if no selected course
+        navigate("/courses");
       } else {
         navigate("/onboarding");
       }

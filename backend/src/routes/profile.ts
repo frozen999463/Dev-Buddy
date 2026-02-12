@@ -28,10 +28,30 @@ router.get("/profile", verifyFirebaseToken, async (req: AuthRequest, res) => {
 
 router.patch("/onboarding", verifyFirebaseToken, async (req: AuthRequest, res) => {
   try {
-    const { uid } = req.user!;
+    const { uid, email, name: firebaseName, firebase } = req.user!;
     const { name, selectedCourse, experienceLevel, learningGoal } = req.body;
 
-    const user = await User.findOneAndUpdate(
+    console.log("📝 Onboarding request received for uid:", uid);
+    console.log("📦 Data:", { name, selectedCourse, experienceLevel, learningGoal });
+
+    // First, check if user exists in MongoDB
+    let user = await User.findOne({ uid });
+
+    if (!user) {
+      // Create user if they don't exist
+      console.log("👤 User not found in MongoDB, creating new user...");
+      user = await User.create({
+        uid,
+        email,
+        name: firebaseName || null,
+        provider: firebase.sign_in_provider,
+        onboarded: false,
+      });
+      console.log("✅ User created in MongoDB:", user._id);
+    }
+
+    // Now update with onboarding data
+    user = await User.findOneAndUpdate(
       { uid },
       {
         name,
@@ -43,12 +63,10 @@ router.patch("/onboarding", verifyFirebaseToken, async (req: AuthRequest, res) =
       { new: true }
     );
 
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
+    console.log("✅ User updated successfully:", user);
     res.json(user);
   } catch (err) {
+    console.error("❌ Onboarding error:", err);
     res.status(500).json({ message: "Failed to update onboarding data" });
   }
 });

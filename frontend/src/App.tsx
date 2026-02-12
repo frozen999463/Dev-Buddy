@@ -12,6 +12,7 @@ import Home from './pages/home'
 import AboutUs from './pages/about'
 import ContactUs from './pages/contact_us'
 import JourneyPage from './pages/journey_page'
+import StudyPage from './pages/StudyPage'
 import OnboardingName from './pages/onboarding'
 import AdminDashboard from './pages/admin/Dashboard'
 import ProtectedRoute from './components/ProtectedRoute'
@@ -35,6 +36,7 @@ function App() {
         <Route path='/about' element={<AboutUs />} />
         <Route path='/contact_us' element={<ContactUs />} />
         <Route path='/journey/:id' element={<JourneyPage />} />
+        <Route path='/course/:courseId/learn/:nodeId' element={<StudyPage />} />
         <Route path='/onboarding' element={<OnboardingName />} />
         <Route path="/courses" element={<BrowseCourses />} />
         <Route path="/course/:id" element={<CourseLanding />} />
