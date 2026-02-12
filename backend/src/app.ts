@@ -4,6 +4,7 @@ import profileRoutes from "./routes/profile";
 import adminRoutes from "./routes/admin";
 import courseRoutes from "./routes/course";
 import nodeRoutes from "./routes/node";
+import progressRoutes from "./routes/progress";
 
 
 const app = express();
@@ -17,5 +18,6 @@ app.use("/api", profileRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/course", courseRoutes);
 app.use("/api/node", nodeRoutes);
+app.use("/api/progress", progressRoutes);
 
 export default app;

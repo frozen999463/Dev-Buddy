@@ -1,10 +1,42 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Progress } from "@/components/ui/progress";
 import { Card, CardContent } from "@/components/ui/card";
 import { Flame, ArrowUp, Inbox } from "lucide-react";
+import { getAuth } from "firebase/auth";
 import StreakCard from "./StreakCard";
+
 const JourneyRightPanel = () => {
   const [showStreak, setShowStreak] = useState(false);
+  const [stats, setStats] = useState({
+    totalXP: 0,
+    currentStreak: 0,
+    totalCompleted: 0,
+  });
+
+  useEffect(() => {
+    fetchStats();
+  }, []);
+
+  const fetchStats = async () => {
+    try {
+      const auth = getAuth();
+      const user = auth.currentUser;
+      if (!user) return;
+
+      const token = await user.getIdToken();
+      const res = await fetch("http://localhost:5000/api/progress/stats/me", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        setStats(data);
+      }
+    } catch (err) {
+      console.error("Failed to fetch stats:", err);
+    }
+  };
+
   return (
     <div className="space-y-8 bg-white relative">
 
@@ -25,7 +57,7 @@ const JourneyRightPanel = () => {
             }`}
           onClick={() => setShowStreak(!showStreak)}
         >
-          <span className="text-lg font-bold text-neutral-800 tabular-nums"></span>
+          <span className="text-lg font-bold text-neutral-800 tabular-nums">{stats.currentStreak}</span>
           <Flame size={24} className="text-orange-500 fill-orange-500" />
 
           {/* 🔥 The interactive Streak Card Popup */}

@@ -37,12 +37,44 @@ const CourseContents = ({ courseId }: { courseId?: string }) => {
               ...node,
               chapterTitle: chapter.title,
               chapterId: chapter._id || chapter.title,
-              // Set first lesson to active, others to locked for now
-              status: (flatNodes.length === 0) ? "active" : "locked"
+              status: "locked" // Will be updated based on progress
             });
           });
         });
       });
+
+      // Fetch user's progress for this course
+      try {
+        const token = await getAuthToken();
+        if (token) {
+          const progressRes = await fetch(`http://localhost:5000/api/progress/${courseId}`, {
+            headers: { Authorization: `Bearer ${token}` }
+          });
+
+          if (progressRes.ok) {
+            const progressData = await progressRes.json();
+            const completedNodeIds = new Set(
+              progressData.completedNodes.map((p: any) => p.nodeId)
+            );
+
+            // Update node statuses based on progress
+            flatNodes.forEach((node, index) => {
+              if (completedNodeIds.has(node._id)) {
+                node.status = "completed";
+              } else if (index === 0 || completedNodeIds.has(flatNodes[index - 1]._id)) {
+                // First node or previous node completed
+                node.status = "active";
+              } else {
+                node.status = "locked";
+              }
+            });
+          }
+        }
+      } catch (progressError) {
+        console.error("Failed to load progress:", progressError);
+        // Fallback: first node active, rest locked
+        if (flatNodes.length > 0) flatNodes[0].status = "active";
+      }
 
       setNodes(flatNodes);
     } catch (error) {
@@ -51,6 +83,21 @@ const CourseContents = ({ courseId }: { courseId?: string }) => {
       setLoading(false);
     }
   };
+
+  // Helper to get Firebase auth token
+  const getAuthToken = async () => {
+    try {
+      const { getAuth } = await import("firebase/auth");
+      const auth = getAuth();
+      const user = auth.currentUser;
+      return user ? await user.getIdToken() : null;
+    } catch {
+      return null;
+    }
+  };
+
+  // 🎯 Unified numeric offsets for the wavy path
+  const pathOffsets = [0, 40, 70, 40, 0, -40, -70, -40];
 
   if (loading) return (
     <div className="flex flex-col items-center justify-center py-20 animate-in fade-in">
@@ -66,10 +113,19 @@ const CourseContents = ({ courseId }: { courseId?: string }) => {
   );
 
   return (
-    <div className="flex flex-col items-center py-2 bg-white min-h-screen content-center">
+    <div className="flex flex-col items-center py-2 bg-white min-h-screen content-center overflow-x-hidden">
       <div className="relative w-full max-w-sm flex flex-col items-center">
         {nodes.map((node, index) => {
           const showDivider = index === 0 || nodes[index - 1].chapterId !== node.chapterId;
+
+          const currOffset = pathOffsets[index % pathOffsets.length];
+          const prevOffset = index > 0 ? pathOffsets[(index - 1) % pathOffsets.length] : 0;
+
+          // Geometry for calculation
+          const vDist = 96; // Precise vertical distance between node centers
+          const hDist = currOffset - prevOffset;
+          const angle = Math.atan2(hDist, vDist) * (180 / Math.PI);
+          const lineLength = Math.sqrt(hDist * hDist + vDist * vDist);
 
           return (
             <React.Fragment key={node._id || index}>
@@ -83,15 +139,20 @@ const CourseContents = ({ courseId }: { courseId?: string }) => {
                 </div>
               )}
               <div className="relative flex flex-col items-center w-full">
-                {/* 📏 Connecting Pipe */}
+                {/* 📏 Connecting Line (Diagonal) */}
                 {index !== 0 && !showDivider && (
-                  <div className={`w-3 h-16 -mt-2 mb-2 rounded-full ${node.status === "locked" ? "bg-neutral-100" : "bg-green-100"
-                    }`}>
-                    <div className={`h-full w-full rounded-full transition-all duration-1000 ${node.status === "completed" ? "bg-green-500" : "bg-transparent"
-                      }`} />
-                  </div>
+                  <div
+                    className="absolute border-l-2 border-dotted border-neutral-300 origin-top pointer-events-none"
+                    style={{
+                      height: `${lineLength}px`,
+                      top: "-48px", // Center of the previous node
+                      left: "50%",
+                      transform: `translateX(${prevOffset}px) rotate(${-angle}deg)`,
+                      zIndex: 0
+                    }}
+                  />
                 )}
-                <RoadmapNodeItem node={node} index={index} courseId={courseId} />
+                <RoadmapNodeItem node={node} index={index} courseId={courseId} offsets={pathOffsets} />
               </div>
             </React.Fragment>
           );
@@ -102,9 +163,8 @@ const CourseContents = ({ courseId }: { courseId?: string }) => {
 };
 
 /* ⬢ Helper component for individual nodes */
-const RoadmapNodeItem = ({ node, index, courseId }: { node: Node; index: number; courseId?: string }) => {
-  const offsets = ["0px", "40px", "70px", "40px", "0px", "-40px", "-70px", "-40px"];
-  const currentOffset = offsets[index % offsets.length];
+const RoadmapNodeItem = ({ node, index, courseId, offsets }: { node: Node; index: number; courseId?: string; offsets: number[] }) => {
+  const currentOffset = `${offsets[index % offsets.length]}px`;
 
   const getColors = () => {
     if (node.status === "locked") return "bg-neutral-200 text-neutral-400 border-neutral-300 shadow-[0_6px_0_0_#d4d4d4]";

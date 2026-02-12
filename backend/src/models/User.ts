@@ -11,6 +11,9 @@ const userSchema = new mongoose.Schema(
     selectedCourse: { type: String },
     experienceLevel: { type: String },
     learningGoal: { type: String },
+    totalXP: { type: Number, default: 0 },
+    currentStreak: { type: Number, default: 0 },
+    lastActivityDate: { type: Date },
   },
   { timestamps: true },
 );

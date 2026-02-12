@@ -2,10 +2,11 @@ import { useState } from "react";
 import { Check, XCircle, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-const QuizContent = ({ node, onComplete }: { node: any, onComplete: () => void }) => {
+const QuizContent = ({ node, onComplete }: { node: any, onComplete: (score: number) => void }) => {
     const [currentIdx, setCurrentIdx] = useState(0);
     const [selected, setSelected] = useState<number | null>(null);
     const [isChecked, setIsChecked] = useState(false);
+    const [correctCount, setCorrectCount] = useState(0);
 
     const questions = node.questions || [];
     if (questions.length === 0) return (
@@ -18,7 +19,12 @@ const QuizContent = ({ node, onComplete }: { node: any, onComplete: () => void }
     const isCorrect = selected === q.correctAnswer;
 
     const handleCheck = () => {
-        if (selected !== null) setIsChecked(true);
+        if (selected !== null) {
+            setIsChecked(true);
+            if (isCorrect) {
+                setCorrectCount(correctCount + 1);
+            }
+        }
     };
 
     const handleNext = () => {
@@ -27,7 +33,9 @@ const QuizContent = ({ node, onComplete }: { node: any, onComplete: () => void }
             setSelected(null);
             setIsChecked(false);
         } else {
-            onComplete();
+            // Calculate final score as percentage
+            const finalScore = Math.round((correctCount / questions.length) * 100);
+            onComplete(finalScore);
         }
     };
 
