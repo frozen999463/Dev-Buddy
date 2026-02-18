@@ -6,7 +6,7 @@ import BrowseCourses from './pages/BrowseCourses'
 import CourseLanding from './pages/CourseLanding'
 
 import Footer from './pages/footer'
-import { Navigate, Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import Signup from './pages/signup'
 import Home from './pages/home'
 import AboutUs from './pages/about'
@@ -24,9 +24,12 @@ const auth = getAuth(app);
 
 
 function App() {
+  const location = useLocation();
+  const isAdminPage = location.pathname.startsWith('/adminDashboard');
+
   return (
     <div className="w-full h-screen ">
-      <Header />
+      {!isAdminPage && <Header />}
       <Routes>
         <Route path="/" element={<Navigate to="home" />} />
         <Route path="/login" element={<Login />} />
@@ -51,7 +54,7 @@ function App() {
           }
         />
       </Routes>
-      <Footer />
+      {!isAdminPage && <Footer />}
       <Toaster />
     </div>
   )
