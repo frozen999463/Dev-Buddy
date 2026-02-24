@@ -40,7 +40,7 @@ function Header() {
         </nav>
 
         <div className="flex items-center gap-2 md:gap-4">
-          <Button asChild variant="outline" size="sm" className="font-semibold hidden sm:flex border-primary/20 hover:bg-primary/5 transition-all duration-300">
+          <Button asChild variant="secondary" size="sm" className="font-semibold hidden sm:flex hover:bg-secondary/80 transition-all duration-300">
             <Link to="/login">Log In</Link>
           </Button>
           <Button asChild variant="default" size="sm" className="font-semibold">
