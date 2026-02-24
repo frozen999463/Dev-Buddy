@@ -1,15 +1,12 @@
 
 "use client";
 
-import { Sidebar, SidebarItem, SidebarItemGroup, SidebarItems, SidebarLogo } from "flowbite-react";
-import { HiChartPie, HiInbox, HiShoppingBag, HiUser, HiViewBoards } from "react-icons/hi";
+import { Sidebar, SidebarItem, SidebarItemGroup, SidebarItems } from "flowbite-react";
+import { HiBookOpen, HiChartPie, HiInbox, HiUser, HiViewBoards } from "react-icons/hi";
 
 export function SideBar() {
   return (
-    <Sidebar aria-label="Sidebar with logo branding example">
-      <SidebarLogo href="#" img="/favicon.svg" imgAlt="Flowbite logo">
-        Flowbite
-      </SidebarLogo>
+    <Sidebar aria-label="Sidebar">
       <SidebarItems>
         <SidebarItemGroup>
           <SidebarItem href="#" icon={HiChartPie}>
@@ -24,8 +21,8 @@ export function SideBar() {
           <SidebarItem href="#" icon={HiUser}>
             Profile
           </SidebarItem>
-          <SidebarItem href="#" icon={HiShoppingBag}>
-            More
+          <SidebarItem href="/Courses" icon={HiBookOpen}>
+            Courses
           </SidebarItem>
         </SidebarItemGroup>
       </SidebarItems>

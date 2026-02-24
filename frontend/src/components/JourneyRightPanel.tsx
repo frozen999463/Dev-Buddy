@@ -43,14 +43,6 @@ const JourneyRightPanel = () => {
       {/* 📊 Perfectly Aligned Header Icons */}
       <div className="flex items-center justify-end gap-3 h-12 mb-4">
 
-        {/* Python Logo Wrapper */}
-        <div className="flex items-center justify-center w-10 h-10 cursor-pointer hover:bg-neutral-50 rounded-xl transition-all" title="Current Course">
-          <img
-            src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg"
-            alt="Python"
-            className="w-7 h-7 object-contain"
-          />
-        </div>
         {/* Streak Trigger */}
         <div
           className={`relative flex items-center gap-2 px-3 py-2 rounded-2xl cursor-pointer transition-all active:scale-95 ${showStreak ? "bg-orange-50" : "hover:bg-neutral-50"

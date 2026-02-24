@@ -28,32 +28,34 @@ function App() {
   const isAdminPage = location.pathname.startsWith('/adminDashboard');
 
   return (
-    <div className="w-full h-screen ">
+    <div className="flex flex-col min-h-screen">
       {!isAdminPage && <Header />}
-      <Routes>
-        <Route path="/" element={<Navigate to="home" />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/codeEditor" element={<CodeEditor />} />
-        <Route path="/home" element={<Home />} />
-        <Route path='/about' element={<AboutUs />} />
-        <Route path='/contact_us' element={<ContactUs />} />
-        <Route path='/journey/:id' element={<JourneyPage />} />
-        <Route path='/course/:courseId/learn/:nodeId' element={<StudyPage />} />
-        <Route path='/onboarding' element={<OnboardingName />} />
-        <Route path="/courses" element={<BrowseCourses />} />
-        <Route path="/course/:id" element={<CourseLanding />} />
+      <main className="flex-1">
+        <Routes>
+          <Route path="/" element={<Navigate to="home" />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/codeEditor" element={<CodeEditor />} />
+          <Route path="/home" element={<Home />} />
+          <Route path='/about' element={<AboutUs />} />
+          <Route path='/contact_us' element={<ContactUs />} />
+          <Route path='/journey/:id' element={<JourneyPage />} />
+          <Route path='/course/:courseId/learn/:nodeId' element={<StudyPage />} />
+          <Route path='/onboarding' element={<OnboardingName />} />
+          <Route path="/courses" element={<BrowseCourses />} />
+          <Route path="/course/:id" element={<CourseLanding />} />
 
-        {/* 2️⃣ Add the protection here */}
-        <Route
-          path='/adminDashboard'
-          element={
-            <ProtectedRoute requiredRole="admin">
-              <AdminDashboard />
-            </ProtectedRoute>
-          }
-        />
-      </Routes>
+          {/* 2️⃣ Add the protection here */}
+          <Route
+            path='/adminDashboard'
+            element={
+              <ProtectedRoute requiredRole="admin">
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </main>
       {!isAdminPage && <Footer />}
       <Toaster />
     </div>

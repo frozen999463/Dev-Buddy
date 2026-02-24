@@ -1,28 +1,50 @@
 import { Link } from "react-router-dom";
+import { Separator } from "@/components/ui/separator";
 
 export default function Footer() {
+  const currentYear = new Date().getFullYear();
+
   return (
-    <footer className="bg-white rounded-base shadow-xs ">
-      <div className="w-full max-w-screen-xl mx-auto p-4 md:py-8">
-        <div className="sm:flex sm:items-center sm:justify-between">
-          <a href="https://flowbite.com/" className="flex items-center mb-4 sm:mb-0 space-x-3 rtl:space-x-reverse">
-            <img src="https://flowbite.com/docs/images/logo.svg" className="h-7" alt="Flowbite Logo" />
-            <span className="text-heading self-center text-2xl font-semibold whitespace-nowrap">Flowbite</span>
-          </a>
-          <ul className="flex flex-wrap items-center mb-6 text-sm font-medium text-body sm:mb-0">
-             <Link to="/signup" className="text-blue-600 hover:underline font-medium">
-              about
+    <footer className="w-full border-t bg-background">
+      <div className="container mx-auto px-4 py-8 md:py-12">
+        <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
+          <div className="flex items-center gap-2">
+            <Link to="/home" className="flex items-center gap-2">
+              <img
+                src="/images/Devbuddylogo2.png"
+                className="h-6 w-6"
+                alt="DevBuddy Logo"
+              />
+              <span className="text-lg font-bold tracking-tight text-primary">
+                DevBuddy
+              </span>
             </Link>
-            <li><a href="#" className="hover:underline mr-4 md:mr-6">About</a></li>
-            <li><a href="#" className="hover:underline mr-4 md:mr-6">Privacy Policy</a></li>
-            <li><a href="#" className="hover:underline mr-4 md:mr-6">Licensing</a></li>
-            <li><a href="#" className="hover:underline">Contact</a></li>
-          </ul>
+          </div>
+
+          <nav className="flex flex-wrap items-center justify-center gap-6 text-sm font-medium text-muted-foreground">
+            <Link to="/home" className="hover:text-foreground transition-colors">
+              Home
+            </Link>
+            <Link to="/about" className="hover:text-foreground transition-colors">
+              About
+            </Link>
+            <Link to="/contact_us" className="hover:text-foreground transition-colors">
+              Contact Us
+            </Link>
+          </nav>
+
+          <div className="text-sm text-muted-foreground">
+            &copy; {currentYear} DevBuddy. All rights reserved.
+          </div>
         </div>
-        <hr className="my-6 border-default sm:mx-auto lg:my-8 " />
-        <span className="block text-sm text-body sm:text-center">
-          © 2023 <a href="https://flowbite.com/" className="hover:underline">Flowbite™</a>. All Rights Reserved.
-        </span>
+
+        <Separator className="my-8" />
+
+        <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
+          <p className="text-center text-xs leading-loose text-muted-foreground md:text-left">
+            Built with passion for developers. Empowering your learning journey.
+          </p>
+        </div>
       </div>
     </footer>
   );
