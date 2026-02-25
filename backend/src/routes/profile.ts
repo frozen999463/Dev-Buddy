@@ -71,4 +71,30 @@ router.patch("/onboarding", verifyFirebaseToken, async (req: AuthRequest, res) =
   }
 });
 
+router.patch("/select-course", verifyFirebaseToken, async (req: AuthRequest, res) => {
+  try {
+    const { uid } = req.user!;
+    const { courseId } = req.body;
+
+    if (!courseId) {
+      return res.status(400).json({ message: "Course ID is required" });
+    }
+
+    const user = await User.findOneAndUpdate(
+      { uid },
+      { selectedCourse: courseId },
+      { new: true }
+    );
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json({ message: "Primary course updated", user });
+  } catch (err) {
+    console.error("❌ Error updating selected course:", err);
+    res.status(500).json({ message: "Failed to update selected course" });
+  }
+});
+
 export default router;

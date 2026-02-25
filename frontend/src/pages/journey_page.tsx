@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import { SideBar } from "@/components/side_bar";
 import JourneyRightPanel from "@/components/JourneyRightPanel";
 import CourseContents from "@/components/CourseContents";
@@ -9,24 +8,6 @@ import { useParams, useNavigate } from "react-router-dom";
 const JourneyPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [courseTitle, setCourseTitle] = useState("Loading...");
-
-  useEffect(() => {
-    const fetchCourseTitle = async () => {
-      try {
-        const response = await fetch(`http://localhost:5000/api/course/${id}`);
-        if (response.ok) {
-          const data = await response.json();
-          setCourseTitle(data.title || "Course Roadmap");
-        }
-      } catch (error) {
-        console.error("Failed to fetch course title:", error);
-        setCourseTitle("Journey");
-      }
-    };
-
-    if (id) fetchCourseTitle();
-  }, [id]);
 
   return (
     <div className="flex min-h-screen bg-[#f8fafc] text-neutral-900">
@@ -41,10 +22,10 @@ const JourneyPage = () => {
             <Button
               variant="ghost"
               className="text-neutral-500 hover:text-neutral-900 p-0"
-              onClick={() => navigate(-1)}
+              onClick={() => navigate("/my-courses")}
             >
               <ChevronLeft className="h-5 w-5 mr-1" />
-              <span className="font-semibold text-lg">{courseTitle}</span>
+              <span className="font-semibold text-lg text-primary uppercase">My Courses</span>
             </Button>
           </div>
           <CourseContents courseId={id} />

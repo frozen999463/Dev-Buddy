@@ -1,93 +1,97 @@
 import { useState, useEffect, useRef } from "react";
 import Editor from "@monaco-editor/react";
-import { Button, TextInput } from "flowbite-react"; // TextInput for input box
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Play, Trash2, Send, ChevronLeft, ChevronRight } from "lucide-react";
 
 const LANGUAGES = [
   { label: "C", value: "c", monaco: "c" },
   { label: "Python", value: "python", monaco: "python" },
   { label: "JavaScript", value: "javascript", monaco: "javascript" },
+  { label: "Java", value: "java", monaco: "java" },
+  { label: "Dart", value: "dart", monaco: "dart" },
 ];
 
 export default function CodeEditor() {
-  const [code, setCode] = useState(`#include <stdio.h>
-
-int main() {
-    printf("Hello, DevBuddy!");
-    return 0;
-}`);
+  const [code, setCode] = useState(`#include <stdio.h>\n\nint main() {\n    printf("Hello, DevBuddy!");\n    return 0;\n}`);
   const [output, setOutput] = useState("");
   const [showProblem, setShowProblem] = useState(true);
   const [language, setLanguage] = useState(LANGUAGES[0]);
-  const [stdin, setStdin] = useState(""); // current input
+  const [stdin, setStdin] = useState("");
+  const [running, setRunning] = useState(false);
   const wsRef = useRef<WebSocket | null>(null);
+  const outputRef = useRef<HTMLPreElement>(null);
 
   useEffect(() => {
-    // Connect to backend WS
-    wsRef.current = new WebSocket("ws://localhost:3000");
+    // Connect to the code execution WebSocket server on port 3001
+    wsRef.current = new WebSocket("ws://localhost:3001");
 
-    wsRef.current.onopen = () => {
-      console.log("Connected to backend");
-    };
+    wsRef.current.onopen = () => console.log("✅ Connected to execution server");
 
     wsRef.current.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data);
-        if (data.stdout) setOutput((prev) => prev + data.stdout);
-        if (data.stderr) setOutput((prev) => prev + data.stderr);
+        if (data.stdout) {
+          setOutput((prev) => prev + data.stdout);
+          if (data.stdout.includes("Process exited")) setRunning(false);
+        }
+        if (data.stderr) {
+          setOutput((prev) => prev + data.stderr);
+          setRunning(false);
+        }
       } catch (e) {
-        console.error("Failed to parse websocket message", e);
+        console.error("Failed to parse WS message", e);
       }
     };
 
-    wsRef.current.onclose = () => console.log("WebSocket closed");
-
-    return () => {
-      wsRef.current?.close();
+    wsRef.current.onclose = () => {
+      console.log("WebSocket closed");
+      setRunning(false);
     };
+
+    return () => wsRef.current?.close();
   }, []);
 
-  // Run the program (initial run)
+  // Auto-scroll output
+  useEffect(() => {
+    if (outputRef.current) {
+      outputRef.current.scrollTop = outputRef.current.scrollHeight;
+    }
+  }, [output]);
+
   const runCode = () => {
     if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
       setOutput("Running...\n");
-      wsRef.current.send(
-        JSON.stringify({
-          type: "run", // specify run type
-          language: language.value,
-          code,
-        })
-      );
+      setRunning(true);
+      wsRef.current.send(JSON.stringify({ type: "run", language: language.value, code }));
     } else {
-      setOutput("Error: WebSocket not connected.");
+      setOutput("Error: Not connected to execution server.\nMake sure the backend is running.");
     }
   };
 
-  // Send input to running program
   const sendInput = () => {
-    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
-      wsRef.current.send(
-        JSON.stringify({
-          type: "input", // specify input type
-          data: stdin + "\n", // include newline for programs like scanf/input
-        })
-      );
-      setStdin(""); // clear input box
-    } else {
-      setOutput((prev) => prev + "\nError: WebSocket not connected.");
+    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN && stdin) {
+      wsRef.current.send(JSON.stringify({ type: "input", data: stdin + "\n" }));
+      setOutput((prev) => prev + stdin + "\n");
+      setStdin("");
     }
   };
 
   return (
-    <div className="h-screen bg-gray-900 text-white flex flex-col max-w">
+    <div className="h-screen bg-gray-950 text-white flex flex-col">
       {/* Top Bar */}
-      <div className="flex items-center justify-between px-4 py-2 border-b border-gray-700">
-        <h1 className="text-lg font-semibold">Online Compiler</h1>
+      <div className="flex items-center justify-between px-4 py-2 bg-gray-900 border-b border-gray-800">
+        <h1 className="text-base font-semibold tracking-tight text-gray-100">DevBuddy Compiler</h1>
         <div className="flex gap-2">
-          <Button size="sm" color="gray">
-            Share
-          </Button>
-          <Button size="sm" color="blue" onClick={runCode}>
-            Run
+          <Button
+            size="sm"
+            variant="default"
+            onClick={runCode}
+            disabled={running}
+            className="bg-green-600 hover:bg-green-700 text-white gap-1.5"
+          >
+            <Play className="h-3.5 w-3.5" />
+            {running ? "Running..." : "Run"}
           </Button>
         </div>
       </div>
@@ -95,51 +99,36 @@ int main() {
       {/* Main Content */}
       <div className="flex flex-1 overflow-hidden">
         {/* Problem Panel */}
-        <div
-          className={`bg-gray-800 border-r border-gray-700 transition-all duration-300 ${
-            showProblem ? "w-1/4 p-4" : "w-0 p-0 overflow-hidden"
-          }`}
-        >
-          {showProblem && (
-            <>
-              <h2 className="font-semibold mb-2">Problem</h2>
-              <p className="text-sm text-gray-300 mb-4">
-                Print <b>Hello, DevBuddy!</b>
-              </p>
-              <h3 className="font-semibold mb-1">Expected Input</h3>
-              <pre className="bg-black p-2 rounded text-gray-300 text-sm mb-4">
-                No input
-              </pre>
-              <h3 className="font-semibold mb-1">Expected Output</h3>
-              <pre className="bg-black p-2 rounded text-green-400 text-sm">
-                Hello, DevBuddy!
-              </pre>
-            </>
-          )}
-        </div>
+        {showProblem && (
+          <div className="w-64 bg-gray-900 border-r border-gray-800 flex-shrink-0 overflow-y-auto p-4">
+            <h2 className="font-semibold text-sm mb-3 text-gray-200">Problem</h2>
+            <p className="text-sm text-gray-400 mb-4">
+              Print <span className="text-white font-medium">Hello, DevBuddy!</span>
+            </p>
+            <h3 className="font-semibold text-xs uppercase text-gray-500 mb-1 tracking-wide">Expected Output</h3>
+            <pre className="bg-gray-950 p-2 rounded text-green-400 text-xs">Hello, DevBuddy!</pre>
+          </div>
+        )}
 
         {/* Editor Section */}
-        <div className="flex-1 border-r border-gray-700 flex flex-col relative">
+        <div className="flex-1 border-r border-gray-800 flex flex-col">
           {/* Toolbar */}
-          <div className="flex items-center gap-3 px-3 py-2 bg-gray-800 border-b border-gray-700">
+          <div className="flex items-center gap-3 px-3 py-1.5 bg-gray-900 border-b border-gray-800">
             <button
               onClick={() => setShowProblem(!showProblem)}
-              className="bg-gray-700 px-2 py-1 rounded text-xs hover:bg-gray-600"
+              className="text-gray-400 hover:text-white p-1 rounded transition-colors"
+              title="Toggle problem panel"
             >
-              {showProblem ? "❮" : "❯"}
+              {showProblem ? <ChevronLeft className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
             </button>
 
             <select
               value={language.value}
-              onChange={(e) =>
-                setLanguage(LANGUAGES.find((l) => l.value === e.target.value)!)
-              }
-              className="bg-gray-900 border border-gray-600 text-white text-sm rounded px-2 py-1 focus:outline-none"
+              onChange={(e) => setLanguage(LANGUAGES.find((l) => l.value === e.target.value)!)}
+              className="bg-gray-800 border border-gray-700 text-gray-200 text-sm rounded px-2 py-1 focus:outline-none focus:border-gray-500"
             >
               {LANGUAGES.map((lang) => (
-                <option key={lang.value} value={lang.value}>
-                  {lang.label}
-                </option>
+                <option key={lang.value} value={lang.value}>{lang.label}</option>
               ))}
             </select>
           </div>
@@ -155,36 +144,49 @@ int main() {
               fontSize: 14,
               minimap: { enabled: false },
               scrollBeyondLastLine: false,
+              padding: { top: 12 },
             }}
           />
         </div>
 
-        {/* Output */}
-        <div className="w-1/4 p-4 bg-gray-800 flex flex-col">
-          <div className="flex justify-between items-center mb-2">
-            <h2 className="font-semibold">Output</h2>
-            <Button size="xs" color="gray" onClick={() => setOutput("")}>
+        {/* Output Panel */}
+        <div className="w-80 bg-gray-900 flex flex-col flex-shrink-0">
+          <div className="flex justify-between items-center px-4 py-2 border-b border-gray-800">
+            <h2 className="text-sm font-semibold text-gray-200">Output</h2>
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() => setOutput("")}
+              className="text-gray-400 hover:text-white gap-1 h-7 px-2"
+            >
+              <Trash2 className="h-3.5 w-3.5" />
               Clear
             </Button>
           </div>
 
-          <pre className="bg-black p-3 rounded text-green-400 h-full overflow-auto flex-1">
-            {output || "Program output will appear here"}
+          <pre
+            ref={outputRef}
+            className="flex-1 p-4 text-green-400 text-sm overflow-auto font-mono bg-gray-950 m-2 rounded-lg whitespace-pre-wrap"
+          >
+            {output || "Program output will appear here..."}
           </pre>
 
-          {/* Input Box */}
-          <div className="flex gap-2 mt-2">
-            <TextInput
-              placeholder="Enter input..."
+          {/* Stdin Input */}
+          <div className="flex gap-2 p-2 border-t border-gray-800">
+            <Input
+              placeholder="Send input to program..."
               value={stdin}
               onChange={(e) => setStdin(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") sendInput();
-              }}
-              className="flex-1 text-black"
+              onKeyDown={(e) => { if (e.key === "Enter") sendInput(); }}
+              className="flex-1 bg-gray-800 border-gray-700 text-white placeholder:text-gray-500 text-sm h-8"
             />
-            <Button size="sm" color="green" onClick={sendInput}>
-              Send
+            <Button
+              size="sm"
+              onClick={sendInput}
+              disabled={!stdin}
+              className="bg-blue-600 hover:bg-blue-700 h-8 gap-1"
+            >
+              <Send className="h-3.5 w-3.5" />
             </Button>
           </div>
         </div>
