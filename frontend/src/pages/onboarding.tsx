@@ -121,7 +121,7 @@ export default function OnboardingName() {
     <div className="min-h-[calc(100vh-64px)] flex flex-col bg-[#fdfdfd] relative font-sans">
 
       {/* Top Left - Mascot & Speech Bubble */}
-      <div className="flex items-start gap-6 px-16 md:px-24 pt-6">
+      <div className="flex items-start gap-6 pl-28 md:pl-40 pt-6">
         <img
           src="/images/onboarding_mascot.png"
           alt="Mascot"
@@ -142,7 +142,7 @@ export default function OnboardingName() {
 
       {/* Centered Selection Card + Buttons */}
       <div className="flex-1 flex flex-col items-center justify-center px-6 -mt-4">
-        <div className="bg-white p-6 md:p-8 rounded-[2.5rem] border border-gray-400 shadow-[15px_15px_0px_rgba(0,0,0,0.1)] w-full max-w-md min-h-[300px] flex flex-col justify-center">
+        <div className="bg-[#373F6E] p-5 md:p-6 rounded-[2rem] border border-gray-400 shadow-[12px_12px_0px_rgba(0,0,0,0.1)] w-full max-w-sm min-h-[220px] flex flex-col justify-center">
 
           {step === 1 && (
             <div className="space-y-8 text-center">
@@ -151,7 +151,7 @@ export default function OnboardingName() {
                 placeholder="Enter your name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full border-2 border-gray-200 rounded-xl px-5 py-3 text-lg bg-white shadow-inner focus:border-[#373F6E] outline-none transition-all"
+                className="w-full border-2 border-gray-200 rounded-xl px-5 py-3 text-lg bg-[#98A1EC] shadow-inner focus:border-[#373F6E] outline-none transition-all placeholder:text-white text-white"
               />
             </div>
           )}
@@ -159,7 +159,7 @@ export default function OnboardingName() {
           {step === 2 && (
             <div className="space-y-4">
               {loadingCourses ? (
-                <div className="text-center py-8 text-gray-500">Loading courses...</div>
+                <div className="text-center py-8 text-grey">Loading courses...</div>
               ) : courses.length === 0 ? (
                 <div className="text-center py-8 text-gray-500">No courses available yet.</div>
               ) : (
@@ -173,13 +173,13 @@ export default function OnboardingName() {
                           setSelectedCourse(course._id);
                           setSelectedCourseName(course.title);
                         }}
-                        className={`flex items-center gap-4 border-[3px] p-4 rounded-xl text-left transition-all shadow-sm ${selectedCourse === course._id
-                          ? "border-[#373F6E] bg-gray-50 bg-opacity-50"
-                          : "border-gray-300 hover:border-gray-500"
+                        className={`flex items-center gap-4 border-[3px] p-4 rounded-xl text-left transition-all shadow-sm bg-[#98A1EC] ${selectedCourse === course._id
+                          ? "border-white"
+                          : "border-transparent hover:border-white/50"
                           }`}
                       >
                         <span className="text-2xl">{icon}</span>
-                        <span className="text-[#1a1a1a] font-bold text-lg">{course.title}</span>
+                        <span className="text-white font-bold text-lg">{course.title}</span>
                       </button>
                     );
                   })}
@@ -194,17 +194,17 @@ export default function OnboardingName() {
                 <button
                   key={opt.id}
                   onClick={() => setExperienceLevel(opt.label)}
-                  className={`w-full flex items-center gap-4 border-[2px] p-4 rounded-xl text-left transition-all shadow-sm ${experienceLevel === opt.label
-                    ? "border-[#373F6E] bg-gray-50"
-                    : "border-gray-300 hover:border-gray-400"
+                  className={`w-full flex items-center gap-4 border-[2px] p-4 rounded-xl text-left transition-all shadow-sm bg-[#98A1EC] ${experienceLevel === opt.label
+                    ? "border-white"
+                    : "border-transparent hover:border-white/50"
                     }`}
                 >
-                  <div className="flex items-end gap-1 h-8 w-10 border-r-2 border-gray-200 pr-2">
-                    <div className={`w-1.5 rounded-t-sm bg-[#373F6E] ${opt.id === 'beginner' ? 'h-2 opacity-30' : opt.id === 'some-exp' ? 'h-4 opacity-50' : opt.id === 'confident' ? 'h-6 opacity-70' : 'h-8'}`}></div>
-                    <div className={`w-1.5 rounded-t-sm bg-[#373F6E] ${opt.id === 'beginner' ? 'h-0' : opt.id === 'some-exp' ? 'h-2' : opt.id === 'confident' ? 'h-4' : 'h-6'}`}></div>
-                    <div className={`w-1.5 rounded-t-sm bg-[#373F6E] ${opt.id === 'beginner' ? 'h-0' : opt.id === 'some-exp' ? 'h-0' : opt.id === 'confident' ? 'h-2' : 'h-4'}`}></div>
+                  <div className="flex items-end gap-1 h-8 w-10 border-r-2 border-white/40 pr-2">
+                    <div className={`w-1.5 rounded-t-sm bg-white ${opt.id === 'beginner' ? 'h-2 opacity-30' : opt.id === 'some-exp' ? 'h-4 opacity-50' : opt.id === 'confident' ? 'h-6 opacity-70' : 'h-8'}`}></div>
+                    <div className={`w-1.5 rounded-t-sm bg-white ${opt.id === 'beginner' ? 'h-0' : opt.id === 'some-exp' ? 'h-2' : opt.id === 'confident' ? 'h-4' : 'h-6'}`}></div>
+                    <div className={`w-1.5 rounded-t-sm bg-white ${opt.id === 'beginner' ? 'h-0' : opt.id === 'some-exp' ? 'h-0' : opt.id === 'confident' ? 'h-2' : 'h-4'}`}></div>
                   </div>
-                  <span className="text-[#373F6E] font-bold text-base md:text-lg">{opt.label}</span>
+                  <span className="text-white font-bold text-base md:text-lg">{opt.label}</span>
                 </button>
               ))}
             </div>
@@ -217,13 +217,13 @@ export default function OnboardingName() {
                   <button
                     key={opt.id}
                     onClick={() => setLearningGoal(opt.label)}
-                    className={`flex items-center gap-4 border-[2px] p-3 rounded-xl text-left transition-all shadow-sm ${learningGoal === opt.label
-                      ? "border-[#373F6E] bg-gray-50"
-                      : "border-gray-300 hover:border-gray-400"
+                    className={`flex items-center gap-4 border-[2px] p-3 rounded-xl text-left transition-all shadow-sm bg-[#98A1EC] ${learningGoal === opt.label
+                      ? "border-white"
+                      : "border-transparent hover:border-white/50"
                       }`}
                   >
                     <span className="text-xl">{opt.icon}</span>
-                    <span className="text-[#373F6E] font-bold text-sm md:text-base">{opt.label}</span>
+                    <span className="text-white font-bold text-sm md:text-base">{opt.label}</span>
                   </button>
                 ))}
               </div>
@@ -233,11 +233,11 @@ export default function OnboardingName() {
         </div>
 
         {/* Action Buttons - Directly under the card */}
-        <div className="flex items-center justify-center gap-6 mt-8 mb-10">
+        <div className="flex items-center justify-center gap-6 mt-8 mb-10 z-10">
           {step > 1 && (
             <button
               onClick={prevStep}
-              className="px-8 py-3 text-gray-400 font-black text-xl uppercase tracking-widest hover:text-[#373F6E] transition-all font-['Bebas_Neue']"
+              className="px-8 py-3 text-gray-400 font-black text-xl uppercase tracking-widest hover:text-[#373F6E] transition-all font-['Bebas_Neue'] cursor-pointer"
             >
               BACK
             </button>
@@ -245,7 +245,7 @@ export default function OnboardingName() {
           <button
             onClick={step === 4 ? handleFinalSubmit : nextStep}
             disabled={(step === 1 && !name.trim()) || (step === 2 && !selectedCourse) || (step === 3 && !experienceLevel) || (step === 4 && !learningGoal) || loading}
-            className="px-12 py-3 rounded-2xl bg-[#373F6E] text-white font-black text-2xl uppercase tracking-widest hover:bg-[#2d3454] transition-all shadow-xl disabled:opacity-50 font-['Bebas_Neue']"
+            className="px-12 py-3 rounded-2xl bg-[#373F6E] text-white font-black text-2xl uppercase tracking-widest hover:bg-[#2d3454] transition-all shadow-xl disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer font-['Bebas_Neue']"
           >
             {loading ? "..." : (step === 4 ? "GET STARTED" : "CONTINUE")}
           </button>
