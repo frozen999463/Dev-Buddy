@@ -25,4 +25,9 @@ export async function loginWithGoogle() {
   return signInWithPopup(auth, googleProvider);
 }
 
+// LOGOUT
+export async function logout() {
+  return auth.signOut();
+}
+
 export { auth };
