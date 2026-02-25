@@ -153,11 +153,12 @@ const CourseLanding = () => {
                             </div>
 
                             <Button
-                                onClick={() => navigate(`/journey/${id}`)}
+                                onClick={handleStartLearning}
+                                disabled={enrolling}
                                 className="w-full py-7 text-lg font-bold shadow-lg hover:shadow-primary/20 group"
                             >
-                                Start Learning Now
-                                <ArrowLeft className="h-5 w-5 ml-2 rotate-180 group-hover:translate-x-1 transition-transform" />
+                                {enrolling ? "Enrolling..." : "Start Learning Now"}
+                                {!enrolling && <ArrowLeft className="h-5 w-5 ml-2 rotate-180 group-hover:translate-x-1 transition-transform" />}
                             </Button>
 
                             <div className="space-y-3 pt-4">
