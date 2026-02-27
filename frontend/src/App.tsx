@@ -13,6 +13,7 @@ import AboutUs from './pages/about'
 import ContactUs from './pages/contact_us'
 import JourneyPage from './pages/journey_page'
 import StudyPage from './pages/StudyPage'
+import MyCourses from './pages/MyCourses'
 import OnboardingName from './pages/onboarding'
 import ReviewPage from './pages/rewie'
 import AdminDashboard from './pages/admin/Dashboard'
@@ -21,8 +22,6 @@ import { Toaster } from './components/ui/sonner'
 /*
 const auth = getAuth(app);
 */
-
-
 
 function App() {
   const location = useLocation();
@@ -46,6 +45,7 @@ function App() {
           <Route path='/review' element={<ReviewPage />} />
           <Route path="/courses" element={<BrowseCourses />} />
           <Route path="/course/:id" element={<CourseLanding />} />
+          <Route path="/my-courses" element={<MyCourses />} />
 
           {/* 2️⃣ Add the protection here */}
           <Route

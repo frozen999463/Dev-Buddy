@@ -28,7 +28,7 @@ function Header() {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between mx-auto px-4 md:px-6">
         <div className="flex items-center gap-2">
-          <Link to="/home" className="flex items-center gap-2">
+          <Link to={user ? "/my-courses" : "/home"} className="flex items-center gap-2">
             <img
               src="/images/Devbuddylogo2.png"
               className="h-10 w-10"
@@ -41,10 +41,14 @@ function Header() {
         </div>
 
         <nav className="hidden md:flex items-center gap-8 text-base font-bold text-[#1a1a1a]">
-          <Link to="/home" className="transition-colors hover:text-[#373F6E]">Home</Link>
-          <Link to="/review" className="transition-colors hover:text-[#373F6E]">Review</Link>
+          {!user && <Link to="/home" className="transition-colors hover:text-[#373F6E]">Home</Link>}
+          {user && (
+            <>
+              <Link to="/my-courses" className="transition-colors hover:text-[#373F6E]">My Courses</Link>
+              <Link to="/courses" className="transition-colors hover:text-[#373F6E]">Explore</Link>
+            </>
+          )}
           <Link to="/about" className="transition-colors hover:text-[#373F6E]">About us</Link>
-          <Link to="/course" className="transition-colors hover:text-[#373F6E]">Course</Link>
           <Link to="/contact_us" className="transition-colors hover:text-[#373F6E]">Contact us</Link>
         </nav>
 

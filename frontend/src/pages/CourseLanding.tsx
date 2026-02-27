@@ -4,12 +4,43 @@ import { BookOpen, Clock, Award, CheckCircle2, ArrowLeft, PlayCircle } from "luc
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
+import { useAuth } from "@/context/AuthContext";
+import { toast } from "sonner";
 
 const CourseLanding = () => {
     const { id } = useParams();
     const navigate = useNavigate();
+    const { user } = useAuth();
     const [course, setCourse] = useState<any>(null);
     const [loading, setLoading] = useState(true);
+    const [enrolling, setEnrolling] = useState(false);
+
+    const handleStartLearning = async () => {
+        try {
+            setEnrolling(true);
+            const token = await user?.getIdToken();
+
+            // Set as primary course if logged in
+            if (token) {
+                await fetch("http://localhost:5000/api/profile/select-course", {
+                    method: "PATCH",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({ courseId: id }),
+                });
+            }
+
+            navigate(`/journey/${id}`);
+        } catch (error) {
+            console.error("Error starting course:", error);
+            toast.error("Failed to start course. Moving you to the roadmap anyway!");
+            navigate(`/journey/${id}`);
+        } finally {
+            setEnrolling(false);
+        }
+    };
 
     useEffect(() => {
         if (id) fetchCourseDetails();
@@ -120,13 +151,14 @@ const CourseLanding = () => {
                                 <span className="text-4xl font-black text-primary">FREE</span>
                                 <span className="text-muted-foreground line-through text-lg">$89.99</span>
                             </div>
-                            
-                            <Button 
-                                onClick={() => navigate(`/journey/${id}`)}
+
+                            <Button
+                                onClick={handleStartLearning}
+                                disabled={enrolling}
                                 className="w-full py-7 text-lg font-bold shadow-lg hover:shadow-primary/20 group"
                             >
-                                Start Learning Now
-                                <ArrowLeft className="h-5 w-5 ml-2 rotate-180 group-hover:translate-x-1 transition-transform" />
+                                {enrolling ? "Enrolling..." : "Start Learning Now"}
+                                {!enrolling && <ArrowLeft className="h-5 w-5 ml-2 rotate-180 group-hover:translate-x-1 transition-transform" />}
                             </Button>
 
                             <div className="space-y-3 pt-4">

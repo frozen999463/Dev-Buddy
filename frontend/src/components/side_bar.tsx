@@ -21,8 +21,8 @@ export function SideBar() {
           <SidebarItem href="#" icon={HiUser}>
             Profile
           </SidebarItem>
-          <SidebarItem href="/Courses" icon={HiBookOpen}>
-            Courses
+          <SidebarItem href="/courses" icon={HiBookOpen}>
+            View other courses
           </SidebarItem>
         </SidebarItemGroup>
       </SidebarItems>

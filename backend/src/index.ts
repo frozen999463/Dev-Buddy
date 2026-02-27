@@ -3,6 +3,7 @@ dotenv.config();
 
 import app from "./app";
 import { connectDB } from "./db/mongo";
+import "./execution/server"; // 🐳 Start the code execution WebSocket server on port 3001
 
 const PORT = process.env.PORT || 5000;
 

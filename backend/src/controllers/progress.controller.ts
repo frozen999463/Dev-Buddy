@@ -1,8 +1,12 @@
 import { Response } from "express";
+import mongoose from "mongoose";
 import { AuthRequest } from "../middleware/auth";
 import { Progress } from "../models/Progress";
 import { User } from "../models/User";
 import { Node } from "../models/Node";
+import { Course } from "../models/Course";
+import { Section } from "../models/Section";
+import { Chapter } from "../models/Chapter";
 
 // XP rewards by node type
 const XP_REWARDS = {
@@ -45,6 +49,74 @@ export const getCourseProgress = async (req: AuthRequest, res: Response) => {
   } catch (err) {
     console.error("❌ Error fetching progress:", err);
     res.status(500).json({ message: "Failed to fetch progress" });
+  }
+};
+
+// Get all courses user has progress in
+export const getEnrolledCourses = async (req: AuthRequest, res: Response) => {
+  try {
+    const userId = req.user?.uid;
+    if (!userId) return res.status(401).json({ message: "Unauthorized" });
+
+    const user = await User.findOne({ uid: userId });
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    // Get all unique courses where user has progress
+    const progressRecords = await Progress.find({ userId: user._id });
+    const courseIds = new Set(progressRecords.map(p => p.courseId.toString()));
+
+    // Also include selectedCourse if not already present
+    if (user.selectedCourse) {
+      // Try to find if user.selectedCourse is an ID or slug
+      const primaryCourse = await Course.findOne({
+        $or: [
+          { _id: mongoose.isValidObjectId(user.selectedCourse) ? user.selectedCourse : undefined },
+          { slug: user.selectedCourse }
+        ].filter(Boolean) as any[]
+      });
+
+      if (primaryCourse) {
+        courseIds.add(primaryCourse._id.toString());
+      }
+    }
+
+    const enrolledCourses = [];
+
+    for (const courseId of courseIds) {
+      const course = await Course.findById(courseId);
+      if (!course) continue;
+
+      // Calculate total nodes in this course
+      const sections = await Section.find({ courseId: course._id });
+      const sectionIds = sections.map(s => s._id);
+
+      const chapters = await Chapter.find({ sectionId: { $in: sectionIds } });
+      const chapterIds = chapters.map(c => c._id);
+
+      const totalNodes = await Node.countDocuments({ chapterId: { $in: chapterIds } });
+      const completedNodes = await Progress.countDocuments({
+        userId: user._id,
+        courseId: course._id,
+        completed: true
+      });
+
+      enrolledCourses.push({
+        _id: course._id,
+        title: course.title,
+        slug: course.slug,
+        thumbnail: course.thumbnail,
+        description: course.description,
+        totalNodes,
+        completedNodes,
+        progress: totalNodes > 0 ? Math.round((completedNodes / totalNodes) * 100) : 0,
+        isPrimary: user.selectedCourse === course._id.toString() || user.selectedCourse === course.slug
+      });
+    }
+
+    res.json(enrolledCourses);
+  } catch (err) {
+    console.error("❌ Error fetching enrolled courses:", err);
+    res.status(500).json({ message: "Failed to fetch enrolled courses" });
   }
 };
 

@@ -88,7 +88,7 @@ const StudyPage = () => {
     if (!node) return <div className="p-20 text-center">Node not found</div>;
 
     return (
-        <div className="h-screen flex flex-col bg-white relative">
+        <div className="flex-1 flex flex-col bg-white relative">
             {/* XP Earned Animation */}
             {showXP && (
                 <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/50 animate-in fade-in">
@@ -100,25 +100,32 @@ const StudyPage = () => {
                 </div>
             )}
 
-            {/* Upper Header: Progress & Close */}
-            <header className="px-6 py-4 border-b flex items-center gap-6">
-                <Button variant="ghost" size="icon" onClick={() => navigate(`/journey/${courseId}`)}>
-                    <X className="h-6 w-6 text-neutral-400" />
-                </Button>
-                <div className="flex-1">
-                    <Progress value={45} className="h-3 bg-neutral-100" />
-                </div>
-                <div className="flex items-center gap-2">
-                    <div className="bg-orange-500 text-white px-3 py-1 rounded-2xl text-xs font-black uppercase tracking-tighter">STREAK 5</div>
-                </div>
-            </header>
+            {/* Upper Header: Progress & Close — hidden for challenges */}
+            {node.type?.toLowerCase() !== "challenge" && (
+                <header className="px-6 py-4 border-b flex items-center gap-6">
+                    <Button variant="ghost" size="icon" onClick={() => navigate(`/journey/${courseId}`)}>
+                        <X className="h-6 w-6 text-neutral-400" />
+                    </Button>
+                    <div className="flex-1">
+                        <Progress value={45} className="h-3 bg-neutral-100" />
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <div className="bg-orange-500 text-white px-3 py-1 rounded-2xl text-xs font-black uppercase tracking-tighter">STREAK 5</div>
+                    </div>
+                </header>
+            )}
 
             <main className="flex-1 overflow-auto flex justify-center">
-                <div className="w-full max-w-4xl p-8">
-                    {node.type === "lesson" && <LessonContent node={node} />}
-                    {node.type === "quiz" && <QuizContent node={node} onComplete={(score) => handleComplete(score)} />}
-                    {node.type === "challenge" && <ChallengeContent node={node} />}
-                </div>
+                {node.type?.toLowerCase() === "challenge" ? (
+                    <div className="w-full px-4 py-0">
+                        <ChallengeContent node={node} />
+                    </div>
+                ) : (
+                    <div className="w-full max-w-4xl p-8">
+                        {node.type === "lesson" && <LessonContent node={node} />}
+                        {node.type === "quiz" && <QuizContent node={node} onComplete={(score) => handleComplete(score)} />}
+                    </div>
+                )}
             </main>
 
             {/* Footer Navigation */}
