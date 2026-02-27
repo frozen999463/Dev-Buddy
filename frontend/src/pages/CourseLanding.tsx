@@ -19,10 +19,11 @@ const CourseLanding = () => {
         try {
             setEnrolling(true);
             const token = await user?.getIdToken();
+            console.log("🚀 [handleStartLearning] Starting enrollment for ID:", id, "User:", user?.uid);
 
             // Set as primary course if logged in
             if (token) {
-                await fetch("http://localhost:5000/api/profile/select-course", {
+                const response = await fetch("http://localhost:5000/api/profile/select-course", {
                     method: "PATCH",
                     headers: {
                         "Content-Type": "application/json",
@@ -30,11 +31,22 @@ const CourseLanding = () => {
                     },
                     body: JSON.stringify({ courseId: id }),
                 });
+
+                if (response.ok) {
+                    const resData = await response.json();
+                    console.log("✅ [handleStartLearning] Successfully enrolled:", resData);
+                } else {
+                    const errData = await response.json();
+                    console.warn("⚠️ [handleStartLearning] Enrollment request failed:", errData);
+                }
+            } else {
+                console.log("ℹ️ [handleStartLearning] No token found, user might not be logged in.");
             }
 
+            console.log("🏁 [handleStartLearning] Navigating to journey roadmap...");
             navigate(`/journey/${id}`);
         } catch (error) {
-            console.error("Error starting course:", error);
+            console.error("❌ [handleStartLearning] Error starting course:", error);
             toast.error("Failed to start course. Moving you to the roadmap anyway!");
             navigate(`/journey/${id}`);
         } finally {
