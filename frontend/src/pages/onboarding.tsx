@@ -141,8 +141,8 @@ export default function OnboardingName() {
       </div>
 
       {/* Centered Selection Card + Buttons */}
-      <div className="flex-1 flex flex-col items-center justify-center px-6 -mt-4">
-        <div className="bg-white p-5 md:p-6 rounded-[2rem] border border-gray-300 shadow-[8px_8px_0px_rgba(0,0,0,0.08)] w-full max-w-xl min-h-[220px] flex flex-col justify-center">
+      <div className="flex-1 flex flex-col items-center justify-center px-6 -mt-8">
+        <div className="bg-white p-6 md:p-8 rounded-[2.5rem] border border-gray-200 shadow-[0px_10px_30px_rgba(0,0,0,0.05)] w-full max-w-md flex flex-col justify-center transition-all duration-300">
 
           {step === 1 && (
             <div className="space-y-8 text-center">
@@ -151,7 +151,7 @@ export default function OnboardingName() {
                 placeholder="Enter your name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full border-2 border-gray-200 rounded-xl px-5 py-3 text-lg bg-[#373F6E] shadow-inner focus:border-[#373F6E] outline-none transition-all placeholder:text-white text-white"
+                className="w-full border-2 border-gray-100 rounded-2xl px-5 py-4 text-xl bg-[#373F6E] shadow-lg focus:ring-4 focus:ring-[#373F6E]/20 outline-none transition-all placeholder:text-gray-400 text-white text-center"
               />
             </div>
           )}
@@ -230,25 +230,26 @@ export default function OnboardingName() {
             </div>
           )}
 
-        </div>
 
-        {/* Action Buttons - Directly under the card */}
-        <div className="flex items-center justify-center gap-6 mt-8 mb-10 z-10">
-          {step > 1 && (
+          {/* Action Buttons - Now inside the card */}
+          <div className="flex items-center justify-center gap-4 mt-10 z-10">
+            {step > 1 && (
+              <button
+                onClick={prevStep}
+                className="px-6 py-2 text-gray-400 font-bold text-lg uppercase tracking-wider hover:text-[#373F6E] transition-all font-['Bebas_Neue'] cursor-pointer"
+              >
+                BACK
+              </button>
+            )}
             <button
-              onClick={prevStep}
-              className="px-8 py-3 text-gray-400 font-black text-xl uppercase tracking-widest hover:text-[#373F6E] transition-all font-['Bebas_Neue'] cursor-pointer"
+              onClick={step === 4 ? handleFinalSubmit : nextStep}
+              disabled={(step === 1 && !name.trim()) || (step === 2 && !selectedCourse) || (step === 3 && !experienceLevel) || (step === 4 && !learningGoal) || loading}
+              className="px-10 py-2.5 rounded-xl bg-[#373F6E] text-white font-bold text-xl uppercase tracking-widest hover:bg-[#2d3454] transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer font-['Bebas_Neue']"
             >
-              BACK
+              {loading ? "..." : (step === 4 ? "GET STARTED" : "CONTINUE")}
             </button>
-          )}
-          <button
-            onClick={step === 4 ? handleFinalSubmit : nextStep}
-            disabled={(step === 1 && !name.trim()) || (step === 2 && !selectedCourse) || (step === 3 && !experienceLevel) || (step === 4 && !learningGoal) || loading}
-            className="px-12 py-3 rounded-2xl bg-[#373F6E] text-white font-black text-2xl uppercase tracking-widest hover:bg-[#2d3454] transition-all shadow-xl disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer font-['Bebas_Neue']"
-          >
-            {loading ? "..." : (step === 4 ? "GET STARTED" : "CONTINUE")}
-          </button>
+          </div>
+
         </div>
       </div>
     </div>
