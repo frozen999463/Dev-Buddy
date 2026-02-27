@@ -1,6 +1,11 @@
 import { Router } from "express";
 import { verifyFirebaseToken, AuthRequest } from "../middleware/auth";
 import { User } from "../models/User";
+import { Course } from "../models/Course";
+import { Progress } from "../models/Progress";
+import { Section } from "../models/Section";
+import { Chapter } from "../models/Chapter";
+import { Node } from "../models/Node";
 
 const router = Router();
 
@@ -8,7 +13,7 @@ router.get("/profile", verifyFirebaseToken, async (req: AuthRequest, res) => {
   try {
     const { uid, email, name, firebase } = req.user!;
 
-    let user = await User.findOne({ uid });
+    let user = await User.findOne({ uid }).populate("selectedCourse");
 
     if (!user) {
       user = await User.create({
@@ -20,7 +25,37 @@ router.get("/profile", verifyFirebaseToken, async (req: AuthRequest, res) => {
       });
     }
 
-    res.json(user);
+    // Calculate progress if a course is selected
+    let progressData = null;
+    if (user.selectedCourse) {
+      const courseId = (user.selectedCourse as any)._id || user.selectedCourse;
+
+      // Calculate total nodes in course
+      const sections = await Section.find({ courseId });
+      const sectionIds = sections.map(s => s._id);
+      const chapters = await Chapter.find({ sectionId: { $in: sectionIds } });
+      const chapterIds = chapters.map(c => c._id);
+      const totalNodes = await Node.countDocuments({ chapterId: { $in: chapterIds } });
+
+      // Count completed nodes
+      const completedNodes = await Progress.countDocuments({
+        userId: user._id,
+        courseId,
+        completed: true
+      });
+
+      progressData = {
+        courseName: (user.selectedCourse as any).title,
+        totalNodes,
+        completedNodes,
+        percent: totalNodes > 0 ? Math.round((completedNodes / totalNodes) * 100) : 0
+      };
+    }
+
+    res.json({
+      ...user.toObject(),
+      progress: progressData
+    });
   } catch (err) {
     res.status(500).json({ message: "Failed to fetch profile" });
   }
@@ -94,6 +129,28 @@ router.patch("/select-course", verifyFirebaseToken, async (req: AuthRequest, res
   } catch (err) {
     console.error("❌ Error updating selected course:", err);
     res.status(500).json({ message: "Failed to update selected course" });
+  }
+});
+
+router.patch("/update", verifyFirebaseToken, async (req: AuthRequest, res) => {
+  try {
+    const { uid } = req.user!;
+    const { name, profilePicture } = req.body;
+
+    const user = await User.findOneAndUpdate(
+      { uid },
+      { name, profilePicture },
+      { new: true }
+    );
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json({ message: "Profile updated successfully", user });
+  } catch (err) {
+    console.error("❌ Error updating profile:", err);
+    res.status(500).json({ message: "Failed to update profile" });
   }
 });
 

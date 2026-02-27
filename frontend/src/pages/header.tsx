@@ -3,14 +3,40 @@ import { Button } from "@/components/ui/button";
 import { auth, logout } from "@/firebase/auth";
 import { onAuthStateChanged } from "firebase/auth";
 import { useState, useEffect } from "react";
+import { User } from "lucide-react";
 
 function Header() {
   const [user, setUser] = useState<any>(null);
+  const [mongoUser, setMongoUser] = useState<any>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
+      if (currentUser) {
+        const fetchHeaderProfile = async () => {
+          try {
+            const token = await currentUser.getIdToken();
+            const response = await fetch("http://localhost:5000/api/profile", {
+              headers: { Authorization: `Bearer ${token}` }
+            });
+            if (response.ok) {
+              const data = await response.json();
+              setMongoUser(data);
+            }
+          } catch (err) {
+            console.error("Error fetching header profile:", err);
+          }
+        };
+
+        fetchHeaderProfile();
+
+        // Listen for profile updates
+        window.addEventListener("profileUpdated", fetchHeaderProfile);
+        return () => window.removeEventListener("profileUpdated", fetchHeaderProfile);
+      } else {
+        setMongoUser(null);
+      }
     });
     return () => unsubscribe();
   }, []);
@@ -41,25 +67,33 @@ function Header() {
         </div>
 
         <nav className="hidden md:flex items-center gap-8 text-base font-bold text-[#1a1a1a]">
-          {!user && <Link to="/home" className="transition-colors hover:text-[#373F6E]">Home</Link>}
-          {user && (
-            <>
-              <Link to="/my-courses" className="transition-colors hover:text-[#373F6E]">My Courses</Link>
-              <Link to="/courses" className="transition-colors hover:text-[#373F6E]">Explore</Link>
-            </>
-          )}
+          <Link to="/home" className="transition-colors hover:text-[#373F6E]">Home</Link>
           <Link to="/about" className="transition-colors hover:text-[#373F6E]">About us</Link>
+          <Link to="/courses" className="transition-colors hover:text-[#373F6E]">Course</Link>
+          <Link to="/review" className="transition-colors hover:text-[#373F6E]">Review</Link>
           <Link to="/contact_us" className="transition-colors hover:text-[#373F6E]">Contact us</Link>
         </nav>
 
         <div className="flex items-center gap-2 md:gap-4">
           {user ? (
-            <Button
-              onClick={handleLogout}
-              className="bg-[#f6b26b] hover:bg-[#e6a25b] text-black font-bold rounded-full px-6 py-2 shadow-sm transition-all"
-            >
-              Logout
-            </Button>
+            <div className="flex items-center gap-4">
+              <Link to="/profile" className="flex items-center gap-2 text-[#373F6E] hover:opacity-80 transition-opacity">
+                <div className="w-10 h-10 rounded-full bg-[#373F6E] overflow-hidden flex items-center justify-center text-white border-2 border-[#373F6E]/10">
+                  {mongoUser?.profilePicture ? (
+                    <img src={mongoUser.profilePicture} alt="Profile" className="w-full h-full object-cover" />
+                  ) : (
+                    <User size={20} />
+                  )}
+                </div>
+                <span className="hidden lg:inline font-bold">Profile</span>
+              </Link>
+              <Button
+                onClick={handleLogout}
+                className="bg-[#f6b26b] hover:bg-[#e6a25b] text-black font-bold rounded-full px-6 py-2 shadow-sm transition-all"
+              >
+                Logout
+              </Button>
+            </div>
           ) : (
             <>
               <Button asChild variant="secondary" size="sm" className="font-semibold hidden sm:flex hover:bg-secondary/80 transition-all duration-300">

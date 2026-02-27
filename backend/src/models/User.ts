@@ -2,13 +2,14 @@ import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema(
   {
-    role: {type: String,enum: ["user", "admin"],default: "user", },
+    role: { type: String, enum: ["user", "admin"], default: "user", },
     uid: { type: String, required: true, unique: true },
     email: { type: String, required: true },
     name: { type: String },
+    profilePicture: { type: String },
     provider: { type: String }, // password / google
     onboarded: { type: Boolean, default: false },
-    selectedCourse: { type: String },
+    selectedCourse: { type: mongoose.Schema.Types.ObjectId, ref: "Course" },
     experienceLevel: { type: String },
     learningGoal: { type: String },
     totalXP: { type: Number, default: 0 },
