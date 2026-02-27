@@ -142,7 +142,7 @@ export default function OnboardingName() {
 
       {/* Centered Selection Card + Buttons */}
       <div className="flex-1 flex flex-col items-center justify-center px-6 -mt-4">
-        <div className="bg-[#373F6E] p-5 md:p-6 rounded-[2rem] border border-gray-400 shadow-[12px_12px_0px_rgba(0,0,0,0.1)] w-full max-w-sm min-h-[220px] flex flex-col justify-center">
+        <div className="bg-white p-5 md:p-6 rounded-[2rem] border border-gray-300 shadow-[8px_8px_0px_rgba(0,0,0,0.08)] w-full max-w-xl min-h-[220px] flex flex-col justify-center">
 
           {step === 1 && (
             <div className="space-y-8 text-center">
@@ -151,7 +151,7 @@ export default function OnboardingName() {
                 placeholder="Enter your name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full border-2 border-gray-200 rounded-xl px-5 py-3 text-lg bg-[#98A1EC] shadow-inner focus:border-[#373F6E] outline-none transition-all placeholder:text-white text-white"
+                className="w-full border-2 border-gray-200 rounded-xl px-5 py-3 text-lg bg-[#373F6E] shadow-inner focus:border-[#373F6E] outline-none transition-all placeholder:text-white text-white"
               />
             </div>
           )}
@@ -163,7 +163,7 @@ export default function OnboardingName() {
               ) : courses.length === 0 ? (
                 <div className="text-center py-8 text-gray-500">No courses available yet.</div>
               ) : (
-                <div className="grid grid-cols-1 gap-3">
+                <div className="grid grid-cols-2 gap-3">
                   {courses.map((course) => {
                     const icon = courseIcons[course.title.toLowerCase()] || courseIcons.default;
                     return (
@@ -173,9 +173,9 @@ export default function OnboardingName() {
                           setSelectedCourse(course._id);
                           setSelectedCourseName(course.title);
                         }}
-                        className={`flex items-center gap-4 border-[3px] p-4 rounded-xl text-left transition-all shadow-sm bg-[#98A1EC] ${selectedCourse === course._id
-                          ? "border-white"
-                          : "border-transparent hover:border-white/50"
+                        className={`flex items-center gap-4 border-[3px] p-4 rounded-xl text-left transition-all shadow-sm ${selectedCourse === course._id
+                          ? "bg-[#98A1EC] border-white"
+                          : "bg-[#373F6E] border-transparent hover:border-white/50"
                           }`}
                       >
                         <span className="text-2xl">{icon}</span>
@@ -194,9 +194,9 @@ export default function OnboardingName() {
                 <button
                   key={opt.id}
                   onClick={() => setExperienceLevel(opt.label)}
-                  className={`w-full flex items-center gap-4 border-[2px] p-4 rounded-xl text-left transition-all shadow-sm bg-[#98A1EC] ${experienceLevel === opt.label
-                    ? "border-white"
-                    : "border-transparent hover:border-white/50"
+                  className={`w-full flex items-center gap-4 border-[2px] p-4 rounded-xl text-left transition-all shadow-sm ${experienceLevel === opt.label
+                    ? "bg-[#98A1EC] border-white"
+                    : "bg-[#373F6E] border-transparent hover:border-white/50"
                     }`}
                 >
                   <div className="flex items-end gap-1 h-8 w-10 border-r-2 border-white/40 pr-2">
@@ -212,14 +212,14 @@ export default function OnboardingName() {
 
           {step === 4 && (
             <div className="space-y-3">
-              <div className="grid grid-cols-1 gap-3">
+              <div className="grid grid-cols-2 gap-3">
                 {goalOptions.map((opt) => (
                   <button
                     key={opt.id}
                     onClick={() => setLearningGoal(opt.label)}
-                    className={`flex items-center gap-4 border-[2px] p-3 rounded-xl text-left transition-all shadow-sm bg-[#98A1EC] ${learningGoal === opt.label
-                      ? "border-white"
-                      : "border-transparent hover:border-white/50"
+                    className={`flex items-center gap-4 border-[2px] p-3 rounded-xl text-left transition-all shadow-sm ${learningGoal === opt.label
+                      ? "bg-[#98A1EC] border-white"
+                      : "bg-[#373F6E] border-transparent hover:border-white/50"
                       }`}
                   >
                     <span className="text-xl">{opt.icon}</span>

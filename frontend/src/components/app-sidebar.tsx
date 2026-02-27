@@ -64,6 +64,11 @@ const data = {
       url: "/adminDashboard?view=payments",
       icon: IconCashBanknote,
     },
+    {
+      title: "Reviews",
+      url: "/adminDashboard?view=reviews",
+      icon: IconReport,
+    },
   ],
   navClouds: [
     {
@@ -155,15 +160,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarHeader>
         <SidebarMenu>
 
-            <SidebarMenuButton
-              asChild
-              className="data-[slot=sidebar-menu-button]:!p-1.5"
-            >
-              <a href="#">
-                <IconInnerShadowTop className="!size-5" />
-                <span className="text-base font-semibold">DEV BUDDY</span>
-              </a>
-            </SidebarMenuButton>
+          <SidebarMenuButton
+            asChild
+            className="data-[slot=sidebar-menu-button]:!p-1.5"
+          >
+            <a href="#">
+              <IconInnerShadowTop className="!size-5" />
+              <span className="text-base font-semibold">DEV BUDDY</span>
+            </a>
+          </SidebarMenuButton>
 
         </SidebarMenu>
       </SidebarHeader>
