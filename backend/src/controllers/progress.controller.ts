@@ -64,19 +64,27 @@ export const getEnrolledCourses = async (req: AuthRequest, res: Response) => {
     // Get all unique courses where user has progress
     const progressRecords = await Progress.find({ userId: user._id });
     const courseIds = new Set(progressRecords.map(p => p.courseId.toString()));
+    console.log("🔍 [getEnrolledCourses] User:", user.uid, "Progress found in:", Array.from(courseIds));
 
     // Also include selectedCourse if not already present
-    if (user.selectedCourse) {
-      // Try to find if user.selectedCourse is an ID or slug
+    if (user.selectedCourse && user.selectedCourse.trim() !== "") {
+      const isId = mongoose.Types.ObjectId.isValid(user.selectedCourse);
+
       const primaryCourse = await Course.findOne({
         $or: [
-          { _id: mongoose.isValidObjectId(user.selectedCourse) ? user.selectedCourse : undefined },
+          ...(isId ? [{ _id: user.selectedCourse }] : []),
           { slug: user.selectedCourse }
-        ].filter(Boolean) as any[]
+        ]
       });
 
       if (primaryCourse) {
-        courseIds.add(primaryCourse._id.toString());
+        const primaryId = primaryCourse._id.toString();
+        if (!courseIds.has(primaryId)) {
+          courseIds.add(primaryId);
+          console.log("🔍 [getEnrolledCourses] Added selectedCourse to list:", primaryCourse.title);
+        }
+      } else {
+        console.log("⚠️ [getEnrolledCourses] User has selectedCourse", user.selectedCourse, "but it matches no Course in DB.");
       }
     }
 

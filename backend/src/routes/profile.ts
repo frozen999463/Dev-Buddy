@@ -130,7 +130,7 @@ router.patch("/onboarding", verifyFirebaseToken, async (req: AuthRequest, res) =
       { new: true }
     );
 
-    console.log("✅ User updated successfully:", user);
+    console.log("✅ User updated successfully with onboarding data. selectedCourse:", user?.selectedCourse);
     res.json(user);
   } catch (err) {
     console.error("❌ Onboarding error:", err);
@@ -157,6 +157,7 @@ router.patch("/select-course", verifyFirebaseToken, async (req: AuthRequest, res
       return res.status(404).json({ message: "User not found" });
     }
 
+    console.log("✅ Primary course updated for user:", uid, "to:", courseId);
     res.json({ message: "Primary course updated", user });
   } catch (err) {
     console.error("❌ Error updating selected course:", err);
