@@ -15,6 +15,7 @@ import JourneyPage from './pages/journey_page'
 import StudyPage from './pages/StudyPage'
 import MyCourses from './pages/MyCourses'
 import OnboardingName from './pages/onboarding'
+import ProfilePage from './pages/profile'
 import ReviewPage from './pages/rewie'
 import AdminDashboard from './pages/admin/Dashboard'
 import ProtectedRoute from './components/ProtectedRoute'
@@ -46,6 +47,7 @@ function App() {
           <Route path="/courses" element={<BrowseCourses />} />
           <Route path="/course/:id" element={<CourseLanding />} />
           <Route path="/my-courses" element={<MyCourses />} />
+          <Route path="/profile" element={<ProfilePage />} />
 
           {/* 2️⃣ Add the protection here */}
           <Route

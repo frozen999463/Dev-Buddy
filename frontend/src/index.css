@@ -7,7 +7,7 @@
 @custom-variant dark (&:is(.dark *));
 @source "../.flowbite-react/class-list.json";
 
-body{
+body {
     border: 0;
 }
 
@@ -122,10 +122,31 @@ body{
 }
 
 @layer base {
-  * {
-    @apply border-border outline-ring/50;
+    * {
+        @apply border-border outline-ring/50;
     }
-  body {
-    @apply bg-background text-foreground;
+
+    body {
+        @apply bg-background text-foreground;
+    }
+}
+
+@layer utilities {
+    @keyframes float {
+        0% {
+            transform: translateY(0px);
+        }
+
+        50% {
+            transform: translateY(-10px);
+        }
+
+        100% {
+            transform: translateY(0px);
+        }
+    }
+
+    .animate-float {
+        animation: float 3s ease-in-out infinite;
     }
 }

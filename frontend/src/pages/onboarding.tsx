@@ -125,7 +125,7 @@ export default function OnboardingName() {
         <img
           src="/images/onboarding_mascot.png"
           alt="Mascot"
-          className="w-20 md:w-28 h-auto flex-shrink-0"
+          className="w-20 md:w-28 h-auto flex-shrink-0 animate-float"
         />
         <div className="relative mt-2">
           <div className="relative bg-[#373F6E] text-white px-5 py-3 rounded-2xl rounded-tl-none shadow-lg max-w-xs md:max-w-sm">

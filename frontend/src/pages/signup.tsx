@@ -5,7 +5,6 @@ import { z } from "zod";
 import { FcGoogle } from "react-icons/fc";
 
 const signupSchema = z.object({
-  username: z.string().min(3, "Username must be at least 3 characters"),
   email: z.string().email("Invalid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
   confirmPassword: z.string()
@@ -15,7 +14,6 @@ const signupSchema = z.object({
 });
 
 export default function Signup() {
-  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -26,7 +24,7 @@ export default function Signup() {
     e.preventDefault();
     setErrors({});
 
-    const result = signupSchema.safeParse({ username, email, password, confirmPassword });
+    const result = signupSchema.safeParse({ email, password, confirmPassword });
 
     if (!result.success) {
       const fieldErrors: Record<string, string> = {};
@@ -39,8 +37,6 @@ export default function Signup() {
 
     try {
       await signupWithEmail(email, password);
-      // Note: You might want to update the user profile with the username here
-      // await updateProfile(auth.currentUser, { displayName: username });
 
       navigate("/onboarding");
     } catch (err: any) {
@@ -76,16 +72,6 @@ export default function Signup() {
         <div className="w-full max-w-lg bg-[#9ca6ea] rounded-[3.5rem] p-10 shadow-xl">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-3 font-sans">
-              <div>
-                <input
-                  type="text"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  placeholder="username"
-                  className="w-full p-4 rounded-xl bg-[#363e63] text-white placeholder:text-gray-400 border-none outline-none text-base font-medium"
-                />
-                {errors.username && <p className="text-red-600 text-sm mt-1 font-bold">{errors.username}</p>}
-              </div>
 
               <div>
                 <input

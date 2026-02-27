@@ -7,6 +7,8 @@ interface Review {
     name: string;
     rating: number;
     text: string;
+    adminReply?: string;
+    repliedAt?: string;
     createdAt: string;
 }
 
@@ -124,6 +126,17 @@ export default function ReviewPage() {
                                 <StarRating rating={review.rating} />
                             </div>
                             <p className="text-gray-500 leading-relaxed">{review.text}</p>
+
+                            {/* Admin Reply */}
+                            {review.adminReply && (
+                                <div className="mt-6 p-4 bg-[#f8fafc] border-l-4 border-[#373F6E] rounded-r-xl">
+                                    <div className="flex items-center gap-2 mb-2">
+                                        <div className="w-1.5 h-1.5 rounded-full bg-[#373F6E]" />
+                                        <span className="text-xs font-black uppercase tracking-widest text-[#373F6E]">DevBuddy Response</span>
+                                    </div>
+                                    <p className="text-sm text-gray-600 italic">"{review.adminReply}"</p>
+                                </div>
+                            )}
                         </div>
                     ))
                 )}

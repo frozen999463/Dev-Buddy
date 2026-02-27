@@ -33,6 +33,35 @@ export const createReview = async (req: Request, res: Response) => {
     }
 };
 
+// REPLY to a review (admin only)
+export const replyToReview = async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params;
+        const { reply } = req.body;
+
+        if (!reply) {
+            return res.status(400).json({ message: "Reply text is required" });
+        }
+
+        const review = await Review.findByIdAndUpdate(
+            id,
+            {
+                adminReply: reply,
+                repliedAt: new Date()
+            },
+            { new: true }
+        );
+
+        if (!review) {
+            return res.status(404).json({ message: "Review not found" });
+        }
+
+        res.json({ message: "Reply sent successfully", review });
+    } catch (error) {
+        res.status(500).json({ message: "Failed to send reply" });
+    }
+};
+
 // DELETE a review (admin only)
 export const deleteReview = async (req: Request, res: Response) => {
     try {
