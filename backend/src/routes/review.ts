@@ -11,6 +11,9 @@ router.get("/", ReviewController.getAllReviews);
 // Authenticated: create a review
 router.post("/", verifyFirebaseToken, ReviewController.createReview);
 
+// Admin: reply to a review
+router.patch("/:id/reply", verifyFirebaseToken, isAdmin, ReviewController.replyToReview);
+
 // Admin: delete a review
 router.delete("/:id", verifyFirebaseToken, isAdmin, ReviewController.deleteReview);
 

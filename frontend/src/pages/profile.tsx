@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { getAuth } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import { User as UserIcon, Mail, Star, Flame, Trophy, Edit2, Save, X } from "lucide-react";
+import { User as UserIcon, Mail, Star, Flame, Trophy, Edit2, Save, X, Upload } from "lucide-react";
+import { useRef } from "react";
 
 interface UserData {
     name: string;
@@ -38,6 +39,8 @@ export default function ProfilePage() {
     const [editName, setEditName] = useState("");
     const [editAvatar, setEditAvatar] = useState("");
     const [saving, setSaving] = useState(false);
+    const [uploading, setUploading] = useState(false);
+    const fileInputRef = useRef<HTMLInputElement>(null);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -110,6 +113,46 @@ export default function ProfilePage() {
         }
     };
 
+    const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        try {
+            setUploading(true);
+            const auth = getAuth();
+            const firebaseUser = auth.currentUser;
+            if (!firebaseUser) return;
+
+            const token = await firebaseUser.getIdToken();
+            const formData = new FormData();
+            formData.append("avatar", file);
+
+            const response = await fetch("http://localhost:5000/api/upload-avatar", {
+                method: "POST",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+                body: formData,
+            });
+
+            if (!response.ok) throw new Error("Failed to upload avatar");
+
+            const data = await response.json();
+            setEditAvatar(data.profilePicture);
+            setUser(prev => prev ? { ...prev, profilePicture: data.profilePicture } : null);
+
+            // Sync header
+            window.dispatchEvent(new Event("profileUpdated"));
+
+            alert("Avatar uploaded! 📸");
+        } catch (err) {
+            console.error("Upload error:", err);
+            alert("Failed to upload avatar.");
+        } finally {
+            setUploading(false);
+        }
+    };
+
     if (loading) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-white text-[#373F6E]">
@@ -165,16 +208,37 @@ export default function ProfilePage() {
                                 )}
                             </div>
                             {isEditing && (
-                                <div className="mt-4 flex flex-wrap justify-center gap-2 max-w-[200px]">
-                                    {avatars.map((av, idx) => (
+                                <div className="mt-4 space-y-4">
+                                    <div className="flex flex-col items-center gap-2">
                                         <button
-                                            key={idx}
-                                            onClick={() => setEditAvatar(av)}
-                                            className={`w-8 h-8 rounded-full overflow-hidden border-2 transition-all ${editAvatar === av ? "border-[#373F6E] scale-110 shadow-md" : "border-transparent opacity-60 hover:opacity-100"}`}
+                                            onClick={() => fileInputRef.current?.click()}
+                                            disabled={uploading}
+                                            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gray-100 text-[#373F6E] font-bold text-xs hover:bg-gray-200 transition-all disabled:opacity-50"
                                         >
-                                            <img src={av} alt="Avatar option" className="w-full h-full object-cover" />
+                                            <Upload size={14} />
+                                            {uploading ? "Uploading..." : "Upload from Computer"}
                                         </button>
-                                    ))}
+                                        <input
+                                            type="file"
+                                            ref={fileInputRef}
+                                            onChange={handleFileUpload}
+                                            accept="image/*"
+                                            className="hidden"
+                                        />
+                                    </div>
+
+                                    <div className="flex flex-wrap justify-center gap-2 max-w-[200px]">
+                                        <p className="w-full text-center text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Or choose an avatar</p>
+                                        {avatars.map((av, idx) => (
+                                            <button
+                                                key={idx}
+                                                onClick={() => setEditAvatar(av)}
+                                                className={`w-8 h-8 rounded-full overflow-hidden border-2 transition-all ${editAvatar === av ? "border-[#373F6E] scale-110 shadow-md" : "border-transparent opacity-60 hover:opacity-100"}`}
+                                            >
+                                                <img src={av} alt="Avatar option" className="w-full h-full object-cover" />
+                                            </button>
+                                        ))}
+                                    </div>
                                 </div>
                             )}
                         </div>

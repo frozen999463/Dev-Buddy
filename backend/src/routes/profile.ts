@@ -6,8 +6,40 @@ import { Progress } from "../models/Progress";
 import { Section } from "../models/Section";
 import { Chapter } from "../models/Chapter";
 import { Node } from "../models/Node";
+import multer from "multer";
+import path from "path";
+import fs from "fs";
 
 const router = Router();
+
+// Configure Multer for local storage
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const uploadPath = path.join(__dirname, "../../uploads");
+    if (!fs.existsSync(uploadPath)) {
+      fs.mkdirSync(uploadPath, { recursive: true });
+    }
+    cb(null, uploadPath);
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    cb(null, file.fieldname + "-" + uniqueSuffix + path.extname(file.originalname));
+  },
+});
+
+const upload = multer({
+  storage,
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
+  fileFilter: (req, file, cb) => {
+    const filetypes = /jpeg|jpg|png|svg|webp/;
+    const mimetype = filetypes.test(file.mimetype);
+    const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+    if (mimetype && extname) {
+      return cb(null, true);
+    }
+    cb(new Error("Only images are allowed!"));
+  }
+});
 
 router.get("/profile", verifyFirebaseToken, async (req: AuthRequest, res) => {
   try {
@@ -151,6 +183,32 @@ router.patch("/update", verifyFirebaseToken, async (req: AuthRequest, res) => {
   } catch (err) {
     console.error("❌ Error updating profile:", err);
     res.status(500).json({ message: "Failed to update profile" });
+  }
+});
+
+router.post("/upload-avatar", verifyFirebaseToken, upload.single("avatar"), async (req: AuthRequest, res) => {
+  try {
+    const { uid } = req.user!;
+    if (!req.file) {
+      return res.status(400).json({ message: "No file uploaded" });
+    }
+
+    const imageUrl = `http://localhost:5000/uploads/${req.file.filename}`;
+
+    const user = await User.findOneAndUpdate(
+      { uid },
+      { profilePicture: imageUrl },
+      { new: true }
+    );
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json({ message: "Avatar uploaded successfully", profilePicture: imageUrl, user });
+  } catch (err) {
+    console.error("❌ Avatar upload error:", err);
+    res.status(500).json({ message: "Failed to upload avatar" });
   }
 });
 

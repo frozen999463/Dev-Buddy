@@ -130,12 +130,12 @@ const CourseContents = ({ courseId }: { courseId?: string }) => {
           return (
             <React.Fragment key={node._id || index}>
               {showDivider && (
-                <div className="w-full flex items-center gap-4 my-12 animate-in slide-in-from-bottom-2">
-                  <div className="h-[1px] flex-1 bg-neutral-200" />
-                  <span className="text-[10px] font-black text-neutral-400 uppercase tracking-[0.2em] whitespace-nowrap">
-                    {node.chapterTitle}
+                <div className="w-full flex items-center justify-center gap-6 my-16 animate-in slide-in-from-bottom-2">
+                  <div className="h-[2px] w-20 bg-neutral-100" />
+                  <span className="text-[11px] font-black text-neutral-300 uppercase tracking-[0.3em] whitespace-nowrap">
+                    {node.chapterTitle || "NEW CHAPTER"}
                   </span>
-                  <div className="h-[1px] flex-1 bg-neutral-200" />
+                  <div className="h-[2px] w-20 bg-neutral-100" />
                 </div>
               )}
               <div className="relative flex flex-col items-center w-full">
@@ -167,10 +167,9 @@ const RoadmapNodeItem = ({ node, index, courseId, offsets }: { node: Node; index
   const currentOffset = `${offsets[index % offsets.length]}px`;
 
   const getColors = () => {
-    if (node.status === "locked") return "bg-neutral-200 text-neutral-400 border-neutral-300 shadow-[0_6px_0_0_#d4d4d4]";
-    if (node.type === "lesson") return "bg-green-500 text-white shadow-[0_8px_0_0_#16a34a] border-green-600";
-    if (node.type === "challenge") return "bg-orange-500 text-white shadow-[0_8px_0_0_#9a3412] border-orange-600";
-    return "bg-purple-500 text-white shadow-[0_8px_0_0_#7c3aed] border-purple-600";
+    if (node.status === "completed") return "bg-orange-500 text-white shadow-[0_8px_0_0_#c2410c] border-[#ea580c]";
+    if (node.status === "active") return "bg-purple-500 text-white shadow-[0_8px_0_0_#6d28d9] border-[#7c3aed]";
+    return "bg-neutral-200 text-neutral-400 border-neutral-300 shadow-[0_6px_0_0_#d4d4d4]";
   };
 
   return (
@@ -180,10 +179,14 @@ const RoadmapNodeItem = ({ node, index, courseId, offsets }: { node: Node; index
         style={{ transform: `translateX(${currentOffset})` }}
       >
         <div className={`${getColors()} w-16 h-16 rounded-2xl flex items-center justify-center border-b-4 transition-all active:translate-y-1 active:shadow-none`}>
-          {node.status === "completed" && <Check size={32} strokeWidth={3} />}
-          {node.status === "active" && node.type === "lesson" && <div className="w-4 h-4 rounded-full bg-white animate-pulse" />}
-          {node.type === "challenge" && <Star size={28} fill="currentColor" />}
-          {node.type === "quiz" && <Trophy size={28} fill="currentColor" />}
+          {node.status === "completed" && (
+            <div className="flex items-center justify-center gap-1">
+              <Check size={24} strokeWidth={4} />
+              <Star size={20} fill="white" />
+            </div>
+          )}
+          {node.status === "active" && <Trophy size={32} fill="white" />}
+          {node.status === "locked" && <div className="w-8 h-8 rounded-lg bg-neutral-100" />}
         </div>
 
         <div className="absolute top-1/2 -translate-y-1/2 left-20 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50 pointer-events-none translate-x-4 group-hover:translate-x-0 duration-300">
