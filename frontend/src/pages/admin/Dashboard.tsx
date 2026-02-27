@@ -12,6 +12,7 @@ import {
 import UsersTable from "./components/table"
 import AdminCourses from "./AdminCourses";
 import NodeEditor from "./NodeEditor";
+import AdminReviews from "./AdminReviews";
 
 export default function AdminDashboard() {
   const [searchParams] = useSearchParams();
@@ -75,6 +76,12 @@ export default function AdminDashboard() {
                   </div>
                   <h2 className="text-2xl font-bold">Payments Coming Soon</h2>
                   <p className="text-muted-foreground">Revenue tracking and checkout integration is currently under development.</p>
+                </div>
+              )}
+
+              {view === "reviews" && (
+                <div className="px-4 lg:px-6">
+                  <AdminReviews />
                 </div>
               )}
             </div>

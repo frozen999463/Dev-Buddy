@@ -5,6 +5,7 @@ import adminRoutes from "./routes/admin";
 import courseRoutes from "./routes/course";
 import nodeRoutes from "./routes/node";
 import progressRoutes from "./routes/progress";
+import reviewRoutes from "./routes/review";
 
 
 const app = express();
@@ -19,5 +20,6 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/course", courseRoutes);
 app.use("/api/node", nodeRoutes);
 app.use("/api/progress", progressRoutes);
+app.use("/api/review", reviewRoutes);
 
 export default app;

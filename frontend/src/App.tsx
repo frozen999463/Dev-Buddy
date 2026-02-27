@@ -15,6 +15,7 @@ import JourneyPage from './pages/journey_page'
 import StudyPage from './pages/StudyPage'
 import MyCourses from './pages/MyCourses'
 import OnboardingName from './pages/onboarding'
+import ReviewPage from './pages/rewie'
 import AdminDashboard from './pages/admin/Dashboard'
 import ProtectedRoute from './components/ProtectedRoute'
 import { Toaster } from './components/ui/sonner'
@@ -41,6 +42,7 @@ function App() {
           <Route path='/journey/:id' element={<JourneyPage />} />
           <Route path='/course/:courseId/learn/:nodeId' element={<StudyPage />} />
           <Route path='/onboarding' element={<OnboardingName />} />
+          <Route path='/review' element={<ReviewPage />} />
           <Route path="/courses" element={<BrowseCourses />} />
           <Route path="/course/:id" element={<CourseLanding />} />
           <Route path="/my-courses" element={<MyCourses />} />
