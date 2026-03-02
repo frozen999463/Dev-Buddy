@@ -125,6 +125,7 @@ router.patch("/onboarding", verifyFirebaseToken, async (req: AuthRequest, res) =
         selectedCourse,
         experienceLevel,
         learningGoal,
+        profilePicture,
         onboarded: true,
       },
       { new: true }
