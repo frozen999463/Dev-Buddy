@@ -42,7 +42,7 @@ export default function OnboardingName() {
   const [loading, setLoading] = useState(false);
   const [courses, setCourses] = useState<any[]>([]);
   const [loadingCourses, setLoadingCourses] = useState(true);
-  const [profileImage, setProfileImage] = useState<string | null>(null);
+
   const navigate = useNavigate();
 
   // Fetch courses from the database
@@ -61,16 +61,7 @@ export default function OnboardingName() {
     fetchCourses();
   }, []);
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setProfileImage(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+
 
   const handleFinalSubmit = async () => {
     try {
@@ -92,7 +83,7 @@ export default function OnboardingName() {
         selectedCourse,
         experienceLevel,
         learningGoal,
-        profileImage
+
       };
 
       console.log("📤 Sending onboarding data:", payload);
@@ -156,49 +147,14 @@ export default function OnboardingName() {
         </div>
       </div>
 
-      {/* Split Screen Layout: Image Left, Container Right */}
-      <div className="flex-1 flex flex-col md:flex-row items-center justify-center px-6 md:px-20 gap-12 lg:gap-24 -mt-10">
-
-        {/* Left Side - Hero Image */}
-        <div className="hidden md:flex flex-1 justify-end items-center max-w-2xl">
-          <img
-            src="/images/1.png"
-            alt="Onboarding Hero"
-            className="w-full h-auto max-h-[600px] object-contain drop-shadow-2xl rounded-3xl"
-          />
-        </div>
+      {/* Selection Card Container */}
+      <div className="flex-1 flex flex-col items-center justify-center px-6 md:px-20 -mt-10">
 
         {/* Right Side - Selection Card */}
         <div className="flex-1 flex flex-col items-center md:items-start justify-center max-w-md w-full">
           <div className="bg-[#373F6E] p-8 md:p-10 rounded-[2.5rem] shadow-[0px_10px_40px_rgba(0,0,0,0.2)] w-full min-h-[450px] flex flex-col items-center justify-center transition-all duration-300">
 
-            {/* Profile Image Section */}
-            <div className="mb-8 relative group cursor-pointer" onClick={() => document.getElementById('profile-upload')?.click()}>
-              <div className="w-24 h-24 md:w-32 md:h-32 rounded-full border-4 border-white/20 overflow-hidden bg-white/10 flex items-center justify-center transition-all group-hover:border-white/40 shadow-xl">
-                {profileImage ? (
-                  <img src={profileImage} alt="Profile" className="w-full h-full object-cover" />
-                ) : (
-                  <div className="text-white/40 text-4xl md:text-5xl">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-12 h-12 md:w-16 md:h-16">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
-                    </svg>
-                  </div>
-                )}
-                <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-8 h-8 text-white">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15a2.25 2.25 0 0 0 2.25-2.25V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z" />
-                  </svg>
-                </div>
-              </div>
-              <input
-                id="profile-upload"
-                type="file"
-                className="hidden"
-                accept="image/*"
-                onChange={handleImageUpload}
-              />
-            </div>
+
 
             {step === 1 && (
               <div className="space-y-8 text-center md:text-left">
