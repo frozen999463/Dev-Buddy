@@ -4,12 +4,12 @@ import { useNavigate } from "react-router-dom";
 
 const AboutUs: React.FC = () => {
 
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
   return (
     <div className="min-h-screen bg-white flex items-center justify-center px-10">
       <div className="max-w-7xl w-full grid grid-cols-1 md:grid-cols-2 items-center gap-10">
-        
+
         {/* Left Content */}
         <div>
           <h1 className="text-5xl font-extrabold text-black mb-6">
@@ -36,7 +36,7 @@ const AboutUs: React.FC = () => {
         {/* Right Image */}
         <div className="flex justify-center md:justify-end">
           <img
-            src="/images/Devbuddylogo2.png"
+            src="/images/logodb1@2x.png"
             alt="DevBuddy Robot"
             className="w-[320px] md:w-[380px]"
           />
