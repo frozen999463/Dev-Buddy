@@ -11,7 +11,7 @@ export default function Footer() {
           <div className="flex items-center gap-2">
             <Link to="/home" className="flex items-center gap-2">
               <img
-                src="/images/Devbuddylogo2.png"
+                src="/images/logodb1@2x.png"
                 className="h-6 w-6"
                 alt="DevBuddy Logo"
               />

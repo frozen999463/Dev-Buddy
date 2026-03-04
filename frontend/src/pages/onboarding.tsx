@@ -130,7 +130,7 @@ export default function OnboardingName() {
       {/* Top Left - Mascot & Speech Bubble */}
       <div className="flex items-start gap-6 pl-28 md:pl-40 pt-6">
         <img
-          src="/images/onboarding_mascot.png"
+          src="/images/logodb1@2x.png"
           alt="Mascot"
           className="w-20 md:w-28 h-auto flex-shrink-0 animate-float"
         />

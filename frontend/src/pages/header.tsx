@@ -56,13 +56,10 @@ function Header() {
         <div className="flex items-center gap-2">
           <Link to={user ? "/my-courses" : "/home"} className="flex items-center gap-2">
             <img
-              src="/images/Devbuddylogo2.png"
-              className="h-10 w-10"
+              src="/images/logodb3@2x.png"
+              className="h-60 w-auto"
               alt="DevBuddy Logo"
             />
-            <span className="text-xl font-bold tracking-tight text-[#373F6E] hidden sm:inline-block">
-              DevBuddy
-            </span>
           </Link>
         </div>
 
