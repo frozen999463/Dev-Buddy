@@ -64,27 +64,19 @@ export const getEnrolledCourses = async (req: AuthRequest, res: Response) => {
     // Get all unique courses where user has progress
     const progressRecords = await Progress.find({ userId: user._id });
     const courseIds = new Set(progressRecords.map(p => p.courseId.toString()));
-    console.log("🔍 [getEnrolledCourses] User:", user.uid, "Progress found in:", Array.from(courseIds));
 
-    // Also include selectedCourse if not already present
-    if (user.selectedCourse && user.selectedCourse.trim() !== "") {
-      const isId = mongoose.Types.ObjectId.isValid(user.selectedCourse);
-
-      const primaryCourse = await Course.findOne({
-        $or: [
-          ...(isId ? [{ _id: user.selectedCourse }] : []),
-          { slug: user.selectedCourse }
-        ]
+    // Add courses from the new enrolledCourses field
+    if (user.enrolledCourses && Array.isArray(user.enrolledCourses)) {
+      user.enrolledCourses.forEach((cId: any) => {
+        if (cId) courseIds.add(cId.toString());
       });
+    }
 
-      if (primaryCourse) {
-        const primaryId = primaryCourse._id.toString();
-        if (!courseIds.has(primaryId)) {
-          courseIds.add(primaryId);
-          console.log("🔍 [getEnrolledCourses] Added selectedCourse to list:", primaryCourse.title);
-        }
-      } else {
-        console.log("⚠️ [getEnrolledCourses] User has selectedCourse", user.selectedCourse, "but it matches no Course in DB.");
+    // Also include selectedCourse if not already present (legacy support)
+    if (user.selectedCourse) {
+      const selectedId = user.selectedCourse.toString();
+      if (selectedId && !courseIds.has(selectedId)) {
+        courseIds.add(selectedId);
       }
     }
 
@@ -117,7 +109,7 @@ export const getEnrolledCourses = async (req: AuthRequest, res: Response) => {
         totalNodes,
         completedNodes,
         progress: totalNodes > 0 ? Math.round((completedNodes / totalNodes) * 100) : 0,
-        isPrimary: user.selectedCourse === course._id.toString() || user.selectedCourse === course.slug
+        isPrimary: user.selectedCourse && user.selectedCourse.toString() === course._id.toString()
       });
     }
 

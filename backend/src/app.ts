@@ -19,7 +19,7 @@ app.use(express.json());
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
 // 🔥 API routes
-app.use("/api", profileRoutes);
+app.use("/api/profile", profileRoutes);
 
 app.use("/api/admin", adminRoutes);
 app.use("/api/course", courseRoutes);

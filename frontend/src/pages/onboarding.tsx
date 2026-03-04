@@ -84,7 +84,7 @@ export default function OnboardingName() {
 
       console.log("📤 Sending onboarding data:", payload);
 
-      const response = await fetch("http://localhost:5000/api/onboarding", {
+      const response = await fetch("http://localhost:5000/api/profile/onboarding", {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
