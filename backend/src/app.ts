@@ -6,6 +6,7 @@ import courseRoutes from "./routes/course";
 import nodeRoutes from "./routes/node";
 import progressRoutes from "./routes/progress";
 import reviewRoutes from "./routes/review";
+import forumRoutes from "./routes/forum";
 
 
 import path from "path";
@@ -26,5 +27,6 @@ app.use("/api/course", courseRoutes);
 app.use("/api/node", nodeRoutes);
 app.use("/api/progress", progressRoutes);
 app.use("/api/review", reviewRoutes);
+app.use("/api/forum", forumRoutes);
 
 export default app;

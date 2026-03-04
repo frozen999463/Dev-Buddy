@@ -244,3 +244,50 @@ export const getUserStats = async (req: AuthRequest, res: Response) => {
     res.status(500).json({ message: "Failed to fetch stats" });
   }
 };
+
+// Get leaderboard for a specific course (top 20 users by XP)
+export const getLeaderboard = async (req: AuthRequest, res: Response) => {
+  try {
+    const { courseId } = req.params;
+    const id = Array.isArray(courseId) ? courseId[0] : courseId;
+
+    // Aggregate total XP per user for this course
+    const leaderboard = await Progress.aggregate([
+      { $match: { courseId: new mongoose.Types.ObjectId(id), completed: true } },
+      {
+        $group: {
+          _id: "$userId",
+          totalXP: { $sum: "$xpEarned" },
+          completedNodes: { $sum: 1 },
+        },
+      },
+      { $sort: { totalXP: -1 } },
+      { $limit: 20 },
+      {
+        $lookup: {
+          from: "users",
+          localField: "_id",
+          foreignField: "_id",
+          as: "userInfo",
+        },
+      },
+      { $unwind: "$userInfo" },
+      {
+        $project: {
+          _id: 1,
+          totalXP: 1,
+          completedNodes: 1,
+          name: "$userInfo.name",
+          profilePicture: "$userInfo.profilePicture",
+          uid: "$userInfo.uid",
+        },
+      },
+    ]);
+
+    res.json(leaderboard);
+  } catch (err) {
+    console.error("❌ Error fetching leaderboard:", err);
+    res.status(500).json({ message: "Failed to fetch leaderboard" });
+  }
+};
+

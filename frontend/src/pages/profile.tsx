@@ -14,7 +14,7 @@ interface UserData {
     totalXP: number;
     currentStreak: number;
     profilePicture?: string;
-    selectedCourse: string; // ID
+    selectedCourse: string | { _id: string; title: string }; // Can be ID or populated object
     enrolledCourses: Array<{
         _id: string;
         title: string;
@@ -361,7 +361,10 @@ export default function ProfilePage() {
                         <h2 className="text-2xl font-black uppercase tracking-widest font-['Bebas_Neue'] mb-6">Join Next Lesson</h2>
                         <p className="opacity-80 mb-6">Continue where you left off and reach your daily goal!</p>
                         <button
-                            onClick={() => navigate(user.selectedCourse ? `/journey/${user.selectedCourse}` : "/courses")}
+                            onClick={() => {
+                                const courseId = typeof user.selectedCourse === 'object' ? user.selectedCourse._id : user.selectedCourse;
+                                navigate(courseId ? `/journey/${courseId}` : "/courses");
+                            }}
                             className="w-full py-4 rounded-xl bg-orange-400 hover:bg-orange-500 text-white font-black text-xl uppercase tracking-widest transition-all"
                         >
                             Continue Learning
@@ -372,14 +375,19 @@ export default function ProfilePage() {
                 {/* Enrolled Courses Section */}
                 <div className="bg-white rounded-[2.5rem] p-8 md:p-12 shadow-sm border border-gray-100">
                     <h2 className="text-3xl font-black text-[#373F6E] uppercase tracking-widest font-['Bebas_Neue'] mb-8">Switch to Other Courses</h2>
-                    {user.enrolledCourses && user.enrolledCourses.filter(c => c._id !== (user.progress?.courseName ? user.enrolledCourses.find(ec => ec.title === user.progress?.courseName)?._id : user.selectedCourse)).length > 0 ? (
+                    {user.enrolledCourses && user.enrolledCourses.filter(c => {
+                        const activeId = user.progress?.courseName
+                            ? user.enrolledCourses.find(ec => ec.title === user.progress?.courseName)?._id
+                            : (typeof user.selectedCourse === 'object' ? user.selectedCourse._id : user.selectedCourse);
+                        return c._id !== activeId;
+                    }).length > 0 ? (
                         <div className="grid grid-cols-1 gap-6">
                             {user.enrolledCourses
                                 .filter(course => {
                                     // Use course title or ID for exclusion to be safe
                                     const activeId = user.progress?.courseName
                                         ? user.enrolledCourses.find(ec => ec.title === user.progress?.courseName)?._id
-                                        : user.selectedCourse;
+                                        : (typeof user.selectedCourse === 'object' ? user.selectedCourse._id : user.selectedCourse);
                                     return course._id !== activeId;
                                 })
                                 .map((course) => (
