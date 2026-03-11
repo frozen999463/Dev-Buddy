@@ -150,9 +150,13 @@ export default function OnboardingName() {
       {/* Selection Card Container */}
       <div className="flex-1 flex flex-col items-center justify-center px-6 md:px-20 -mt-10">
 
-        {/* Right Side - Selection Card */}
-        <div className="flex-1 flex flex-col items-center md:items-start justify-center max-w-md w-full">
-          <div className="bg-[#373F6E] p-8 md:p-10 rounded-[2.5rem] shadow-[0px_10px_40px_rgba(0,0,0,0.2)] w-full min-h-[450px] flex flex-col items-center justify-center transition-all duration-300">
+        {/* Right Side - Selection Card - 3D Wrapper */}
+        <div className="flex-1 flex flex-col items-center md:items-start justify-center max-w-md w-full [perspective:2000px]">
+          <div className="bg-gradient-to-br from-[#373F6E] to-[#252b52] p-8 md:p-10 rounded-[2.5rem] 
+            shadow-[20px_40px_100px_rgba(0,0,0,0.5),0_0_60px_rgba(30,144,255,0.3),inset_0_2px_10px_rgba(255,255,255,0.1)] 
+            w-full min-h-[450px] flex flex-col items-center justify-center transition-all duration-500 
+            border-t border-l border-white/10 border-b-[10px] border-r-[5px] border-black/40
+            [transform:rotateX(6deg)_rotateY(-6deg)] hover:[transform:rotateX(0deg)_rotateY(0deg)] hover:shadow-[0_20px_80px_rgba(30,144,255,0.5)]">
 
 
 
