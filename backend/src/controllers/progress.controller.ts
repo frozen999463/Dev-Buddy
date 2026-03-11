@@ -64,27 +64,19 @@ export const getEnrolledCourses = async (req: AuthRequest, res: Response) => {
     // Get all unique courses where user has progress
     const progressRecords = await Progress.find({ userId: user._id });
     const courseIds = new Set(progressRecords.map(p => p.courseId.toString()));
-    console.log("🔍 [getEnrolledCourses] User:", user.uid, "Progress found in:", Array.from(courseIds));
 
-    // Also include selectedCourse if not already present
-    if (user.selectedCourse && user.selectedCourse.trim() !== "") {
-      const isId = mongoose.Types.ObjectId.isValid(user.selectedCourse);
-
-      const primaryCourse = await Course.findOne({
-        $or: [
-          ...(isId ? [{ _id: user.selectedCourse }] : []),
-          { slug: user.selectedCourse }
-        ]
+    // Add courses from the new enrolledCourses field
+    if (user.enrolledCourses && Array.isArray(user.enrolledCourses)) {
+      user.enrolledCourses.forEach((cId: any) => {
+        if (cId) courseIds.add(cId.toString());
       });
+    }
 
-      if (primaryCourse) {
-        const primaryId = primaryCourse._id.toString();
-        if (!courseIds.has(primaryId)) {
-          courseIds.add(primaryId);
-          console.log("🔍 [getEnrolledCourses] Added selectedCourse to list:", primaryCourse.title);
-        }
-      } else {
-        console.log("⚠️ [getEnrolledCourses] User has selectedCourse", user.selectedCourse, "but it matches no Course in DB.");
+    // Also include selectedCourse if not already present (legacy support)
+    if (user.selectedCourse) {
+      const selectedId = user.selectedCourse.toString();
+      if (selectedId && !courseIds.has(selectedId)) {
+        courseIds.add(selectedId);
       }
     }
 
@@ -117,7 +109,7 @@ export const getEnrolledCourses = async (req: AuthRequest, res: Response) => {
         totalNodes,
         completedNodes,
         progress: totalNodes > 0 ? Math.round((completedNodes / totalNodes) * 100) : 0,
-        isPrimary: user.selectedCourse === course._id.toString() || user.selectedCourse === course.slug
+        isPrimary: user.selectedCourse && user.selectedCourse.toString() === course._id.toString()
       });
     }
 
@@ -252,3 +244,50 @@ export const getUserStats = async (req: AuthRequest, res: Response) => {
     res.status(500).json({ message: "Failed to fetch stats" });
   }
 };
+
+// Get leaderboard for a specific course (top 20 users by XP)
+export const getLeaderboard = async (req: AuthRequest, res: Response) => {
+  try {
+    const { courseId } = req.params;
+    const id = Array.isArray(courseId) ? courseId[0] : courseId;
+
+    // Aggregate total XP per user for this course
+    const leaderboard = await Progress.aggregate([
+      { $match: { courseId: new mongoose.Types.ObjectId(id), completed: true } },
+      {
+        $group: {
+          _id: "$userId",
+          totalXP: { $sum: "$xpEarned" },
+          completedNodes: { $sum: 1 },
+        },
+      },
+      { $sort: { totalXP: -1 } },
+      { $limit: 20 },
+      {
+        $lookup: {
+          from: "users",
+          localField: "_id",
+          foreignField: "_id",
+          as: "userInfo",
+        },
+      },
+      { $unwind: "$userInfo" },
+      {
+        $project: {
+          _id: 1,
+          totalXP: 1,
+          completedNodes: 1,
+          name: "$userInfo.name",
+          profilePicture: "$userInfo.profilePicture",
+          uid: "$userInfo.uid",
+        },
+      },
+    ]);
+
+    res.json(leaderboard);
+  } catch (err) {
+    console.error("❌ Error fetching leaderboard:", err);
+    res.status(500).json({ message: "Failed to fetch leaderboard" });
+  }
+};
+

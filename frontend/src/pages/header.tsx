@@ -64,11 +64,20 @@ function Header() {
         </div>
 
         <nav className="hidden md:flex items-center gap-8 text-base font-bold text-[#1a1a1a]">
-          <Link to="/home" className="transition-colors hover:text-[#373F6E]">Home</Link>
-          <Link to="/about" className="transition-colors hover:text-[#373F6E]">About us</Link>
-          <Link to="/courses" className="transition-colors hover:text-[#373F6E]">Course</Link>
+          {user && mongoUser?.selectedCourse ? (
+            <Link
+              to={`/journey/${typeof mongoUser.selectedCourse === 'object' ? mongoUser.selectedCourse._id : mongoUser.selectedCourse}`}
+              className="transition-colors hover:text-[#373F6E]"
+            >
+              Course
+            </Link>
+          ) : (
+            <Link to="/home" className="transition-colors hover:text-[#373F6E]">Home</Link>
+          )}
+          <Link to="/courses" className="transition-colors hover:text-[#373F6E]">More Courses</Link>
           <Link to="/review" className="transition-colors hover:text-[#373F6E]">Review</Link>
           <Link to="/contact_us" className="transition-colors hover:text-[#373F6E]">Contact us</Link>
+          <Link to="/about" className="transition-colors hover:text-[#373F6E]">About us</Link>
         </nav>
 
         <div className="flex items-center gap-2 md:gap-4">

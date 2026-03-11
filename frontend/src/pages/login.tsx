@@ -59,7 +59,8 @@ export default function Login() {
       }
       // Redirect based on onboarding status
       else if (data.onboarded && data.selectedCourse) {
-        navigate(`/journey/${data.selectedCourse}`);
+        const courseId = typeof data.selectedCourse === "object" ? data.selectedCourse._id : data.selectedCourse;
+        navigate(`/journey/${courseId}`);
       } else if (data.onboarded) {
         navigate("/courses");
       } else {
@@ -101,7 +102,8 @@ export default function Login() {
         navigate("/adminDashboard");
         return;
       } else if (data.onboarded && data.selectedCourse) {
-        navigate(`/journey/${data.selectedCourse}`);
+        const courseId = typeof data.selectedCourse === "object" ? data.selectedCourse._id : data.selectedCourse;
+        navigate(`/journey/${courseId}`);
       } else if (data.onboarded) {
         navigate("/courses");
       } else {

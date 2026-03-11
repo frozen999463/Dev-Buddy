@@ -149,7 +149,8 @@ export async function executeCode(
     "bash", "-c", bashCmd,
   ];
 
-  const proc = spawn("docker", dockerArgs, { stdio: ["pipe", "pipe", "pipe"] });
+  // Use podman instead of docker CLI to avoid 500 upgrade proxy bugs on Fedora
+  const proc = spawn("podman", dockerArgs, { stdio: ["pipe", "pipe", "pipe"] });
 
   // Write the code to stdin immediately — head -c will consume exactly this many bytes
   proc.stdin.write(code);
@@ -173,3 +174,4 @@ export async function executeCode(
 
   return { proc, codeWritten: true };
 }
+

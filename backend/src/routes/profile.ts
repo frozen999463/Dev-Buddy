@@ -41,11 +41,11 @@ const upload = multer({
   }
 });
 
-router.get("/profile", verifyFirebaseToken, async (req: AuthRequest, res) => {
+router.get("/", verifyFirebaseToken, async (req: AuthRequest, res) => {
   try {
     const { uid, email, name, firebase } = req.user!;
 
-    let user = await User.findOne({ uid }).populate("selectedCourse");
+    let user = await User.findOne({ uid }).populate("selectedCourse").populate("enrolledCourses");
 
     if (!user) {
       user = await User.create({
@@ -126,6 +126,7 @@ router.patch("/onboarding", verifyFirebaseToken, async (req: AuthRequest, res) =
         experienceLevel,
         learningGoal,
         onboarded: true,
+        $addToSet: { enrolledCourses: selectedCourse } // Ensure it's in enrolledCourses
       },
       { new: true }
     );
@@ -149,7 +150,10 @@ router.patch("/select-course", verifyFirebaseToken, async (req: AuthRequest, res
 
     const user = await User.findOneAndUpdate(
       { uid },
-      { selectedCourse: courseId },
+      {
+        selectedCourse: courseId,
+        $addToSet: { enrolledCourses: courseId } // Add to enrollment list if not present
+      },
       { new: true }
     );
 

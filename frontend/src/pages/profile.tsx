@@ -9,12 +9,19 @@ interface UserData {
     email: string;
     role: string;
     onboarded: boolean;
-    selectedCourse: string;
     experienceLevel: string;
     learningGoal: string;
     totalXP: number;
     currentStreak: number;
     profilePicture?: string;
+    selectedCourse: string | { _id: string; title: string }; // Can be ID or populated object
+    enrolledCourses: Array<{
+        _id: string;
+        title: string;
+        slug: string;
+        thumbnail?: string;
+        description: string;
+    }>;
     progress: {
         courseName: string;
         totalNodes: number;
@@ -84,7 +91,7 @@ export default function ProfilePage() {
             if (!firebaseUser) return;
 
             const token = await firebaseUser.getIdToken();
-            const response = await fetch("http://localhost:5000/api/update", {
+            const response = await fetch("http://localhost:5000/api/profile/update", {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
@@ -127,7 +134,7 @@ export default function ProfilePage() {
             const formData = new FormData();
             formData.append("avatar", file);
 
-            const response = await fetch("http://localhost:5000/api/upload-avatar", {
+            const response = await fetch("http://localhost:5000/api/profile/upload-avatar", {
                 method: "POST",
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -150,6 +157,46 @@ export default function ProfilePage() {
             alert("Failed to upload avatar.");
         } finally {
             setUploading(false);
+        }
+    };
+
+    const handleSetPrimary = async (courseId: string) => {
+        try {
+            setSaving(true);
+            const auth = getAuth();
+            const firebaseUser = auth.currentUser;
+            if (!firebaseUser) return;
+
+            const token = await firebaseUser.getIdToken();
+            const response = await fetch("http://localhost:5000/api/profile/select-course", {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({ courseId }),
+            });
+
+            if (!response.ok) throw new Error("Failed to update primary course");
+
+            // Refresh profile data
+            const updatedProfileResponse = await fetch("http://localhost:5000/api/profile", {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            const updatedData = await updatedProfileResponse.json();
+            setUser(updatedData);
+
+            // Dispatch event to sync header
+            window.dispatchEvent(new Event("profileUpdated"));
+
+            alert("Primary course updated! 🎓");
+        } catch (err) {
+            console.error("Error updating primary course:", err);
+            alert("Failed to update primary course.");
+        } finally {
+            setSaving(false);
         }
     };
 
@@ -281,7 +328,7 @@ export default function ProfilePage() {
                 </div>
 
                 {/* Details Section */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
                     <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100">
                         <h2 className="text-2xl font-black text-[#373F6E] uppercase tracking-widest font-['Bebas_Neue'] mb-6">Learning Path</h2>
                         <div className="space-y-6">
@@ -314,12 +361,79 @@ export default function ProfilePage() {
                         <h2 className="text-2xl font-black uppercase tracking-widest font-['Bebas_Neue'] mb-6">Join Next Lesson</h2>
                         <p className="opacity-80 mb-6">Continue where you left off and reach your daily goal!</p>
                         <button
-                            onClick={() => navigate(user.selectedCourse ? `/journey/${user.selectedCourse}` : "/courses")}
+                            onClick={() => {
+                                const courseId = typeof user.selectedCourse === 'object' ? user.selectedCourse._id : user.selectedCourse;
+                                navigate(courseId ? `/journey/${courseId}` : "/courses");
+                            }}
                             className="w-full py-4 rounded-xl bg-orange-400 hover:bg-orange-500 text-white font-black text-xl uppercase tracking-widest transition-all"
                         >
                             Continue Learning
                         </button>
                     </div>
+                </div>
+
+                {/* Enrolled Courses Section */}
+                <div className="bg-white rounded-[2.5rem] p-8 md:p-12 shadow-sm border border-gray-100">
+                    <h2 className="text-3xl font-black text-[#373F6E] uppercase tracking-widest font-['Bebas_Neue'] mb-8">Switch to Other Courses</h2>
+                    {user.enrolledCourses && user.enrolledCourses.filter(c => {
+                        const activeId = user.progress?.courseName
+                            ? user.enrolledCourses.find(ec => ec.title === user.progress?.courseName)?._id
+                            : (typeof user.selectedCourse === 'object' ? user.selectedCourse._id : user.selectedCourse);
+                        return c._id !== activeId;
+                    }).length > 0 ? (
+                        <div className="grid grid-cols-1 gap-6">
+                            {user.enrolledCourses
+                                .filter(course => {
+                                    // Use course title or ID for exclusion to be safe
+                                    const activeId = user.progress?.courseName
+                                        ? user.enrolledCourses.find(ec => ec.title === user.progress?.courseName)?._id
+                                        : (typeof user.selectedCourse === 'object' ? user.selectedCourse._id : user.selectedCourse);
+                                    return course._id !== activeId;
+                                })
+                                .map((course) => (
+                                    <div key={course._id} className="flex items-center justify-between p-6 rounded-3xl bg-gray-50 border border-gray-100 group transition-all hover:shadow-md">
+                                        <div className="flex items-center gap-6">
+                                            <div className="w-16 h-16 rounded-2xl bg-[#373F6E]/10 overflow-hidden flex items-center justify-center shrink-0">
+                                                {course.thumbnail ? (
+                                                    <img src={course.thumbnail} alt={course.title} className="w-full h-full object-cover" />
+                                                ) : (
+                                                    <span className="text-2xl font-bold text-[#373F6E]">{course.title[0]}</span>
+                                                )}
+                                            </div>
+                                            <div>
+                                                <h3 className="text-xl font-bold text-[#1a1a1a]">{course.title}</h3>
+                                                <p className="text-sm text-gray-400 font-medium line-clamp-1">{course.description}</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center gap-4">
+                                            <button
+                                                onClick={() => handleSetPrimary(course._id)}
+                                                disabled={saving}
+                                                className="px-4 py-2 rounded-xl bg-white border-2 border-[#373F6E] text-[#373F6E] font-black text-xs uppercase tracking-widest hover:bg-[#373F6E] hover:text-white transition-all disabled:opacity-50"
+                                            >
+                                                Set as Primary
+                                            </button>
+                                            <button
+                                                onClick={() => navigate(`/journey/${course._id}`)}
+                                                className="p-3 rounded-xl bg-gray-200 text-[#373F6E] hover:bg-[#373F6E] hover:text-white transition-all"
+                                            >
+                                                <Edit2 size={16} />
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))}
+                        </div>
+                    ) : (
+                        <div className="text-center py-12 space-y-4">
+                            <p className="text-gray-400 font-bold">No other courses enrolled.</p>
+                            <button
+                                onClick={() => navigate("/courses")}
+                                className="px-8 py-3 rounded-xl bg-[#373F6E] text-white font-black text-lg uppercase tracking-widest hover:bg-[#2d3454] transition-all shadow-lg"
+                            >
+                                Browse More Courses
+                            </button>
+                        </div>
+                    )}
                 </div>
 
             </div>

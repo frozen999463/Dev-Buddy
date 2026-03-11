@@ -19,6 +19,7 @@ import ProfilePage from './pages/profile'
 import ReviewPage from './pages/rewie'
 import AdminDashboard from './pages/admin/Dashboard'
 import ProtectedRoute from './components/ProtectedRoute'
+import LeaderboardPage from './pages/leaderboard_page'
 import { Toaster } from './components/ui/sonner'
 /*
 const auth = getAuth(app);
@@ -48,6 +49,7 @@ function App() {
           <Route path="/course/:id" element={<CourseLanding />} />
           <Route path="/my-courses" element={<MyCourses />} />
           <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/leaderboard/:id" element={<LeaderboardPage />} />
 
           {/* 2️⃣ Add the protection here */}
           <Route

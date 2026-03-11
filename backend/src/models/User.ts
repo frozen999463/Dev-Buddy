@@ -10,6 +10,7 @@ const userSchema = new mongoose.Schema(
     provider: { type: String }, // password / google
     onboarded: { type: Boolean, default: false },
     selectedCourse: { type: mongoose.Schema.Types.ObjectId, ref: "Course" },
+    enrolledCourses: [{ type: mongoose.Schema.Types.ObjectId, ref: "Course" }],
     experienceLevel: { type: String },
     learningGoal: { type: String },
     totalXP: { type: Number, default: 0 },
