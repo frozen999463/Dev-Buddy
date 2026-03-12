@@ -1,5 +1,7 @@
 import { pythonMasterclassPartA } from "./python_masterclass_a";
+import { pythonMasterclassPartA2 } from "./python_masterclass_a2";
 import { pythonMasterclassPartB } from "./python_masterclass_b";
+import { pythonMasterclassPartB2 } from "./python_masterclass_b2";
 
 export const pythonMasterclass = {
     course: {
@@ -10,6 +12,8 @@ export const pythonMasterclass = {
     },
     sections: [
         ...pythonMasterclassPartA,
+        ...pythonMasterclassPartA2,
         ...pythonMasterclassPartB,
+        ...pythonMasterclassPartB2,
     ]
 };

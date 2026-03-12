@@ -1,30 +1,71 @@
-// Dart Masterclass — Part B (Sections 6-9)
+// Dart Masterclass — Part B (Sections 6-7)
 export const dartMasterclassPartB = [
     {
-        title: "Asynchronous Programming (Replaces Memory section)", order: 6,
+        title: "Working with Collections", order: 6,
         chapters: [
             {
-                title: "Futures and Async/Await", order: 1,
+                title: "Lists, Sets, and Maps", order: 1,
                 nodes: [
                     {
-                        title: "Why Asynchronous?", type: "lesson", order: 1,
-                        content: `## Asynchronous Programming in Dart\n\nUnlike C where you manage memory, Dart manages memory for you. But as a UI language, Dart has a much bigger challenge: **keeping the UI responsive**.\n\nImagine dragging a screen while waiting for a photo to download. If the download blocks the main thread, the app freezes (Frame Drop). Dart uses an **Event Loop** to run code without blocking.\n\n**The Future Object:**\nA \`Future<T>\` represents a value that will be available... in the future! (Like a Promise in JavaScript).\n\n\`\`\`dart\n// This function takes 2 seconds to complete\nFuture<String> fetchUserData() {\n  return Future.delayed(\n    Duration(seconds: 2),\n    () => 'Alice Smith',\n  );\n}\n\nvoid main() {\n  print('Fetching user...');\n  \n  // .then runs WHEN the future completes\n  fetchUserData().then((String user) {\n    print('Got user: \$user');\n  });\n  \n  print('This prints IMMEDIATELY. The app is not frozen!');\n}\n\`\`\``
+                        title: "Lists and the Spread Operator", type: "lesson", order: 1,
+                        content: `## Lists and the Spread Operator\n\n### Ordering your Data\nA **List** is the most fundamental collection in Dart. In other languages, this is often called an "Array". It is an ordered collection of objects where each item (or element) is tracked by its numerical position (index). Like most modern languages, Dart lists are zero-indexed, meaning the first item is at position 0.\n\n\`\`\`dart\nList<String> fruits = ['Apple', 'Banana', 'Orange'];\nprint(fruits[0]); // Apple\n\`\`\`\n\n### Fixed-Length vs. Growable\n- **Growable (Default):** Most lists you create are growable. You can add more items whenever you want using \`.add()\` or \`.addAll()\`.\n- **Fixed-Length:** You can create lists that have a permanent, unchangeable size for performance reasons. If you try to add an item to a fixed list, the app will crash.\n\n### The Spread Operator (\`...\`)\nThis is a powerful feature imported from the world of modern JavaScript. The spread operator allows you to "unpack" or insert all the elements of one list into another list seamlessly. This is incredibly helpful when combining data sets or building complex UI lists in Flutter.\n\n\`\`\`dart\nvar commonFruits = ['Apple', 'Banana'];\nvar allFruits = ['Mango', ...commonFruits, 'Cherry'];\n// Result: ['Mango', 'Apple', 'Banana', 'Cherry']\n\`\`\`\n\n### List Methods you must know\n1. **\`.add()\`**: Appends one item to the end.\n2. **\`.removeAt(index)\`**: Deletes the item at a specific position.\n3. **\`.contains(item)\`**: Returns true if the item exists in the list.\n4. **\`.indexOf(item)\`**: Tells you the numerical position of an item.\n5. **\`.length\`**: Tells you how many items are currently stored.\n\nMastering Lists is the first step toward handling complex data like user rosters, product catalogs, or message histories in your mobile applications.`
                     },
                     {
-                        title: "Async / Await Syntax", type: "lesson", order: 2,
-                        content: `## Async and Await\n\nUsing \`.then()\` gets messy fast (Callback Hell). Dart provides the \`async\` and \`await\` keywords so you can write asynchronous code that *looks* synchronous!\n\n\`\`\`dart\nFuture<String> fetchUser() async {\n  await Future.delayed(Duration(seconds: 2));\n  return 'Bob Jones';\n}\n\nFuture<int> fetchAge() async {\n  await Future.delayed(Duration(seconds: 1));\n  return 25;\n}\n\n// Any function using 'await' MUST be marked 'async' \nvoid main() async {\n  print('1. Starting...');\n  \n  // Execution PAUSES here, but the rest of the app (UI) stays responsive!\n  String name = await fetchUser();\n  print('2. User: \$name');\n  \n  int age = await fetchAge();\n  print('3. Age: \$age');\n  \n  print('4. Done!');\n}\n\`\`\`\n\n**Handling Errors (try/catch):**\n\`\`\`dart\nFuture<void> login() async {\n  try {\n    print(await fetchUser());\n  } catch (e) {\n    print('Network error: \$e');\n  }\n}\n\`\`\``
+                        title: "Sets and Maps", type: "lesson", order: 2,
+                        content: `## Sets and Maps\n\n### Beyond the Simple List\nWhile Lists are great for ordered data, they aren't always the right tool for the job. Sometimes you need to ensure every item is unique, or you need to find an item instantly without scanning the whole collection. This is where **Sets** and **Maps** come in.\n\n### 1. Sets: The Quest for Uniqueness\nA **Set** is a collection where every item must be unique. If you try to add 'Banana' twice to a set, Dart simply ignores the second attempt. This is extremely useful for things like tracking unique visitor IDs or ensuring a user doesn't follow the same person twice in a social app.\n\n\`\`\`dart\nSet<int> uniqueIds = {101, 102, 101}; \nprint(uniqueIds); // Outputs: {101, 102}\n\`\`\`\n\n### 2. Maps: Key-Value Networking\nA **Map** (often called a Dictionary or Hash) is a collection of "Key-Value" pairs. Instead of finding data by its position (0, 1, 2), you find data by a unique label (the Key). Maps are the primary way data is transferred over the internet (JSON format).\n\n\`\`\`dart\nMap<String, String> userProfile = {\n  'name': 'Alice',\n  'email': 'alice@example.com',\n  'role': 'Admin'\n};\n\nprint(userProfile['email']); // Outputs: alice@example.com\n\`\`\`\n\n### Choosing the Right Collection\n- Use a **List** if the order of items matters (like a playlist).\n- Use a **Set** if you need to prevent duplicates (like a list of tags).\n- Use a **Map** if you need to look up data by a specific name or ID (like a user database). \n\nKnowing when to use a Map vs a List is a hallmark of a senior-level engineer. It makes your code faster, safer, and much more logical.`
                     },
                     {
-                        title: "Streams (Continuous Data)", type: "lesson", order: 3,
-                        content: `## Streams — A River of Data\n\nA \`Future\` gives you a single value in the future. A \`Stream\` gives you a sequence of values over time! (Perfect for live data like GPS coordinates or Firebase updates).\n\n\`\`\`dart\n// This stream yields a highly every second, up to 'max'\nStream<int> counterStream(int max) async* {\n  for (int i = 1; i <= max; i++) {\n    await Future.delayed(Duration(seconds: 1));\n    yield i; // yield pushes a value into the stream\n  }\n}\n\nvoid main() async {\n  print('Listening to stream...');\n  \n  // await for loop listens to the entire stream!\n  await for (int number in counterStream(3)) {\n    print('Got: \$number');\n  }\n  \n  print('Stream finished!');\n}\n\`\`\`\n\n**Common Stream uses in Flutter:** Subscribing to database updates, sensing device orientation, reading WebSockets.`
+                        title: "Collection If and Collection For", type: "lesson", order: 3,
+                        content: `## Collection If and Collection For\n\n### Advanced Initialization\nDart features revolutionary "Collection Operators" that allow you to use logic directly *inside* the square brackets while creating a list. This is a game-changer for Flutter development, where you often want to show or hide a UI element based on a condition.\n\n### 1. Collection If\nInstead of creating a list and then calling \`.add()\` in a separate line, you can put an \`if\` statement right in the list literal.\n\n\`\`\`dart\nbool isAdmin = true;\nvar navLinks = [\n  'Home',\n  'Settings',\n  if (isAdmin) 'Admin Dashboard',\n  'Log Out'\n];\n\`\`\`\nIf \`isAdmin\` is false, the 'Admin Dashboard' string simply isn't added to the list. It's clean, readable, and lightning-fast.\n\n### 2. Collection For\nYou can also use a \`for\` loop inside a list to generate items dynamically based on another collection.\n\n\`\`\`dart\nvar numbers = [1, 2, 3];\nvar doubled = [\n  for (var n in numbers) n * 2\n];\n// Result: [2, 4, 6]\n\`\`\`\n\n### Why this matters for Flutter\nIn Flutter, the entire User Interface is built as a giant "tree" of widgets (which are basically just code objects in a list). Using **Collection If** allows you to show a 'Payment Button' only if the cart isn't empty, and **Collection For** allows you to build 100 'Product Cards' instantly by looping through your database list. This "declarative" style of UI building is why Flutter is so much more productive than traditional mobile development.`
                     },
                     {
-                        title: "Async Quiz", type: "quiz", order: 4,
+                        title: "Collections Quiz", type: "quiz", order: 4,
                         questions: [
-                            { question: "What object represents a value that will be provided later?", options: ["Future", "Stream", "Async", "Later"], correctAnswer: 0 },
-                            { question: "What keyword must you use on a function if you want to use 'await' inside it?", options: ["future", "wait", "async", "sync"], correctAnswer: 2 },
-                            { question: "What is the difference between Future and Stream?", options: ["Future is fast, stream is slow", "Stream is for UI, Future is for backend", "Future returns one value, Stream yields multiple values over time", "None"], correctAnswer: 2 },
-                            { question: "What happens to the main thread when it hits an 'await'?", options: ["The whole app freezes until it's done", "The function pauses, but the main thread is free to do other work", "The function crashes", "It runs synchronously"], correctAnswer: 1 }
+                            { question: "Which collection type in Dart strictly prohibits duplicate items?", options: ["List", "Map", "Set", "Queue"], correctAnswer: 2 },
+                            { question: "What does the Spread Operator (...) do?", options: ["It multiplies all items in a list", "It inserts all elements from one collection into another", "It encrypts the list data", "It deletes the entire list"], correctAnswer: 1 },
+                            { question: "How do you access the value associated with the key 'id' in a Map called 'user'?", options: ["user.id", "user[0]", "user['id']", "user.find('id')"], correctAnswer: 2 },
+                            { question: "What is the result of using a 'Collection If' inside a list?", options: ["It crashes the app", "It allows items to be added to the list only if a specific condition is true", "It sorts the list alphabetically", "It turns the list into a set"], correctAnswer: 1 }
+                        ]
+                    }
+                ]
+            },
+            {
+                title: "Mini Projects — Collections", order: 2,
+                nodes: [
+                    {
+                        title: "Project Guide: Shopping Cart System", type: "lesson", order: 1,
+                        content: `## Project Guide: Smart Shopping Cart\n\n### Introduction\nIn this project, you will build a functional shopping cart logic. This will require you to use a List of Maps (an extremely common structure in real apps), use loops to calculate totals, and use Set logic to identify unique categories in the cart.\n\n### Goal\nCreate a program that represents a shopper's cart. The cart should be a \`List<Map<String, dynamic>>\` where each map contains an 'item', a 'price', and a 'category'. You will write code to: 1. Print the whole cart. 2. Calculate the grand total. 3. Use a Set to print a list of all unique categories represented in the cart.\n\n### Requirements\n1. Define the cart: \`var cart = [{'item': 'Milk', 'price': 2.5, 'category': 'Dairy'}, ...];\`.\n2. Use a \`for-in\` loop to iterate through the cart and print: "Item: [Name] - $[Price]".\n3. Create a \`double total = 0;\` and add up the prices inside the loop.\n4. Create a \`Set<String> categories = {};\`. Inside the loop, add the current item's category to the set using \`.add()\`.\n5. Print the final subtotal and the list of unique categories.\n\n### Step-by-Step Guide\n\n**Step 1: Data Setup**\nInitialize your list. Add at least 4 items, making sure two of them share a category (e.g., both 'Milk' and 'Cheese' should be 'Dairy') to test your Set logic.\n\n**Step 2: Iteration**\nStart your loop: \`for (var product in cart) { ... }\`.\n\n**Step 3: Extracting Data**\nInside the loop, access the map values using the keys: \`String name = product['item'];\`. Note: You may need to tell Dart the type if it can't figure it out, using \`product['price'] as double\`.\n\n**Step 4: Logic**\nAdd the price to your running total variable. Then, use \`categories.add(product['category']);\`. Remember, the set will automatically ignore the second 'Dairy' tag!\n\n**Step 5: Visual Verification**\nPrint the final report using string interpolation. Check that the category count is correct.\n\n### Challenge Yourself\n- Add a 'Tax' calculation based on the category! (e.g., if category is 'Luxury', tax is 15%, else it's 5%).\n- Use the \`.where()\` method (a topic we'll cover later, but you can Google it!) to only print items in the 'Electronics' category.`
+                    }
+                ]
+            }
+        ]
+    },
+
+    {
+        title: "Error Handling & Persistence", order: 7,
+        chapters: [
+            {
+                title: "Async and Exceptions", order: 1,
+                nodes: [
+                    {
+                        title: "Try-Catch-Finally", type: "lesson", order: 1,
+                        content: `## Try-Catch-Finally\n\n### Expecting the Unexpected\nIn a perfect world, code always works. In the real world, users type "hello" into a "Number" box, internet connections drop during a download, and files you try to open are sometimes accidentally deleted. If your code doesn't expect these errors, your app will "Crash to Desktop" (die instantly). Professional engineering requires **Exception Handling** to catch these errors and fail gracefully.\n\n### The Try-Catch Structure\nYou wrap "dangerous" code inside a \`try\` block. If an error occurs, Dart immediately stops running the dangerous code and jumps into the \`catch\` block.\n\n\`\`\`dart\ntry {\n  int result = 10 ~/ 0; // Error: Cannot divide by zero!\n} catch (e) {\n  print('Something went wrong: $e');\n}\n\`\`\`\n\n### Specialized Catches (\`on \`)\nSometimes you want to handle different errors in different ways. For example, if a "Permission Denied" error happens, you want to ask the user to sign in. If a "File Not Found" error happens, you want to show a 404 image. You use the \`on\` keyword to catch specific types of errors.\n\n\`\`\`dart\ntry {\n  // File operations\n} on FileSystemException {\n  print('The file does not exist.');\n} catch (e) {\n  print('An unknown error occurred: $e');\n}\n\`\`\`\n\n### The Final Word: \`finally \`\nThe \`finally\` block is special. It runs **no matter what happen**, whether there was an error or not. This is usually used for "cleanup" tasks, like closing a database connection or hiding a loading spinner so the app doesn't stay frozen forever.`
+                    },
+                    {
+                        title: "Throwing Custom Exceptions", type: "lesson", order: 2,
+                        content: `## Throwing Custom Exceptions\n\n### Designing your own Errors\nSometimes, the computer doesn't think there's an error, but *your application logic* does. For example, if a user tries to withdraw $1,000 from an account that only has $5, the math is perfectly valid, but the transaction should be rejected. In these cases, you "Throw" an error manually.\n\n\`\`\`dart\nvoid withdrawMoney(double balance, double amount) {\n  if (amount > balance) {\n    throw Exception('Insufficient funds!');\n  }\n  print('Withdrawal successful.');\n}\n\`\`\`\n\n### Creating Custom Exception Classes\nFor professional apps, using the generic \`Exception\` class isn't enough. You can create your own custom classes to represent specific business errors. This makes your debugging much more accurate.\n\n\`\`\`dart\nclass AccountBlockedException implements Exception {\n  String message() => 'This account has been flagged for security.';\n}\n\nvoid login(String user) {\n  if (user == 'Hacker') throw AccountBlockedException();\n}\n\`\`\`\n\n### The Rethrow Command\nSometimes you want to catch an error, do something (like log it to a server), and then "throw it again" so the main UI can also see it. You use the \`rethrow\` keyword for this. It passes the error up the chain without losing the details of where it originally happened. This is a common pattern for complex enterprise-level background services.`
+                    },
+                    {
+                        title: "Future and Async-Await Basics", type: "lesson", order: 3,
+                        content: `## Future and Async-Await Basics\n\n### The Waiting Game\nModern apps spend a lot of time waiting. You wait for an image to download, you wait for a database to save, and you wait for a GPS signal. If your app "freezes" while waiting for these things, the user will delete your app. In Dart, we solve this with **Asynchronous Programming**.\n\n### What is a Future?\nA \`Future<T>\` is like a "ticket" to a value that will exist... in the future. It's like ordering a pizza; you get a receipt immediately (The Future), but you don't actually have the pizza (The Value) yet.\n\n### Using Async and Await\nTo handle Futures cleanly, we use the \`async\` and \`await\` keywords. \n- **\`async\`**: Marks a function as asynchronous.\n- **\`await\`**: Tells Dart to pause and wait for the Future to finish before moving to the next line of code.\n\n\`\`\`dart\nFuture<String> downloadData() async {\n  // Simulate a 2-second internet delay\n  await Future.delayed(Duration(seconds: 2));\n  return 'Success!';\n}\n\nvoid main() async {\n  print('Starting...');\n  String result = await downloadData(); // Wait here!\n  print(result);\n}\n\`\`\`\nEven though the code *looks* like it's waiting, Dart's engine is actually busy doing other tasks (like keeping the UI animations smooth) while the background work finishes. This is the secret to building highly responsive, "silky smooth" mobile applications.`
+                    },
+                    {
+                        title: "Handling Quiz", type: "quiz", order: 4,
+                        questions: [
+                            { question: "What is the purpose of the 'finally' block in an error handling sequence?", options: ["To catch specific file errors", "To exit the program immediately", "To execute code that must run regardless of whether an error occurred or not", "To restart the computer"], correctAnswer: 2 },
+                            { question: "Which keyword is used to manually trigger an error based on your own business logic?", options: ["catch", "try", "throw", "error"], correctAnswer: 2 },
+                            { question: "What does the 'await' keyword do in an async function?", options: ["It pauses the UI and prevents the user from clicking", "It tells Dart to wait for an asynchronous task (Future) to complete before proceeding", "It turns a string into an integer", "It speeds up network requests"], correctAnswer: 1 },
+                            { question: "A function that returns a value in the future is called a:", options: ["Past", "Present", "Future", "Variable"], correctAnswer: 2 }
                         ]
                     }
                 ]
@@ -33,83 +74,8 @@ export const dartMasterclassPartB = [
                 title: "Mini Projects — Async", order: 2,
                 nodes: [
                     {
-                        title: "Project: Simulated Weather App", type: "lesson", order: 1,
-                        content: `## Project: Weather API Simulator\n\n\`\`\`dart\nimport 'dart:math';\nimport 'dart:async';\n\nclass WeatherService {\n  Future<String> fetchCity() async {\n    print('Requesting city data... 📡');\n    await Future.delayed(Duration(seconds: 1));\n    return 'London';\n  }\n\n  Future<double> fetchTemp(String city) async {\n    print('Parsing weather for \$city... 🌦️');\n    await Future.delayed(Duration(seconds: 2));\n    \n    // Simulate random network failure\n    if (Random().nextInt(10) > 8) {\n      throw Exception('Server Timeout!');\n    }\n    \n    return 15.5;\n  }\n}\n\nvoid main() async {\n  var api = WeatherService();\n  \n  try {\n    print('--- Weather App Started ---');\n    String city = await api.fetchCity();\n    double temp = await api.fetchTemp(city);\n    print('\\n✅ Success: \$city is \${temp}°C');\n  } catch (e) {\n    print('\\n❌ Error: \$e');\n  } finally {\n    print('--- App Ready ---');\n  }\n}\n\`\`\``
-                    }
-                ]
-            }
-        ]
-    },
-
-    {
-        title: "File Handling", order: 7,
-        chapters: [
-            {
-                title: "Reading and Writing Files", order: 1,
-                nodes: [
-                    {
-                        title: "Asynchronous File I/O", type: "lesson", order: 1,
-                        content: `## File Handling in Dart\n\nFile operations happen on the hard drive, which is slow! Therefore, File I/O in Dart is fully asynchronous using Futures.\n\n\`\`\`dart\nimport 'dart:io';\n\nvoid main() async {\n  File file = File('data.txt');\n  \n  // Writing (overwrites)\n  await file.writeAsString('Line 1\\n');\n  \n  // Appending\n  await file.writeAsString('Line 2\\n', mode: FileMode.append);\n  \n  // Reading the entire file\n  print('Reading file:');\n  String content = await file.readAsString();\n  print(content);\n  \n  // Reading line by line (great for huge files)\n  List<String> lines = await file.readAsLines();\n  print('File has \${lines.length} lines.');\n  \n  // Deleting\n  if (await file.exists()) {\n    await file.delete();\n    print('File deleted.');\n  }\n}\n\`\`\``
-                    },
-                    {
-                        title: "JSON Serialization", type: "lesson", order: 2,
-                        content: `## JSON Encoding and Decoding\n\nJSON (JavaScript Object Notation) is the language of the internet. You'll convert Dart Maps to JSON to send to an API, and JSON strings back to Maps when receiving data.\n\n\`\`\`dart\nimport 'dart:convert';\n\nvoid main() {\n  // 1. Map to JSON String (Encoding)\n  Map<String, dynamic> user = {\n    'name': 'Alice',\n    'age': 25,\n    'isAdmin': true,\n    'scores': [100, 95]\n  };\n  \n  String jsonString = jsonEncode(user);\n  print(jsonString);\n  // {"name":"Alice","age":25,"isAdmin":true,"scores":[100,95]}\n  \n  // 2. JSON String to Map (Decoding)\n  String responseBody = '{"user_id": 42, "status": "active"}';\n  \n  // decode always returns dynamic (usually Map<String, dynamic>)\n  Map<String, dynamic> data = jsonDecode(responseBody);\n  \n  print(data['user_id']); // 42\n  print(data['status']);  // active\n}\n\`\`\``
-                    }
-                ]
-            }
-        ]
-    },
-
-    {
-        title: "Object-Oriented Programming (Dart Style)", order: 8,
-        chapters: [
-            {
-                title: "Dart Classes and Constructors", order: 1,
-                nodes: [
-                    {
-                        title: "Classes, Properties, and Methods", type: "lesson", order: 1,
-                        content: `## Classes in Dart\n\n\`\`\`dart\nclass Person {\n  // Instance variables\n  String name;\n  int age;\n  \n  // Private variable (Starts with _)\n  double _money;\n\n  // Syntactic Sugar Constructor! (Initializes automatically)\n  Person(this.name, this.age, this._money);\n  \n  // Named Constructor (Dart doesn't support overloading!)\n  Person.newborn(this.name) : age = 0, _money = 0.0;\n  \n  // Getters and Setters\n  double get balance => _money;\n  \n  set addMoney(double amount) {\n    if (amount > 0) _money += amount;\n  }\n  \n  // Methods\n  void introduce() {\n    print('Hi, I am \$name and I am \$age years old.');\n  }\n}\n\nvoid main() {\n  var p1 = Person('Alice', 25, 1000.0);\n  p1.introduce();\n  \n  var p2 = Person.newborn('Baby Bob');\n  p2.introduce();\n  \n  // Accessing Getters and Setters (looks like a normal variable!)\n  p1.addMoney = 500.0;     // Uses setter\n  print(p1.balance);       // Uses getter\n}\n\`\`\``
-                    },
-                    {
-                        title: "Inheritance, Mixins, and Interfaces", type: "lesson", order: 2,
-                        content: `## Advanced OOP Features\n\n**1. Inheritance (\`extends\`) — Is-A relationship:**\n\`\`\`dart\nclass Animal { void breathe() => print('Breathing'); }\n\nclass Dog extends Animal {\n  void bark() => print('Woof');\n}\n\`\`\`\n\n**2. Implicit Interfaces (\`implements\`) — Acts-Like relationship:**\nEvery class in Dart is secretly an interface! If you implement it, you must rewrite ALL its methods.\n\`\`\`dart\nclass Flyer {\n  void fly() => print('Flying...');\n}\n\n// Must completely rewrite fly()\nclass Airplane implements Flyer {\n  @override\n  void fly() => print('Engine running, takeoff!');\n}\n\`\`\`\n\n**3. Mixins (\`with\`) — Has-A-Skill relationship (Dart's superpower!):**\nAllows you to share code across multiple class hierarchies without inheritance.\n\`\`\`dart\nmixin Swimmer {\n  void swim() => print('Swimming in the water 🏊‍♂️');\n}\n\nmixin Runner {\n  void run() => print('Running fast! 🏃‍♂️');\n}\n\n// A dog extends Animal, but MIXES IN Swimmer and Runner!\nclass AthleteDog extends Animal with Swimmer, Runner {}\n\nvoid main() {\n  var myDog = AthleteDog();\n  myDog.breathe(); // From Animal\n  myDog.swim();    // From Swimmer Mixin\n  myDog.run();     // From Runner Mixin\n}\n\`\`\``
-                    },
-                    {
-                        title: "OOP Quiz", type: "quiz", order: 3,
-                        questions: [
-                            { question: "How do you make a variable private in a Dart class?", options: ["Use the 'private' keyword", "Use the '@private' decorator", "Start the variable name with an underscore (_)", "Dart has no private variables"], correctAnswer: 2 },
-                            { question: "What is Person.newborn(this.name) an example of?", options: ["A static method", "A named constructor", "A factory constructor", "A mixin"], correctAnswer: 1 },
-                            { question: "What keyword lets you share behavior across classes without inheritance?", options: ["mixin", "shares", "interface", "factory"], correctAnswer: 0 },
-                            { question: "What happens if a class 'implements' another class?", options: ["It inherits its code", "It must provide its own code for ALL methods of that class", "It becomes a mixin", "It crashes compiler"], correctAnswer: 1 }
-                        ]
-                    }
-                ]
-            },
-            {
-                title: "Mini Projects — OOP", order: 2,
-                nodes: [
-                    {
-                        title: "Project: Smart Home Simulator", type: "lesson", order: 1,
-                        content: `## Project: Smart Home OOP Simulator\n\n\`\`\`dart\n// Abstract base class\nabstract class Device {\n  String name;\n  bool isOn = false;\n  Device(this.name);\n  \n  void turnOn() { isOn = true; print('\$name is ON'); }\n  void turnOff() { isOn = false; print('\$name is OFF'); }\n}\n\n// Mixin\nmixin InternetCapable {\n  bool isConnected = false;\n  void connectToWifi() {\n    isConnected = true;\n    print('Wi-Fi Connected 📶');\n  }\n}\n\nclass SmartLight extends Device {\n  int brightness = 50;\n  SmartLight(String name) : super(name);\n  \n  void setBrightness(int level) {\n    brightness = level;\n    print('\$name brightness set to \$level%');\n  }\n}\n\nclass SmartTV extends Device with InternetCapable {\n  SmartTV(String name) : super(name);\n  \n  void playNetflix() {\n    if (isOn && isConnected) print('Playing Stranger Things 📺');\n    else print('Must be ON and CONNECTED to play!');\n  }\n}\n\nvoid main() {\n  var light = SmartLight('Living Room Light');\n  light.turnOn();\n  light.setBrightness(80);\n  \n  var tv = SmartTV('Bedroom TV');\n  tv.turnOn();\n  tv.playNetflix(); // Fails, no Wi-Fi\n  tv.connectToWifi();\n  tv.playNetflix(); // Works!\n}\n\`\`\``
-                    }
-                ]
-            }
-        ]
-    },
-
-    {
-        title: "Software Engineering & Dart Principles", order: 9,
-        chapters: [
-            {
-                title: "Factory Constructors and Patterns", order: 1,
-                nodes: [
-                    {
-                        title: "Factory Constructors", type: "lesson", order: 1,
-                        content: `## The Factory Keyword (Singleton Pattern)\n\nDart has a unique constructor type called a **factory**. It is used when you *don't* always want to create a brand new object (e.g. returning an existing database connection, or returning a subclass based on input).\n\n\`\`\`dart\nclass Database {\n  String url;\n  \n  // Private internal constructor\n  Database._internal(this.url);\n  \n  // Static variable holding the ONLY instance\n  static final Database _instance = Database._internal('localhost:5432');\n  \n  // The factory returns the exact same instance every time!\n  factory Database() {\n    return _instance;\n  }\n}\n\nvoid main() {\n  var db1 = Database();\n  var db2 = Database();\n  \n  print(identical(db1, db2)); // TRUE! They are the exact same object in memory.\n}\n\`\`\``
-                    },
-                    {
-                        title: "Parsing JSON to Objects", type: "lesson", order: 2,
-                        content: `## Data Modeling (JSON to Dart Classes)\n\nIn real apps, you never leave data as \`Map<String, dynamic>\` because you lose auto-complete and type safety! You always convert Maps into Classes using a \`fromJson\` factory.\n\n\`\`\`dart\nimport 'dart:convert';\n\nclass User {\n  final String username;\n  final int xp;\n  \n  User({required this.username, required this.xp});\n  \n  // Factory to convert JSON Map into a User object\n  factory User.fromJson(Map<String, dynamic> json) {\n    return User(\n      username: json['username'] as String,\n      xp: json['xp'] as int,\n    );\n  }\n  \n  void display() => print('\$username | Level: \${xp ~/ 100}');\n}\n\nvoid main() {\n  String apiResponse = '{"username": "FlutterDev", "xp": 450}';\n  \n  // 1. Decode JSON string to Map\n  Map<String, dynamic> map = jsonDecode(apiResponse);\n  \n  // 2. Convert Map to User object\n  User myUser = User.fromJson(map);\n  \n  // 3. Now we have type safety and methods!\n  myUser.display();\n}\n\`\`\``
+                        title: "Project Guide: Weather Tracker Simulation", type: "lesson", order: 1,
+                        content: `## Project Guide: Simulated Weather Fetcher\n\n### Introduction\nIn this project, you will simulate a real-world scenario where your app fetches weather data from the cloud. You will practice using \`Future\`, \`async\`, \`await\`, and \`try-catch\` to handle network delays and potential connection failures.\n\n### Goal\nCreate a program with a function called \`fetchWeather(String city)\`. This function should wait for 3 seconds to simulate a network request. It should then return a string like "25°C - Sunny". However, you must add logic where if the city is "London", the function "fails" (throws an error) to simulate a server error. Use a Try-Catch in \`main()\` to handle this failure.\n\n### Requirements\n1. Function signature: \`Future<String> fetchWeather(String city) async\`. \n2. Use \`await Future.delayed(Duration(seconds: 3));\` inside.\n3. Add a check: \`if (city == 'London') throw Exception('Server is down!');\`.\n4. In \`main()\`, call \`fetchWeather('New York')\` first and print the result.\n5. Then call \`fetchWeather('London')\` and catch the error to prevent the app from crashing.\n6. Use a \`finally\` block to print "Weather update complete."\n\n### Step-by-Step Guide\n\n**Step 1: The Async Function**\nDefine your function. Don't forget the \`async\` keyword and the \`Future<String>\` return type!\n\n**Step 2: Simulate Delay**\nNotice how the app feels during the delay. Even though it's "waiting," Dart is still alive. \n\n**Step 3: Intentional Failure**\nAdding errors on purpose is a core part of "Quality Assurance" testing. Test how your app reacts to the \`Exception\`.\n\n**Step 4: The Main Call**\nSince \`main()\` will use \`await\`, the \`main()\` function itself must be marked as \`async\`: \`void main() async { ... }\`.\n\n**Step 5: The Guard**\nWrap the calls in a \`try { ... } catch (e) { ... }\` block. Make sure to print a user-friendly message in the catch block like "Sorry! Could not reach the weather station."\n\n**Step 6: Cleanup**\nIn the \`finally\` block, log that the operation finished. This is where you would normally hide a "loading loading..." spinner in a real mobile app.\n\n### Challenge Yourself\n- Can you return a \`Map<String, dynamic>\` instead of a string? (e.g. \`{'temp': 25, 'status': 'Sunny'}\`).\n- Use a \`for\` loop to simulate fetching weather for a List of 3 different cities sequentially!`
                     }
                 ]
             }
