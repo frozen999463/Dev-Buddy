@@ -29,10 +29,11 @@ const auth = getAuth(app);
 function App() {
   const location = useLocation();
   const isAdminPage = location.pathname.startsWith('/adminDashboard');
+  const isIdePage = location.pathname === '/ide';
 
   return (
     <div className="flex flex-col min-h-screen">
-      {!isAdminPage && <Header />}
+      {!isAdminPage && !isIdePage && <Header />}
       <main className="flex-1">
         <Routes>
           <Route path="/" element={<Navigate to="home" />} />
@@ -52,6 +53,7 @@ function App() {
           <Route path="/my-courses" element={<MyCourses />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/leaderboard/:id" element={<LeaderboardPage />} />
+          <Route path="/ide" element={<div className="h-screen"><CodeEditor /></div>} />
 
           {/* 2️⃣ Add the protection here */}
           <Route
@@ -64,7 +66,7 @@ function App() {
           />
         </Routes>
       </main>
-      {!isAdminPage && <Footer />}
+      {!isAdminPage && !isIdePage && <Footer />}
       <Toaster />
     </div>
   )
