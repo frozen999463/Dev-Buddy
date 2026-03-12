@@ -1,193 +1,125 @@
-// Dart Masterclass — Part A (Sections 1-5)
+// Dart Masterclass — Part A (Sections 1-3)
 export const dartMasterclassPartA = [
-    {
-        title: "Introduction to Programming", order: 1,
-        chapters: [
-            {
-                title: "Dart — The UI Optimized Language", order: 1,
-                nodes: [
-                    {
-                        title: "What is Dart?", type: "lesson", order: 1,
-                        content: `## Dart — Built for UIs\n\nDart was created by Google in 2011. While it started as a web language, it exploded in popularity because it is the language behind **Flutter** — Google's framework for building iOS, Android, macOS, Windows, and web apps from a single codebase.\n\nDart is an object-oriented, strongly typed language with C-style syntax. It feels very familiar if you know Java, C++, or JavaScript.\n\n**Why learn Dart?**\n- It's the only language you need to build Flutter apps\n- Runs surprisingly fast (compiles to ARM/x64 machine code for mobile)\n- Can also compile to JavaScript for the web\n- Built-in support for async programming (Futures and Streams)\n\n## Your First Dart Program\n\`\`\`dart\n// Every Dart program starts execution from the main() function\nvoid main() {\n  // Print outputs to the console\n  print('Hello, World! 🌍');\n}\n\`\`\`\n\n**Key rules:**\n- \`main()\` is required\n- Every statement must end with a semicolon \`;\`\n- Single quotes \`' '\` are preferred over double quotes \`" "\` for strings`
-                    },
-                    {
-                        title: "Dart Execution and Tools", type: "lesson", order: 2,
-                        content: `## How Dart Runs\n\nDart is incredibly flexible because it can be compiled in two different ways:\n\n**1. JIT (Just-In-Time) Compilation:**\nUsed during development. It compiles your code on the fly as it runs. This enables Flutter's famous "Hot Reload" feature — you save your file, and the app updates instantly without losing state.\n\n**2. AOT (Ahead-Of-Time) Compilation:**\nUsed when releasing your app to the App Store or Play Store. It compiles Dart directly into native machine code (ARM/x64). This makes Dart apps start instantly and run at 60 or 120 frames per second.\n\n**Running Dart via Terminal:**\n\`\`\`bash\n# Run a dart file\ndart run myapp.dart\n\n# Or compile it to a native executable!\ndart compile exe myapp.dart\n./myapp.exe\n\`\`\``
-                    },
-                    {
-                        title: "Intro Quiz", type: "quiz", order: 3,
-                        questions: [
-                            { question: "What popular UI framework uses Dart?", options: ["React Native", "Flutter", "SwiftUI", "Angular"], correctAnswer: 1 },
-                            { question: "What is the entry point of a Dart program?", options: ["app()", "run()", "main()", "start()"], correctAnswer: 2 },
-                            { question: "Which feature makes Dart great for rapid development?", options: ["Machine learning", "Hot Reload via JIT", "Pointers", "Manual memory management"], correctAnswer: 1 },
-                            { question: "Does Dart require semicolons?", options: ["Yes", "No", "Only on the last line", "Only inside functions"], correctAnswer: 0 }
-                        ]
-                    }
-                ]
-            },
-            {
-                title: "Mini Projects — Intro", order: 2,
-                nodes: [
-                    {
-                        title: "Project: Interactive Greeter", type: "lesson", order: 1,
-                        content: `## Project: Interactive Greeter\n\n\`\`\`dart\nimport 'dart:io';\n\nvoid main() {\n  print('What is your name?');\n  String? name = stdin.readLineSync(); // Read input\n  \n  print('What year were you born?');\n  String? yearStr = stdin.readLineSync();\n  \n  if (name != null && yearStr != null) {\n    int year = int.parse(yearStr);\n    int age = DateTime.now().year - year;\n    \n    print('\\n========================');\n    print('  Hello, \$name! 👋');\n    print('  You turn \$age this year.');\n    print('========================\\n');\n  }\n}\n\`\`\`\n\n**Key concepts:**\n- \`dart:io\` — required for console input/output\n- \`stdin.readLineSync()\` — reads a line of text (like Python's input())\n- \`String?\` — the \`?\` means the value could be null\n- \`\$name\` — string interpolation to insert variables into text`
-                    }
-                ]
-            }
+  {
+    title: "Introduction to Dart", order: 1,
+    chapters: [
+      {
+        title: "The Modern App Language", order: 1,
+        nodes: [
+          {
+            title: "What is Dart?", type: "lesson", order: 1,
+            content: `## What is Dart?\n\n### Google's Vision for the Future\nDart is an open-source, client-optimized programming language created by Google in 2011. While it was originally intended as a successor to JavaScript for the web, it has evolved into the foundational powerhouse behind **Flutter**—the world's most popular cross-platform UI framework. Dart's primary mission is to provide the most productive programming experience for building high-performance apps on any platform.\n\n### Why Dart is Different\nWhat sets Dart apart from languages like Java or Python is its focus on the "Client." This means it is specifically engineered to handle the complex, fluid demands of User Interfaces. \n\n1. **High Performance:** Dart compiles to native machine code for mobile and desktop, and highly optimized JavaScript for the web. This ensures that your apps run at 60 or 120 frames per second smoothly.\n2. **Productivity:** Dart's syntax is intentionally concise and familiar. If you know C++, Java, or JavaScript, you can learn the basics of Dart in a single afternoon.\n3. **Sound Null Safety:** This is a breakthrough feature that prevents "null pointer errors"—the most common cause of app crashes. The compiler helps you catch these mistakes before you even run your code.\n\n### The Superpower: Hot Reload\nOne of the most beloved features of the Dart ecosystem is **Hot Reload**. Because Dart uses a special development compiler (Just-In-Time or JIT), it can inject updated code directly into a running app. You can change a button's color in your code, save the file, and the app on your phone updates instantly without losing your current progress. This makes the development cycle incredibly fast and fun.`
+          },
+          {
+            title: "The Compilation Journey", type: "lesson", order: 2,
+            content: `## The Compilation Journey\n\n### Dual-Mode Compilation\nDart is one of the few languages that uses two different types of compilation depending on what you are doing. This is the secret to its incredible developer experience and its lightning-fast production performance.\n\n### 1. JIT (Just-In-Time)\nDuring development, Dart uses JIT compilation. The code is compiled as the program runs. This is what enables the "Hot Reload" feature. It allows for rapid iteration and a very fast "save-to-see" feedback loop. You don't have to wait for a long build process every time you make a tiny change.\n\n### 2. AOT (Ahead-Of-Time)\nWhen you are ready to publish your app to the App Store or Play Store, Dart switches to AOT compilation. The entire codebase is meticulously translated into raw binary Machine Code (ARM or x64) before the app even reaches the user. This results in incredibly fast startup times and consistently high performance that is indistinguishable from apps written in "native" languages like Swift or Kotlin.\n\n### Dart on the Web\nIn addition to native machine code, Dart can also compile into highly optimized JavaScript. This means you can take your Dart logic and run it in any modern browser. The Dart-to-JS compiler is extremely smart, performing "tree-shaking" to remove any code you aren't actually using, which keeps your web app sizes small and fast. Whether you are targeting an iPhone, an Android tablet, a Windows PC, or a Chrome browser, Dart has a compilation strategy to get you there with maximum efficiency.`
+          },
+          {
+            title: "Hello, Dart! Explained", type: "lesson", order: 3,
+            content: `## Hello, Dart! Explained\n\n### The First Step\nEvery programming journey starts with the iconic "Hello, World!" program. In Dart, this program is simple, but it introduces the foundational structure that every professional app follows.\n\n\`\`\`dart\nvoid main() {\n  print('Hello, Dart!');\n}\n\`\`\`\n\n### Breaking Down the Syntax\n\n**1. The \`main()\` function**\nJust like C and Java, the \`main()\` function is the absolute entry point of every Dart program. When you run your code, the Dart virtual machine aggressively looks for this function first. If it doesn't find it, the program simply won't start.\n\n**2. The \`void\` keyword**\nThis tells the compiler that the \`main()\` function will do some work but will not return any data back to the system when it's finished. It's an empty "void."\n\n**3. The \`print()\` function**\nThis is a built-in function that takes a string of text and displays it in the console. You can use single quotes (\`' \`) or double quotes (\`" \`) to define your text strings. In the Dart community, single quotes are generally preferred unless the string itself contains a single quote.\n\n**4. The Semicolon (\`;\`)**\nDart is a "semicolon" language. Every single statement must end with a semicolon to tell the compiler that the instruction is complete. Forgetting a semicolon is the #1 reason for "syntax errors" among beginners! Always keep an eye out for that tiny but mighty dot-and-comma.`
+          },
+          {
+            title: "Introduction Quiz", type: "quiz", order: 4,
+            questions: [
+              { question: "Which Google-supported UI framework is built entirely on Dart?", options: ["React Native", "Angular", "Flutter", "SwiftUI"], correctAnswer: 2 },
+              { question: "What is the primary benefit of 'Hot Reload' in Dart?", options: ["It makes the final app run faster", "It allows developers to see code changes instantly in a running app without restarting it", "It automatically fixes bugs in your code", "It translates Dart into Python"], correctAnswer: 1 },
+              { question: "Which function is the mandatory entry point for every Dart application?", options: ["start()", "init()", "main()", "dart()"], correctAnswer: 2 },
+              { question: "What does 'Sound Null Safety' do in Dart?", options: ["It makes the code run in silent mode", "It prevents common app crashes caused by variables containing unexpected 'null' values", "It encrypts the source code", "It allows variables to be any type"], correctAnswer: 1 }
+            ]
+          }
         ]
-    },
+      },
+      {
+        title: "Mini Projects — Intro", order: 2,
+        nodes: [
+          {
+            title: "Project Guide: Professional Bio Console", type: "lesson", order: 1,
+            content: `## Project Guide: Professional Bio Console\n\n### Introduction\nLearning a language isn't just about reading; it's about building. In this first mini-project, you will move beyond a single "Hello World" and construct a multi-line professional biography that outputs to the console. This will help you practice formatting, string usage, and the core structural requirements of Dart.\n\n### Goal\nConstruct a Dart program titled \`bio.dart\`. The application should print a well-formatted professional biography including your name, your top three technical interests, and a catchy "mission statement" about why you are learning Dart. You will use newline characters and specific spacing to make the output look like a real terminal dashboard.\n\n### Requirements\n1. Use the mandatory \`main()\` function structure.\n2. Use a minimum of five separate \`print()\` statements.\n3. Include a "Header" section using characters like \`===\` or \`---\` to create a visual border.\n4. Display your name and current role (e.g., "Student Developer").\n5. List three specific technologies you want to master.\n6. Ensure the final line of output is a closing border.\n\n### Step-by-Step Guide\n\n**Step 1: The Skeleton**\nOpen your editor and create the basic structure: \`void main() { }\`. All your code MUST live inside those curly braces.\n\n**Step 2: The Borders**\nStart with a decorative border to make your console look professional: \`print('==============================');\`.\n\n**Step 3: Personal Details**\nAdd your name. Practice using single quotes: \`print('NAME: Abhijith');\`. Add your role immediately after.\n\n**Step 4: Lists and Formatting**\nUse special characters like \`\\n\` if you want to add extra space between lines. For example, \`print('INTERESTS:\\n - Dart\\n - Flutter\\n - AI');\` uses the newline character to group your list under one print statement!\n\n**Step 5: Closing**\nAdd your mission statement and a final border. Save your file and run it using the command \`dart run bio.dart\`. \n\n### Challenge Yourself\n- Can you find a way to make part of your text uppercase without retyping it? Hint: Look at the \`.toUpperCase()\` method on strings!\n- Try adding a variable for your name instead of hardcoding it. We'll learn variables next, but see if you can guess how it works!`
+          }
+        ]
+      }
+    ]
+  },
 
-    {
-        title: "Programming Fundamentals", order: 2,
-        chapters: [
-            {
-                title: "Variables and Sound Null Safety", order: 1,
-                nodes: [
-                    {
-                        title: "Variables and Types", type: "lesson", order: 1,
-                        content: `## Dart Variables\n\nDart has strong typing, but you don't always have to write the types. Dart can infer them!\n\n\`\`\`dart\nvoid main() {\n  // Explicit typing (Classic C/Java style)\n  String name = 'Alice';\n  int age = 22;\n  double height = 1.65;\n  bool isEnrolled = true;\n  \n  // Implicit typing using 'var' (Dart infers the type)\n  var city = 'London'; // Automatically typed as String\n  // city = 10;        // Error! Once a String, always a String\n  \n  // 'dynamic' allows the type to change (like Python/JS)\n  // AVOID THIS unless absolutely necessary!\n  dynamic magic = 42;\n  magic = 'Now I am a string'; // Legal, but dangerous\n  \n  // Constants\n  final timeNow = DateTime.now(); // Set once at runtime\n  const pi = 3.14159;             // Set at compile-time (hardcoded)\n}\n\`\`\`\n\n**String Interpolation:**\n\`\`\`dart\nString name = "Bob";\nint score = 45;\n// Use \$ for variables, \${} for expressions\nprint('\$name has \${score * 2} points.'); \n\`\`\``
-                    },
-                    {
-                        title: "Sound Null Safety", type: "lesson", order: 2,
-                        content: `## Sound Null Safety in Dart\n\nIn older languages (like Java or C), any variable can secretly be \`null\` (empty), causing the dreaded "Null Pointer Exception" that crashes apps.\n\nDart fixed this with **Sound Null Safety**. By default, variables CANNOT be null!\n\n\`\`\`dart\nvoid main() {\n  int age = 20;     // Must always hold a number. Cannot be null.\n  // age = null;    // Compile OUTRAGE! 🛑\n  \n  // If a variable MIGHT be empty, add a ? to the type\n  String? middleName; // Correct! Defaults to null\n  \n  middleName = "Danger";\n  \n  // To use a nullable variable safely, check if it's null first\n  if (middleName != null) {\n    print('Length: \${middleName.length}');\n  }\n  \n  // Or use the ? operator (returns null if middleName is null)\n  print('Length: \${middleName?.length}');\n  \n  // Using ?? to provide a fallback value\n  String nameToPrint = middleName ?? 'No Middle Name';\n}\n\`\`\``
-                    },
-                    {
-                        title: "Null Safety Quiz", type: "quiz", order: 3,
-                        questions: [
-                            { question: "What does 'var' do in Dart?", options: ["Creates a dynamic variable", "Infers the type based on the initial value", "Makes a variable constant", "Creates a null variable"], correctAnswer: 1 },
-                            { question: "What is the difference between final and const?", options: ["None", "final is set at compile-time, const at runtime", "final is set once at runtime, const must be known at compile-time", "const can be changed, final cannot"], correctAnswer: 2 },
-                            { question: "How do you declare a String that is allowed to be null?", options: ["String! name", "String? name", "nullable String name", "String name = null"], correctAnswer: 1 },
-                            { question: "What does the ?? operator do?", options: ["Throws an error", "Returns the left side if not null, otherwise the right side", "Checks if both sides are equal", "Makes a variable nullable"], correctAnswer: 1 }
-                        ]
-                    }
-                ]
-            },
-            {
-                title: "Input and Output", order: 2,
-                nodes: [
-                    {
-                        title: "Input/Output and Operators", type: "lesson", order: 1,
-                        content: `## Input, Output, and Operators\n\n**Basic I/O:**\n\`\`\`dart\nimport 'dart:io';\n\nvoid main() {\n  stdout.write('Enter price: '); // write doesn't add a newline\n  String? input = stdin.readLineSync();\n  \n  if (input != null) {\n    double price = double.parse(input); // Convert String to double\n    print('Total with tax: \${price * 1.2}');\n  }\n}\n\`\`\`\n\n**Operators:**\n\`\`\`dart\nvoid main() {\n  int a = 10, b = 3;\n  \n  // Arithmetic\n  print(a + b);   // 13\n  print(a / b);   // 3.333... (division always returns double)\n  print(a ~/ b);  // 3 (integer division, drops the decimal)\n  print(a % b);   // 1 (modulo)\n  \n  // Cascade operator (..) — incredibly useful in Flutter!\n  // Allows calling multiple methods on the same object\n  List<int> list = [1, 2]\n    ..add(3)\n    ..add(4)\n    ..remove(1);\n  print(list); // [2, 3, 4]\n}\n\`\`\``
-                    }
-                ]
-            },
-            {
-                title: "Mini Projects — Fundamentals", order: 3,
-                nodes: [
-                    {
-                        title: "Project: Bill Splitter in Dart", type: "lesson", order: 1,
-                        content: `## Project: Bill Splitter\n\n\`\`\`dart\nimport 'dart:io';\n\nvoid main() {\n  print('--- Bill Splitter ---');\n  \n  stdout.write('Total Bill ($): ');\n  double bill = double.parse(stdin.readLineSync() ?? '0');\n  \n  stdout.write('Tip percentage (e.g. 15): ');\n  double tipPct = double.parse(stdin.readLineSync() ?? '0');\n  \n  stdout.write('Number of people: ');\n  int people = int.parse(stdin.readLineSync() ?? '1');\n  \n  double tipAmount = bill * (tipPct / 100);\n  double total = bill + tipAmount;\n  double perPerson = total / people;\n  \n  print('\\n--- Summary ---');\n  // toStringAsFixed(2) rounds to 2 decimal places\n  print('Bill:        \$\${bill.toStringAsFixed(2)}');\n  print('Tip:         \$\${tipAmount.toStringAsFixed(2)}');\n  print('Total:       \$\${total.toStringAsFixed(2)}');\n  print('Per Person:  \$\${perPerson.toStringAsFixed(2)}');\n}\n\`\`\``
-                    }
-                ]
-            }
+  {
+    title: "Programming Fundamentals", order: 2,
+    chapters: [
+      {
+        title: "Variables and Data Types", order: 1,
+        nodes: [
+          {
+            title: "Variables and Sound Null Safety", type: "lesson", order: 1,
+            content: `## Variables and Sound Null Safety\n\n### Declaring Variables\nIn Dart, there are multiple ways to declare a variable. You can be very specific about the type, or you can let Dart figure it out for you.\n\n1. **Explicit Typing:** \`int age = 25;\` or \`String name = 'Alice';\`\n2. **Type Inference (\`var\`):** \`var score = 100;\` (Dart knows this is an integer because of the initial value).\n\n### Core Data Types\n- **\`int\`**: Whole numbers (1, 10, -5).\n- **\`double\`**: Decimal numbers (3.14, 0.5).\n- **\`String\`**: Text data ('Hello').\n- **\`bool\`**: True or False values (\`true\`, \`false\`).\n- **\`num\`**: A special parent type that can be *either* an int or a double.\n\n### Sound Null Safety: The Game Changer\nOne of the most powerful features of Dart is **Sound Null Safety**. In many older languages, if you declare a variable but forget to give it a value, it starts as "null." If your code then tries to use that null variable, the program crashes instantly. \n\nIn Dart, by default, **variables cannot be null**. If you try to write \`int age;\` and then use it without assigning a value, the code won't even compile! This forces you to be intentional about your data.\n\n### Allowing Nulls with \`?\` \nSometimes, you *want* a variable to be able to be empty (for example, if a user hasn't filled out their profile yet). In Dart, you mark a type as "nullable" by adding a question mark: \n\`\`\`dart\nString? middleName; // This is ALLOWED to be null.\nmiddleName = null; // Perfect!\n\nString lastName = 'Smith'; // This is NOT allowed to be null.\n// lastName = null; // This would cause a compile error!\n\`\`\`\nThis system makes your apps incredibly stable because it eliminates the biggest source of crashes in mobile development.`
+          },
+          {
+            title: "Final, Const, and Late", type: "lesson", order: 2,
+            content: `## Final, Const, and Late\n\n### Variables vs. Constants\nWhen writing a program, some values change (like a player's score) and some stay the same (like the mathematical value of Pi or your app's API version). Dart provides three special keywords to handle values that shouldn't be changed after they are set.\n\n### 1. \`final\`\nA \`final\` variable can only be set once. Once you assign a value to it, you can never change it. However, the value can be determined **while the program is running**. \n\nExample: \`final currentTime = DateTime.now();\` \nThe exact time isn't known until the app starts, but once \`currentTime\` is set, it stays constant for the rest of the application's life.\n\n### 2. \`const \`\nA \`const\` variable is a **compile-time constant**. This means the value must be known and fixed *before* the program even starts. Const variables are even more efficient than final variables because Dart calculates their value once during the build process and reuses them forever.\n\nExample: \`const pi = 3.14159;\` \nYou cannot use \`DateTime.now()\` with const because the time isn't known at compile-time.\n\n### 3. \`late \` \nSometimes you have a variable that cannot be null, but you also can't give it a value immediately in the constructor. The \`late\` keyword tells Dart: "I promise to initialize this variable before I ever use it. Don't worry about null safety right now."\n\n\`\`\`dart\nlate String description;\n\nvoid main() {\n  description = 'Initializing later...';\n  print(description);\n}\n\`\`\`\n**Warning:** If you use a \`late\` variable before actually setting its value, your app will crash with a "LateInitializationError". Use it carefully!`
+          },
+          {
+            title: "Arithmetic and Operators", type: "lesson", order: 3,
+            content: `## Arithmetic and Math Operators\n\n### Building Algorithms\nMath is the engine of every application. Whether you are calculating the total price in a shopping cart or the distance between two points in a GPS app, you need operators. Dart supports all familiar mathematical symbols.\n\n- **Standard Math:** \`+\` (Add), \`-\` (Subtract), \`*\` (Multiply), \`/\` (Divide).\n- **Modulo (\`%\`):** Returns the remainder of a division (e.g., \`10 % 3\` results in \`1\`).\n- **Integer Division (\`~/\`):** This is a unique Dart operator. It performs division but throws away the decimal part and returns an integer. \n\n\`\`\`dart\nprint(10 / 3);  // Outputs: 3.3333333333333335\nprint(10 ~/ 3); // Outputs: 3\n\`\`\`\n\n### Type Conversion\nBecause Dart is strictly typed, you cannot easily add a string like \`"5"\` to a number like \`10\`. You must convert the data types first. \n\n1. **String to Int:** \`int.parse('5')\`\n2. **Int to String:** \`5.toString()\`\n3. **Double to Int:** \`3.14.toInt()\` (Note: this truncates the decimal, it doesn't round!).\n\n### Logical Operators\nTo make decisions, you use logical operators:\n- \`==\`: Equals\n- \`!=\`: Not Equals\n- \`>\` / \`<\`: Greater than / Less than\n- \` && \`: AND (Both conditions must be true)\n- \` || \`: OR (At least one condition must be true)\n\nThese operators allow you to build complex logic, like Checking if a user's password is correct AND their subscription is active before letting them watch a video.`
+          },
+          {
+            title: "Fundamentals Quiz", type: "quiz", order: 4,
+            questions: [
+              { question: "What happens if you try to assign `null` to a variable declared as `int score = 0;`?", options: ["It works perfectly", "It causes a compile-time error due to Sound Null Safety", "It resets the score to zero", "It turns the variable into a string"], correctAnswer: 1 },
+              { question: "Which keyword is used for a constant whose value is known only at runtime?", options: ["const", "final", "var", "dynamic"], correctAnswer: 1 },
+              { question: "What is the result of `10 ~/ 4` in Dart?", options: ["2.5", "2", "3", "0"], correctAnswer: 1 },
+              { question: "How do you convert the integer 50 into the string '50'?", options: ["String.parse(50)", "50.asString()", "50.toString()", "intToText(50)"], correctAnswer: 2 }
+            ]
+          }
         ]
-    },
+      },
+      {
+        title: "Mini Projects — Variables", order: 2,
+        nodes: [
+          {
+            title: "Project Guide: Currency Converter", type: "lesson", order: 1,
+            content: `## Project Guide: Currency Converter CLI\n\n### Introduction\nIn this project, you will build a practical tool to convert between currencies. This will require you to use various data types (doubles for money), perform arithmetic, and handle type conversion between user input and numerical logic.\n\n### Goal\nCreate a program that represents a simplified banking kiosk. It should store an exchange rate as a \`const\`, ask the user for an amount in USD, convert that amount into another currency (like EUR or INR), and print the final result rounded to two decimal places.\n\n### Requirements\n1. Use \`const\` for the exchange rate (e.g., \`const usdToEur = 0.91;\`).\n2. Use a \`double\` variable to store the user's input.\n3. Since we haven't officially covered "input" yet, you can hardcode a variable called \`inputAmount\` for now, or use \`double.parse()\` if you want to experiment!\n4. Print a message like: "Exchange Rate: 0.91".\n5. Print the final result using string interpolation: \`'Result: $totalVal'\`.\n6. Use the \`.toStringAsFixed(2)\` method to ensure the money output always shows exactly two decimals.\n\n### Step-by-Step Guide\n\n**Step 1: Setup**\nCreate your \`main()\` function. Inside, define your exchange rate: \`const double exchangeRate = 82.50;\` (for USD to INR).\n\n**Step 2: Input Placeholder**\nCreate a variable for the amount to convert: \`double usdAmount = 100.0;\`.\n\n**Step 3: Calculation**\nCreate a new variable for the result: \`double inrAmount = usdAmount * exchangeRate;\`.\n\n**Step 4: The Output**\nDisplay the result clearly. Use the dollar sign for interest interpolation: \`print('The conversion of $usdAmount USD to INR is: \${inrAmount.toStringAsFixed(2)}');\`. Note the curly braces \`{}\` used when interpolating a calculation or method call!\n\n**Step 5: Testing**\nChange the \`usdAmount\` variable to several different values (like 10.50 or 1000) and run the script again. Does it always show exactly two decimals? \n\n### Challenge Yourself\n- Add a 'transaction fee' constant (e.g. $2.00) and subtract it from the total before calculating the conversion.\n- Try to make the script interactive by importing \`import 'dart:io';\` and using \`stdin.readLineSync()\` to get the amount from the user's keyboard!`
+          }
+        ]
+      }
+    ]
+  },
 
-    {
-        title: "Collections and Type Systems", order: 3,
-        chapters: [
-            {
-                title: "Lists, Sets, and Maps", order: 1,
-                nodes: [
-                    {
-                        title: "Collections in Dart", type: "lesson", order: 1,
-                        content: `## Dart Collections (Lists, Sets, Maps)\n\n**1. Lists (Ordered Arrays)**\n\`\`\`dart\nvoid main() {\n  List<String> fruits = ['Apple', 'Banana'];  // Fixed type list\n  fruits.add('Mango');\n  print(fruits[0]);    // Apple\n  print(fruits.length); // 3\n  \n  // Collection if & for (Awesome Dart features for UI!)\n  bool addCherry = true;\n  List<String> moreFruits = [\n    'Peach',\n    if (addCherry) 'Cherry',   // Adds conditionally!\n    for (var f in fruits) 'Super \$f', // Spreads another list\n  ];\n  print(moreFruits); // [Peach, Cherry, Super Apple, Super Banana, Super Mango]\n}\n\`\`\`\n\n**2. Sets (Unique items, no order)**\n\`\`\`dart\nSet<int> numbers = {1, 2, 2, 3}; \nprint(numbers); // {1, 2, 3} (duplicates ignored!)\n\`\`\`\n\n**3. Maps (Key-Value pairs, like dicts in Python)**\n\`\`\`dart\nMap<String, int> scores = {\n  'Alice': 95,\n  'Bob': 88\n};\nscores['Carol'] = 92;\nprint(scores['Alice']); // 95\n\`\`\``
-                    },
-                    {
-                        title: "Type Casting and Parsing", type: "lesson", order: 2,
-                        content: `## Type Casting and Conversions\n\n\`\`\`dart\nvoid main() {\n  // String to Number\n  int a = int.parse('42');\n  double b = double.parse('3.14');\n  \n  // Safe parsing (returns null if it fails)\n  int? safeAge = int.tryParse('hello'); \n  print(safeAge); // null\n  \n  // Number to String\n  String piStr = 3.14159.toString();\n  String rounded = 3.14159.toStringAsFixed(2); // "3.14"\n  \n  // The 'as' and 'is' operators for types\n  dynamic value = 'Dart';\n  \n  if (value is String) {\n    print('It is a string of length \${value.length}');\n  }\n  \n  // Force casting (will crash if wrong!)\n  String text = value as String; \n}\n\`\`\``
-                    },
-                    {
-                        title: "Collections Quiz", type: "quiz", order: 3,
-                        questions: [
-                            { question: "Which collection type ignores duplicate values?", options: ["List", "Set", "Map", "Array"], correctAnswer: 1 },
-                            { question: "What is Dart's Collection 'if' used for?", options: ["If-else statements", "Adding items to a list conditionally during declaration", "Filtering lists after creation", "Checking if a list is empty"], correctAnswer: 1 },
-                            { question: "How do you safely parse a string 'abc' to an int so it returns null instead of crashing?", options: ["int.parse('abc')", "int.tryParse('abc')", "(int)'abc'", "parseSafe('abc')"], correctAnswer: 1 },
-                            { question: "What does the 'is' operator do?", options: ["Checks equality", "Assigns a variable", "Checks if an object is of a specific type", "Casts a variable to a type"], correctAnswer: 2 }
-                        ]
-                    }
-                ]
-            },
-            {
-                title: "Mini Projects — Collections", order: 2,
-                nodes: [
-                    {
-                        title: "Project: Unique Word Counter", type: "lesson", order: 1,
-                        content: `## Project: Unique Word Counter\n\nUsing a Map to count frequencies, and a Set for unique words.\n\n\`\`\`dart\nvoid main() {\n  String text = "the quick brown fox jumps over the lazy dog and the fox respects the dog";\n  \n  List<String> words = text.split(' ');\n  \n  // Map to count occurrences\n  Map<String, int> frequencies = {};\n  \n  for (String word in words) {\n    if (frequencies.containsKey(word)) {\n      frequencies[word] = frequencies[word]! + 1; // ! asserts not null\n    } else {\n      frequencies[word] = 1;\n    }\n  }\n  \n  print('--- Word Frequencies ---');\n  frequencies.forEach((word, count) {\n    print('\$word: \$count');\n  });\n  \n  // Set to get unique words instantly\n  Set<String> uniqueWords = words.toSet();\n  print('\\nTotal words: \${words.length}');\n  print('Unique words: \${uniqueWords.length}');\n}\n\`\`\``
-                    }
-                ]
-            }
+  {
+    title: "Type Systems & Conversions", order: 3,
+    chapters: [
+      {
+        title: "Dynamic vs Static Typing", order: 1,
+        nodes: [
+          {
+            title: "Object, Dynamic, and Type Proof", type: "lesson", order: 1,
+            content: `## Object, Dynamic, and Type Proofing\n\n### The Spectrum of Flexibility\nDart is primarily a statically typed language, but it offers "escape hatches" for situations where you don't know the exact type of data beforehand (like when reading data from a website API). Understanding the difference between \`Object\`, \`dynamic\`, and \`static\` typing is critical for writing flexible yet safe code.\n\n### 1. Static Typing (The Default)\nWhen you use \`int x = 5;\`, you are using static typing. The type is fixed. This is the safest way to code because the compiler catches mistakes instantly.\n\n### 2. The \`Object\` Type\nIn Dart, absolutely everything is an object. \`int\`, \`String\`, and even \`null\` are all children of the root \`Object\` type. If you declare a variable as \`Object\`, you can put anything in it, BUT you can only perform operations that apply to all objects (like \`.toString()\`). \n\n\`\`\`dart\nObject mystery = 'Hello';\n// print(mystery.length); // Error! Not all objects have a length.\n\`\`\`\n\n### 3. The \`dynamic\` Type\nThis is the ultimate flexibility. A \`dynamic\` variable turns off the type checker for that variable. You can do anything to it! However, if you try to do something the data doesn't support (like calling \`.length\` on a number), your app will crash while it is running.\n\n\`\`\`dart\ndynamic wildCard = 'Hello';\nprint(wildCard.length); // Works!\nwildCard = 50;\n// print(wildCard.length); // CRASH! Numbers don't have lengths.\n\`\`\`\n\n### Type Checking at Runtime\nYou can check what type a variable is using the \`is\` keyword. This is vital when working with dynamic data:\n\`\`\`dart\nif (mystery is String) {\n  print('The length is \${mystery.length}'); // Dart now knows it's a string!\n}\n\`\`\`\nThis is called "Type Promotion." Once you check the type, Dart safely "promotes" the variable to that type within the code block, giving you access to all its specific features safely.`
+          },
+          {
+            title: "Advanced String Manipulation", type: "lesson", order: 2,
+            content: `## Advanced String Manipulation\n\n### More than just Text\nIn Dart, strings are powerful objects with dozens of built-in methods designed to make text processing easy. Since mobile apps are full of user input, mastering these methods is non-negotiable.\n\n### String Interpolation\nWe've seen the \`$\` symbol used to inject variables into strings. This is "Interpolation." It's much faster and cleaner than adding strings together with the \`+\` operator.\n- Single Variable: \`'Hello $name'\`\n- Expression/Method: \`'Length is \${name.length}'\`\n\n### Multiline and Raw Strings\nIf you want to paste a giant block of text, use triple quotes:\n\`\`\`dart\nString longBio = '''\nThis is line one.\nThis is line two.\n''';\n\`\`\`\nIf you want to include characters like backslashes (common in file paths) without them being treated as special commands, use a **Raw String** by adding an \`r\` at the start:\n\`String path = r'C:\\Users\\Documents';\`\n\n### Common String Methods\n1. **\`.contains('search')\`**: Checks if a sub-string exists inside another string (Case-sensitive!).\n2. **\`.trim()\`**: Removes all accidental whitespace from the start and end of a string (Very useful for user logins!).\n3. **\`.split(',')\`**: Breaks a string apart into a list of smaller strings based on a divider.\n4. **\`.replaceAll('old', 'new')\`**: Swaps all occurrences of one phrase for another.\n\nMastering these tools allows you to clean up user data, format beautiful reports, and build smarter, more responsive user interfaces.`
+          },
+          {
+            title: "Type Casting with 'as'", type: "lesson", order: 3,
+            content: `## Type Casting with 'as' \n\n### Forcing the Type\nSometimes, you know more about a variable than the Dart compiler does. For example, if you receive a generic \`Object\` from a database but you are 100% sure it is a \`String\`, you can use the \`as\` keyword to "cast" it. \n\n\`\`\`dart\nObject data = 'I am a string';\nString actualText = data as String; // Explicitly forcing the type\n\`\`\`\n\n### The Danger of Casting\nCasting is like telling the compiler "Trust me, I know what I'm doing." If you are wrong, and \`data\` is actually an \`int\`, the app will crash with a \`TypeError\`. \n\n### Best Practice: The 'is' Check\nYou should almost never use \`as\` blindly. Instead, always use the \`is\` check first. This creates a "Safe Cast."\n\n\`\`\`dart\nif (data is String) {\n  String text = data; // Automatically promoted, no 'as' needed!\n}\n\`\`\`\n\n### Null Casting\nWhat if you have a nullable \`String?\` but you need to pass it to a function that only accepts a non-nullable \`String\`? If you are absolutely certain the value isn't null at that exact moment, you can use the **Bang Operator (\`!\`)**.\n\n\`\`\`dart\nString? optionalName = 'Bob';\nString fixedName = optionalName!; // The '!' tells Dart: "I swear this is not null!"\n\`\`\`\n**Warning:** If the value *is* null when you use \`!\`, you get an instant crash. It is the "danger" button of Dart. Use it as a last resort!`
+          },
+          {
+            title: "Type System Quiz", type: "quiz", order: 4,
+            questions: [
+              { question: "Which type allows you to bypass the Dart type-checker entirely, potentially leading to runtime crashes?", options: ["Object", "dynamic", "var", "num"], correctAnswer: 1 },
+              { question: "How do you create a 'Raw String' that ignores escape characters like backslashes?", options: ["Use triple quotes", "Add an 'r' before the string like r'text'", "Use brackets", "Add a '!' at the end"], correctAnswer: 1 },
+              { question: "What is the safest way to convert a generic `Object` into a `String`?", options: ["Use the 'as' keyword immediately", "Use an 'is String' check to trigger type promotion", "Use .toString()", "Restart the app"], correctAnswer: 1 },
+              { question: "Which operator is known as the 'Bang Operator' and forces a nullable variable to be treated as non-nullable?", options: ["?", "??", "!", "as"], correctAnswer: 2 }
+            ]
+          }
         ]
-    },
-
-    {
-        title: "Control Flow", order: 4,
-        chapters: [
-            {
-                title: "Conditionals and Loops", order: 1,
-                nodes: [
-                    {
-                        title: "if/else and switch", type: "lesson", order: 1,
-                        content: `## Conditional Statements\n\n\`\`\`dart\nvoid main() {\n  int score = 85;\n  \n  if (score >= 90) {\n    print('A');\n  } else if (score >= 80) {\n    print('B');\n  } else {\n    print('C');\n  }\n  \n  // Dart 3.0 enhanced switch statements (Pattern matching!)\n  String grade = 'B';\n  \n  switch (grade) {\n    case 'A':\n      print('Excellent!');\n      break;\n    case 'B':\n    case 'C':\n      print('Passed!');\n      break;\n    default:\n      print('Failed.');\n  }\n  \n  // Switch Expressions (Dart 3.0+ — Return values directly from switch!)\n  String status = switch (score) {\n    >= 90 => 'Distinction',\n    >= 50 => 'Pass',\n    _ => 'Fail'  // _ means default\n  };\n  print(status);\n}\n\`\`\``
-                    },
-                    {
-                        title: "Loops", type: "lesson", order: 2,
-                        content: `## Loops in Dart\n\n\`\`\`dart\nvoid main() {\n  // Standard for loop\n  for (int i = 0; i < 5; i++) {\n    print(i);\n  }\n  \n  // for-in loop (great for Lists)\n  List<String> heroes = ['Batman', 'Superman', 'Flash'];\n  for (String hero in heroes) {\n    print(hero);\n  }\n  \n  // while loop\n  int count = 3;\n  while (count > 0) {\n    print('Countdown: \$count');\n    count--;\n  }\n  \n  // Using break and continue\n  for (int i = 1; i <= 10; i++) {\n    if (i == 5) continue; // Skip 5\n    if (i == 8) break;    // Stop at 8\n    print(i); // Prints 1,2,3,4,6,7\n  }\n}\n\`\`\``
-                    },
-                    {
-                        title: "FizzBuzz Challenge", type: "challenge", order: 3,
-                        starterCode: "void fizzbuzz(int n) {\n  // Print 1 to n. \n  // Multiples of 3 = Fizz\n  // Multiples of 5 = Buzz\n  // Both = FizzBuzz\n}",
-                        solution: "void fizzbuzz(int n) {\n  for (int i = 1; i <= n; i++) {\n    if (i % 15 == 0) print('FizzBuzz');\n    else if (i % 3 == 0) print('Fizz');\n    else if (i % 5 == 0) print('Buzz');\n    else print(i);\n  }\n}",
-                        testCases: [{ input: "15", expectedOutput: "1\\n2\\nFizz\\n...FizzBuzz" }]
-                    }
-                ]
-            },
-            {
-                title: "Mini Projects — Control Flow", order: 2,
-                nodes: [
-                    {
-                        title: "Project: Number Guessing Game", type: "lesson", order: 1,
-                        content: `## Project: Number Guessing Game in Dart\n\n\`\`\`dart\nimport 'dart:io';\nimport 'dart:math';\n\nvoid main() {\n  Random random = Random();\n  int secret = random.nextInt(100) + 1; // 1 to 100\n  int attempts = 0;\n  bool guessed = false;\n  \n  print('=== Guess the Number (1-100) ===');\n  \n  while (!guessed) {\n    stdout.write('Attempt \${attempts + 1} - Guess: ');\n    String? input = stdin.readLineSync();\n    int? guess = int.tryParse(input ?? '');\n    \n    if (guess == null) {\n      print('Please enter a valid number.');\n      continue;\n    }\n    \n    attempts++;\n    \n    if (guess == secret) {\n      print('🎉 Correct! You guessed it in \$attempts attempts.');\n      guessed = true;\n    } else if (guess < secret) {\n      print('Too low! 📉');\n    } else {\n      print('Too high! 📈');\n    }\n  }\n}\n\`\`\``
-                    }
-                ]
-            }
+      },
+      {
+        title: "Mini Projects — Conversions", order: 2,
+        nodes: [
+          {
+            title: "Project Guide: User Input Cleaner", type: "lesson", order: 1,
+            content: `## Project Guide: User Input Data Cleaner\n\n### Introduction\nUsers are messy. They add accidental spaces, capitalize things randomly, and often provide data in the wrong format. Professional apps spend a lot of code "cleaning" this data before saving it. In this project, you will build a script that takes a messy user profile submittal and sanitizes it perfectly.\n\n### Goal\nCreate a program that takes three messy variables: a name with extra spaces (\`  jOhn sMith  \`), an age provided as a string (\`"25"\`), and a nullable status message. Your program must: 1. Remove white space. 2. Fix the capitalization. 3. Convert the age string to an integer. 4. Provide a default message if the status is null. \n\n### Requirements\n1. Input: \`String rawName = '   daRt pRogRammeR   ';\`\n2. Use the \`.trim()\` method to remove spaces.\n3. Research how to make a string "Title Case" (First letter of words capitalized). Hint: Use \`.split()\` and \`.substring()\`. \n4. Use \`int.parse()\` to handle the age.\n5. Use the "Null-is-Coalescing" operator (\`??\`) to provide a default status: \`String displayStatus = userStatus ?? 'No status set';\`.\n6. Print a final "Cleaned Profile" report.\n\n### Step-by-Step Guide\n\n**Step 1: The Raw Data**\nInside \`main()\`, define your messy variables. For the name, use \`    flutter develoPER    \`.\n\n**Step 2: Trimming**\nClean the edges: \`String trimmed = rawName.trim();\`.\n\n**Step 3: Advanced Trimming**\nTo fix the casing, convert the whole thing to lowercase first: \`String lower = trimmed.toLowerCase();\`. Then, research how to capitalize just the first letter (Hint: \`lower[0].toUpperCase() + lower.substring(1)\`).\n\n**Step 4: The Null Check**\nDefine \`String? rawStatus = null;\`. Then create your display version: \`String status = rawStatus ?? 'Available';\`. The \`??\` operator checks if the left side is null; if it is, it uses the right side instead!\n\n**Step 5: Formatting**\nPrint the final results cleanly: \`print('User: $status | Name: $lower');\`.\n\n### Challenge Yourself\n- Can you count how many characters were removed during the trimming process? (Hint: Subtract the length of the trimmed string from the original length).\n- Use a \`try-catch\` block around the \`int.parse()\` to prevent the app from crashing if the user accidentally types "two" instead of "2"!`
+          }
         ]
-    },
-
-    {
-        title: "Functions and Modular Programming", order: 5,
-        chapters: [
-            {
-                title: "Dart Functions", order: 1,
-                nodes: [
-                    {
-                        title: "Positional and Named Parameters", type: "lesson", order: 1,
-                        content: `## Defining Functions in Dart\n\nDart functions are objects. You can pass them around like variables!\n\n\`\`\`dart\n// Basic function\nint add(int a, int b) {\n  return a + b;\n}\n\n// Arrow syntax (great for single-line functions)\nint multiply(int a, int b) => a * b;\n\n// Named Parameters (crucial for Flutter UI!)\n// Wrap parameters in { } to name them. By default they are optional (nullable)\nvoid createUser({String? name, int? age}) {\n  print('\$name is \$age');\n}\n\n// Required Named Parameters (use 'required' keyword)\nvoid transfer({required String from, required String to, required double amount}) {\n  print('\$\${amount} moved from \$from to \$to');\n}\n\nvoid main() {\n  print(add(5, 3));\n  \n  // Named parameters mean order doesn't matter!\n  transfer(amount: 100.5, to: 'Bob', from: 'Alice');\n}\n\`\`\``
-                    },
-                    {
-                        title: "Anonymous Functions and Closures", type: "lesson", order: 2,
-                        content: `## Anonymous Functions (Lambdas)\n\nFunctions without names that you pass directly to other methods.\n\n\`\`\`dart\nvoid main() {\n  List<String> fruits = ['apple', 'banana', 'cherry'];\n  \n  // Using an anonymous function inside forEach\n  fruits.forEach((element) {\n    print('I love \${element.toUpperCase()}');\n  });\n  \n  // Using map to transform data (arrow syntax)\n  List<int> lengths = fruits.map((f) => f.length).toList();\n  print(lengths); // [5, 6, 6]\n  \n  // Filtering a list\n  List<String> bFruits = fruits.where((f) => f.startsWith('b')).toList();\n  print(bFruits); // [banana]\n}\n\`\`\``
-                    },
-                    {
-                        title: "Functions Quiz", type: "quiz", order: 3,
-                        questions: [
-                            { question: "What does the => syntax do in Dart?", options: ["Greater than or equal to", "Defines a getter", "A shorthand for { return expr; }", "Creates an arrow"], correctAnswer: 2 },
-                            { question: "How do you make parameters positional but optional?", options: ["Wrap them in [ ]", "Wrap them in { }", "Use the ? symbol", "Use the 'optional' keyword"], correctAnswer: 0 },
-                            { question: "How do you define named parameters?", options: ["Wrap them in [ ]", "Wrap them in { }", "Prefix them with $", "Dart always has named parameters"], correctAnswer: 1 },
-                            { question: "What does the required keyword do for named parameters?", options: ["Forces the user to provide that parameter", "Makes it compile-time constant", "Makes it synchronous", "Locks the variable"], correctAnswer: 0 }
-                        ]
-                    }
-                ]
-            },
-            {
-                title: "Mini Projects — Functions", order: 2,
-                nodes: [
-                    {
-                        title: "Project: List Processor", type: "lesson", order: 1,
-                        content: `## Project: List Processor using Lambdas\n\n\`\`\`dart\nvoid main() {\n  List<int> numbers = [12, 45, 9, 32, 18, 77, 4, 21];\n  \n  // 1. Filter: Keep only numbers > 20\n  var bigNumbers = numbers.where((n) => n > 20).toList();\n  print('Big numbers: \$bigNumbers');\n  \n  // 2. Map: Square all numbers\n  var squares = numbers.map((n) => n * n).toList();\n  print('Squares: \$squares');\n  \n  // 3. Reduce: Find the sum of all numbers\n  var sum = numbers.reduce((value, element) => value + element);\n  print('Sum: \$sum');\n  \n  // 4. Sort: Sort ascending\n  numbers.sort((a, b) => a.compareTo(b));\n  print('Sorted: \$numbers');\n}\n\`\`\``
-                    }
-                ]
-            }
-        ]
-    }
+      }
+    ]
+  }
 ];

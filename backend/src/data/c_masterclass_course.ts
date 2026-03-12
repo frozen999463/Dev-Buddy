@@ -1,5 +1,7 @@
 import { cMasterclassPartA } from "./c_masterclass_a";
+import { cMasterclassPartA2 } from "./c_masterclass_a2";
 import { cMasterclassPartB } from "./c_masterclass_b";
+import { cMasterclassPartB2 } from "./c_masterclass_b2";
 
 export const cMasterclass = {
     course: {
@@ -10,6 +12,8 @@ export const cMasterclass = {
     },
     sections: [
         ...cMasterclassPartA,
+        ...cMasterclassPartA2,
         ...cMasterclassPartB,
+        ...cMasterclassPartB2,
     ]
 };

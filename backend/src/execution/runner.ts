@@ -142,14 +142,12 @@ export async function executeCode(
     "--network", "none",
     "--memory", langKey === "java" ? "256m" : "128m",
     "--cpus", "0.5",
-    "--ulimit", "nproc=64:64",
     "--ulimit", "fsize=1048576:1048576",
     "-i",
     "devbuddy-runner",
     "bash", "-c", bashCmd,
   ];
 
-  // Use podman instead of docker CLI to avoid 500 upgrade proxy bugs on Fedora
   const proc = spawn("podman", dockerArgs, { stdio: ["pipe", "pipe", "pipe"] });
 
   // Write the code to stdin immediately — head -c will consume exactly this many bytes
