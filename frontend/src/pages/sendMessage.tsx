@@ -20,14 +20,25 @@ const SendMessage: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Sending message to:", targetEmail, formData);
     
-    // Placeholder for actual send logic
-    toast.success(`Message sent to ${targetEmail}!`);
+    // Construct the mailto link
+    const subject = encodeURIComponent(formData.subject);
+    const body = encodeURIComponent(
+      `Name: ${formData.name}\n` +
+      `Sender Email: ${formData.email}\n\n` +
+      `Message:\n${formData.message}`
+    );
+    
+    const mailtoUrl = `mailto:${targetEmail}?subject=${subject}&body=${body}`;
+    
+    // Open the user's email client
+    window.location.href = mailtoUrl;
+
+    toast.success(`Opening your email app to send to ${targetEmail}...`);
     
     setTimeout(() => {
       navigate(-1);
-    }, 2000);
+    }, 3000);
   };
 
   return (
