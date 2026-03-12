@@ -12,8 +12,17 @@ const LANGUAGES = [
   { label: "Dart", value: "dart", monaco: "dart" },
 ];
 
+const DEFAULT_CODE: Record<string, string> = {
+  c: '#include <stdio.h>\n\nint main() {\n    printf("Hello, DevBuddy!\\n");\n    return 0;\n}',
+  python: 'print("Hello, DevBuddy!")',
+  javascript: 'console.log("Hello, DevBuddy!");',
+  java: 'public class Main {\n    public static void main(String[] args) {\n        System.out.println("Hello, DevBuddy!");\n    }\n}',
+  dart: 'void main() {\n  print("Hello, DevBuddy!");\n}'
+};
+
+
 export default function CodeEditor() {
-  const [code, setCode] = useState(`#include <stdio.h>\n\nint main() {\n    printf("Hello, DevBuddy!");\n    return 0;\n}`);
+  const [code, setCode] = useState(DEFAULT_CODE["c"]);
   const [output, setOutput] = useState("");
   const [showProblem, setShowProblem] = useState(true);
   const [language, setLanguage] = useState(LANGUAGES[0]);
@@ -124,7 +133,11 @@ export default function CodeEditor() {
 
             <select
               value={language.value}
-              onChange={(e) => setLanguage(LANGUAGES.find((l) => l.value === e.target.value)!)}
+              onChange={(e) => {
+                const newLang = LANGUAGES.find((l) => l.value === e.target.value)!;
+                setLanguage(newLang);
+                setCode(DEFAULT_CODE[newLang.value]);
+              }}
               className="bg-gray-800 border border-gray-700 text-gray-200 text-sm rounded px-2 py-1 focus:outline-none focus:border-gray-500"
             >
               {LANGUAGES.map((lang) => (

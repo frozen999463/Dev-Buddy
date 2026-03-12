@@ -1,0 +1,126 @@
+Collection: Collection_ User
+Description: This collection is used to store the details of all registered users on the Dev-Buddy platform.
+Collection 3.1 Collection_ User
+
+SI.NO	Field Name	Datatype	Description
+1	_id	string	Unique auto-generated primary key
+2	uid	string	Firebase Authentication unique ID
+3	email	string	Email address of the user
+4	name	string	Display name of the user
+5	profilePicture	string	URL of the user's profile picture
+6	role	string	Role of the user (e.g., "user" or "admin")
+7	provider	string	Authentication provider (e.g., "password" or "google")
+8	onboarded	boolean	Status indicating if the user has completed onboarding
+9	selectedCourse	string	ID of the user's currently active course
+10	enrolledCourses	array of strings	List of course IDs the user is enrolled in
+11	experienceLevel	string	User's self-reported programming experience
+12	learningGoal	string	User's stated primary learning goal
+13	totalXP	number	Total experience points earned by the user
+14	currentStreak	number	Number of consecutive active days
+15	lastActivityDate	date	Timestamp of the user's latest activity
+16	createdAt	date	Timestamp when the user record was created
+17	updatedAt	date	Timestamp when the user record was last updated
+
+Collection: Collection_ Course
+Description: This collection is used to store details of the available learning courses on the platform.
+Collection 3.2 Collection_ Course
+
+SI.NO	Field Name	Datatype	Description
+1	_id	string	Unique auto-generated primary key
+2	title	string	Full title of the course
+3	slug	string	Unique URL-friendly identifier for the course
+4	description	string	Detailed description of the course content
+5	thumbnail	string	URL to the course thumbnail image
+6	status	string	Current publication status ("draft" or "published")
+7	createdBy	string	Admin UID of the course creator
+8	createdAt	date	Timestamp when the course was created
+9	updatedAt	date	Timestamp when the course was last updated
+
+Collection: Collection_ Section
+Description: This collection is used to store the major sections or modules within a course.
+Collection 3.3 Collection_ Section
+
+SI.NO	Field Name	Datatype	Description
+1	_id	string	Unique auto-generated primary key
+2	title	string	Title of the section
+3	description	string	Overview or description of the section
+4	order	number	Display sequence number of the section
+5	courseId	string	ID of the parent Course
+6	createdAt	date	Timestamp when the section was created
+7	updatedAt	date	Timestamp when the section was last updated
+
+Collection: Collection_ Chapter
+Description: This collection is used to store chapters, which represent sub-topics within a section.
+Collection 3.4 Collection_ Chapter
+
+SI.NO	Field Name	Datatype	Description
+1	_id	string	Unique auto-generated primary key
+2	title	string	Title of the chapter
+3	order	number	Display sequence number within the section
+4	sectionId	string	ID of the parent Section
+5	createdAt	date	Timestamp when the chapter was created
+6	updatedAt	date	Timestamp when the chapter was last updated
+
+Collection: Collection_ Node
+Description: This collection is used to store individual learning units (lessons, quizzes, or challenges) within a chapter.
+Collection 3.5 Collection_ Node
+
+SI.NO	Field Name	Datatype	Description
+1	_id	string	Unique auto-generated primary key
+2	title	string	Title of the learning node
+3	type	string	Type identifier ("lesson", "quiz", or "challenge")
+4	content	string	Markdown or video content for lessons
+5	order	number	Display sequence number within the chapter
+6	chapterId	string	ID of the parent Chapter
+7	questions	array of objects	Embedded list of quiz questions and options
+8	starterCode	string	Base code provided to the user for challenges
+9	solution	string	The correct solution code for a challenge
+10	testCases	array of objects	Input and expected output cases to test challenge submissions
+11	createdAt	date	Timestamp when the node was created
+12	updatedAt	date	Timestamp when the node was last updated
+
+Collection: Collection_ Progress
+Description: This collection tracks individual user progress, score, and XP earned for each completed node.
+Collection 3.6 Collection_ Progress
+
+SI.NO	Field Name	Datatype	Description
+1	_id	string	Unique auto-generated primary key
+2	userId	string	ID of the user
+3	courseId	string	ID of the course the node belongs to
+4	nodeId	string	ID of the completed node
+5	completed	boolean	Status indicating if the node was successfully finished
+6	score	number	User's score on the node (applicable for quizzes)
+7	xpEarned	number	Experience points awarded to the user
+8	completedAt	date	Timestamp marking exactly when the node was completed
+9	createdAt	date	Timestamp when the progress record was initially created
+10	updatedAt	date	Timestamp when the progress record was last updated
+
+Collection: Collection_ Question
+Description: This collection is used to store forum/Q&A questions posted by users, along with embedded threaded comments.
+Collection 3.7 Collection_ Question
+
+SI.NO	Field Name	Datatype	Description
+1	_id	string	Unique auto-generated primary key
+2	userId	string	ID of the user who posted the question
+3	userName	string	Display name of the user who posted
+4	userPicture	string	Profile picture URL of the user
+5	courseId	string	ID of the course the question is associated with
+6	title	string	Subject or heading of the question
+7	content	string	Full body text description of the question
+8	comments	array of objects	List of embedded replies/comments from other users
+9	createdAt	date	Timestamp when the question was initially posted
+
+Collection: Collection_ Review
+Description: This collection is used to store course reviews and ratings submitted by users, optionally with admin replies.
+Collection 3.8 Collection_ Review
+
+SI.NO	Field Name	Datatype	Description
+1	_id	string	Unique auto-generated primary key
+2	uid	string	Firebase UID of the reviewing user
+3	name	string	Display name of the reviewer
+4	rating	number	Numeric star rating given (1 to 5)
+5	text	string	The review text written by the user
+6	adminReply	string	Optional response text provided by an admin
+7	repliedAt	date	Timestamp marking when the admin responded
+8	createdAt	date	Timestamp when the user review was created
+9	updatedAt	date	Timestamp when the user review was last updated

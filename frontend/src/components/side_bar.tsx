@@ -34,7 +34,7 @@ export function SideBar({ courseId }: SideBarProps) {
       ))}
 
       {/* Open IDE Button */}
-      <div className="mt-auto pt-4 border-t border-neutral-100">
+      <div className="mt-4 pt-4 border-t border-neutral-100">
         <button
           onClick={() => navigate("/ide")}
           className="relative w-full overflow-hidden rounded-2xl p-[2px] group"
