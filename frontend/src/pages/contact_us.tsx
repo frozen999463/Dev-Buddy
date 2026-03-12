@@ -16,13 +16,24 @@ const ContactUs: React.FC = () => {
 
           {/* Contact Items */}
           <div className="space-y-6 mb-10">
-            {[1, 2, 3].map((_, index) => (
-              <div key={index} className="flex items-center gap-4">
-                <div className="w-12 h-12 flex items-center justify-center rounded-full bg-black text-white">
-                  ✉️
+            {[
+              "aswinks490@gmail.com",
+              "dinilbabu8590@gmail.com",
+              "devbuddy48@gmail.com",
+              "aslamnizarn@gmail.com",
+              "abhijithtmofficial@gmail.com",
+              "harikrishnaner2006@gmail.com"
+            ].map((email, index) => (
+              <div 
+                key={index} 
+                className="flex items-center gap-4 cursor-pointer group"
+                onClick={() => navigate(`/send-message?to=${email}`)}
+              >
+                <div className="w-12 h-12 flex items-center justify-center rounded-full bg-black text-white group-hover:bg-indigo-600 transition-colors">
+                  <span className="text-xl">✉️</span>
                 </div>
-                <span className="text-gray-700">
-                  asdfyijb@gmail.com
+                <span className="text-gray-700 font-medium group-hover:text-indigo-600 transition-colors">
+                  {email}
                 </span>
               </div>
             ))}

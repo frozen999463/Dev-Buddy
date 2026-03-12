@@ -2,7 +2,30 @@ import { useState, useEffect } from "react";
 import { getAuth } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 
-// Course icons mapping
+// Course icons - keyword-based matching
+const courseIconRules: { keyword: string; icon: string }[] = [
+  { keyword: "python", icon: "🐍" },
+  { keyword: "dart", icon: "🎯" },
+  { keyword: "flutter", icon: "💙" },
+  { keyword: "html", icon: "🌐" },
+  { keyword: "css", icon: "🎨" },
+  { keyword: "javascript", icon: "📜" },
+  { keyword: "react", icon: "⚛️" },
+  { keyword: "java", icon: "☕" },
+  { keyword: "c programming", icon: "⚙️" },
+  { keyword: "c++", icon: "🔧" },
+  { keyword: "programming basics", icon: "💻" },
+  { keyword: "programming masterclass", icon: "🏆" },
+];
+function getCourseIcon(title: string): string {
+  const lower = title.toLowerCase();
+  for (const rule of courseIconRules) {
+    if (lower.includes(rule.keyword)) return rule.icon;
+  }
+  return "💎";
+}
+
+// Legacy (unused)
 const courseIcons: Record<string, string> = {
   python: "🐍",
   html: "🌐",
@@ -151,12 +174,11 @@ export default function OnboardingName() {
       <div className="flex-1 flex flex-col items-center justify-center px-6 md:px-20 -mt-10">
 
         {/* Right Side - Selection Card - 3D Wrapper */}
-        <div className="flex-1 flex flex-col items-center md:items-start justify-center max-w-md w-full [perspective:2000px]">
+        <div className={`flex-1 flex flex-col items-center md:items-start justify-center w-full ${step === 2 ? "max-w-4xl" : "max-w-lg"}`}>
           <div className="bg-gradient-to-br from-[#373F6E] to-[#252b52] p-8 md:p-10 rounded-[2.5rem] 
-            shadow-[20px_40px_100px_rgba(0,0,0,0.5),0_0_60px_rgba(30,144,255,0.3),inset_0_2px_10px_rgba(255,255,255,0.1)] 
-            w-full min-h-[450px] flex flex-col items-center justify-center transition-all duration-500 
-            border-t border-l border-white/10 border-b-[10px] border-r-[5px] border-black/40
-            [transform:rotateX(6deg)_rotateY(-6deg)] hover:[transform:rotateX(0deg)_rotateY(0deg)] hover:shadow-[0_20px_80px_rgba(30,144,255,0.5)]">
+            shadow-xl 
+            w-full min-h-[350px] flex flex-col items-center justify-center transition-all duration-500 
+            border border-white/10">
 
 
 
@@ -167,7 +189,7 @@ export default function OnboardingName() {
                   placeholder="Enter your name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full border-2 border-white/20 rounded-2xl px-6 py-4 text-xl bg-[#98A1EC] shadow-xl focus:ring-4 focus:ring-white/10 outline-none transition-all placeholder:text-[#373F6E]/60 text-[#373F6E] text-center md:text-left font-bold"
+                  className="w-full border-2 border-white/20 rounded-xl px-4 py-2.5 text-base bg-[#98A1EC] shadow-xl focus:ring-4 focus:ring-white/10 outline-none transition-all placeholder:text-[#373F6E]/60 text-[#373F6E] text-center md:text-left font-bold"
                 />
               </div>
             )}
@@ -182,7 +204,7 @@ export default function OnboardingName() {
                 ) : (
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {courses.map((course) => {
-                      const icon = courseIcons[course.title.toLowerCase()] || courseIcons.default;
+                      const icon = getCourseIcon(course.title);
                       return (
                         <button
                           key={course._id}
@@ -190,13 +212,13 @@ export default function OnboardingName() {
                             setSelectedCourse(course._id);
                             setSelectedCourseName(course.title);
                           }}
-                          className={`flex items-center gap-4 border-[3px] p-4 rounded-xl text-left transition-all shadow-sm ${selectedCourse === course._id
+                          className={`flex items-center gap-3 border-[2px] p-2.5 rounded-lg text-left transition-all shadow-sm ${selectedCourse === course._id
                             ? "bg-white border-white text-[#373F6E]"
                             : "bg-white/10 border-white/10 hover:border-white/30 text-white"
                             }`}
                         >
-                          <span className="text-2xl">{icon}</span>
-                          <span className={`font-bold text-lg ${selectedCourse === course._id ? "text-[#373F6E]" : "text-white"}`}>{course.title}</span>
+                          <span className="text-lg">{icon}</span>
+                          <span className={`font-semibold text-sm ${selectedCourse === course._id ? "text-[#373F6E]" : "text-white"}`}>{course.title}</span>
                         </button>
                       );
                     })}
@@ -211,7 +233,7 @@ export default function OnboardingName() {
                   <button
                     key={opt.id}
                     onClick={() => setExperienceLevel(opt.label)}
-                    className={`w-full flex items-center gap-4 border-[2px] p-4 rounded-xl text-left transition-all shadow-sm ${experienceLevel === opt.label
+                    className={`w-full flex items-center gap-3 border-[2px] p-2.5 rounded-lg text-left transition-all shadow-sm ${experienceLevel === opt.label
                       ? "bg-white border-white text-[#373F6E]"
                       : "bg-white/10 border-white/10 hover:border-white/30 text-white"
                       }`}
@@ -221,7 +243,7 @@ export default function OnboardingName() {
                       <div className={`w-1.5 rounded-t-sm ${experienceLevel === opt.label ? "bg-[#373F6E]" : "bg-white"} ${opt.id === 'beginner' ? 'h-0' : opt.id === 'some-exp' ? 'h-2' : opt.id === 'confident' ? 'h-4' : 'h-6'}`}></div>
                       <div className={`w-1.5 rounded-t-sm ${experienceLevel === opt.label ? "bg-[#373F6E]" : "bg-white"} ${opt.id === 'beginner' ? 'h-0' : opt.id === 'some-exp' ? 'h-0' : opt.id === 'confident' ? 'h-2' : 'h-4'}`}></div>
                     </div>
-                    <span className={`font-bold text-base md:text-lg ${experienceLevel === opt.label ? "text-[#373F6E]" : "text-white"}`}>{opt.label}</span>
+                    <span className={`font-semibold text-sm ${experienceLevel === opt.label ? "text-[#373F6E]" : "text-white"}`}>{opt.label}</span>
                   </button>
                 ))}
               </div>
@@ -234,13 +256,13 @@ export default function OnboardingName() {
                     <button
                       key={opt.id}
                       onClick={() => setLearningGoal(opt.label)}
-                      className={`flex items-center gap-4 border-[2px] p-3 rounded-xl text-left transition-all shadow-sm ${learningGoal === opt.label
+                      className={`flex items-center gap-3 border-[2px] p-2.5 rounded-lg text-left transition-all shadow-sm ${learningGoal === opt.label
                         ? "bg-white border-white text-[#373F6E]"
                         : "bg-white/10 border-white/10 hover:border-white/30 text-white"
                         }`}
                     >
-                      <span className="text-xl">{opt.icon}</span>
-                      <span className={`font-bold text-sm md:text-base ${learningGoal === opt.label ? "text-[#373F6E]" : "text-white"}`}>{opt.label}</span>
+                      <span className="text-base">{opt.icon}</span>
+                      <span className={`font-semibold text-xs md:text-sm ${learningGoal === opt.label ? "text-[#373F6E]" : "text-white"}`}>{opt.label}</span>
                     </button>
                   ))}
                 </div>
@@ -248,11 +270,11 @@ export default function OnboardingName() {
             )}
 
             {/* Action Buttons */}
-            <div className="flex items-center justify-center gap-4 mt-10 z-10 w-full">
+            <div className="flex items-center justify-center gap-4 mt-6 z-10 w-full">
               {step > 1 && (
                 <button
                   onClick={prevStep}
-                  className="px-6 py-2 text-gray-400/80 font-bold text-lg uppercase tracking-wider hover:text-white transition-all font-['Bebas_Neue'] cursor-pointer"
+                  className="px-4 py-1.5 text-gray-400/80 font-bold text-sm uppercase tracking-wider hover:text-white transition-all font-['Bebas_Neue'] cursor-pointer"
                 >
                   BACK
                 </button>
@@ -260,7 +282,7 @@ export default function OnboardingName() {
               <button
                 onClick={step === 4 ? handleFinalSubmit : nextStep}
                 disabled={(step === 1 && !name.trim()) || (step === 2 && !selectedCourse) || (step === 3 && !experienceLevel) || (step === 4 && !learningGoal) || loading}
-                className="flex-1 max-w-[240px] px-10 py-3 rounded-2xl bg-white text-[#373F6E] font-bold text-xl uppercase tracking-widest hover:bg-gray-100 transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer font-['Bebas_Neue']"
+                className="flex-1 max-w-[200px] px-6 py-2 rounded-xl bg-white text-[#373F6E] font-bold text-base uppercase tracking-widest hover:bg-gray-100 transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer font-['Bebas_Neue']"
               >
                 {loading ? "..." : (step === 4 ? "GET STARTED" : "CONTINUE")}
               </button>

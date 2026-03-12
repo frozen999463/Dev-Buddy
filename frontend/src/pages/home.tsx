@@ -38,9 +38,9 @@ export default function Home() {
           {/* Right Illustration */}
           <div className="flex justify-center">
             <img
-              src="/images/logodb1@2x.png"
+              src="/images/logodb2@2x.png"
               alt="Coding Illustration"
-              className="w-full max-w-md"
+              className="w-full max-w-xl"
             />
           </div>
 

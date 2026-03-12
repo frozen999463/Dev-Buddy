@@ -132,7 +132,7 @@ const CourseContents = ({ courseId }: { courseId?: string }) => {
               {showDivider && (
                 <div className="w-full flex items-center justify-center gap-6 my-16 animate-in slide-in-from-bottom-2">
                   <div className="h-[2px] w-20 bg-neutral-100" />
-                  <span className="text-[11px] font-black text-neutral-300 uppercase tracking-[0.3em] whitespace-nowrap">
+                  <span className="text-[11px] font-black text-black uppercase tracking-[0.3em] whitespace-nowrap">
                     {node.chapterTitle || "NEW CHAPTER"}
                   </span>
                   <div className="h-[2px] w-20 bg-neutral-100" />

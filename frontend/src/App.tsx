@@ -11,6 +11,7 @@ import Signup from './pages/signup'
 import Home from './pages/home'
 import AboutUs from './pages/about'
 import ContactUs from './pages/contact_us'
+import SendMessage from './pages/sendMessage'
 import JourneyPage from './pages/journey_page'
 import StudyPage from './pages/StudyPage'
 import MyCourses from './pages/MyCourses'
@@ -41,6 +42,7 @@ function App() {
           <Route path="/home" element={<Home />} />
           <Route path='/about' element={<AboutUs />} />
           <Route path='/contact_us' element={<ContactUs />} />
+          <Route path='/send-message' element={<SendMessage />} />
           <Route path='/journey/:id' element={<JourneyPage />} />
           <Route path='/course/:courseId/learn/:nodeId' element={<StudyPage />} />
           <Route path='/onboarding' element={<OnboardingName />} />
